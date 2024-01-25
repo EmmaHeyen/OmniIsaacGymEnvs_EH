@@ -30,6 +30,8 @@
 
 Inherits nut-bolt environment class and abstract task class (not enforced). Can be executed with
 PYTHON_PATH omniisaacgymenvs/scripts/rlgames_train.py task=FactoryTaskNutBoltPlace
+
+PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskPegHolePlace_eh
 """
 
 
@@ -79,7 +81,7 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         ][
             "yaml"
         ]  # strip superfluous nesting
-        # TODO: adjust yaml for ppo
+        # TODO: adjust yaml for ppo --> done
         ppo_path = "train/FactoryTaskPegHolePlace_ehPPO.yaml"  # relative to Gym's Hydra search path (cfg dir)
         self.cfg_ppo = hydra.compose(config_name=ppo_path)
         self.cfg_ppo = self.cfg_ppo["train"]  # strip superfluous nesting
@@ -222,10 +224,12 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
                     self.cfg_task.randomize.franka_arm_initial_dof_pos,
                     device=self.device,
                 ).repeat((len(env_ids), 1)),
-                (self.peg_widths * 0.5)
+                # (self.peg_widths * 0.5)
+                (self.peg_widths * 5)
                 # (self.nut_widths_max * 0.5)
                 * 1.1,  # buffer on gripper DOF pos to prevent initial contact
-                (self.peg_widths * 0.5) * 1.1,
+                # (self.peg_widths * 0.5) * 1.1,
+                (self.peg_widths * 0.5) * 1.1
                 # (self.nut_widths_max * 0.5) * 1.1,
             ),  # buffer on gripper DOF pos to prevent initial contact
             dim=-1,
@@ -241,13 +245,17 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         """Reset root states of nut and bolt."""
 
         # Randomize root state of nut within gripper
-        self.peg_pos[env_ids, 0] = 0.0
-        self.peg_pos[env_ids, 1] = 0.0
+        self.peg_pos[env_ids, 0] = 0.0 # x-coordinate of position?
+        self.peg_pos[env_ids, 1] = 0.0 # y-coordinate of position?
+
+        # self.peg_pos[env_ids, 0] = 1.0 # makes no difference??
+        # self.peg_pos[env_ids, 1] = 1.0 # makes no difference??
+
 
         # TODO: check out if value for fingertip_midpoint_pos_reset has to be adjusted
         fingertip_midpoint_pos_reset = 0.58781  # self.fingertip_midpoint_pos at reset
         peg_base_pos_local = self.hole_drill_hole_heights.squeeze(-1)
-        self.peg_pos[env_ids, 2] = fingertip_midpoint_pos_reset - peg_base_pos_local
+        self.peg_pos[env_ids, 2] = fingertip_midpoint_pos_reset # test: comment out (- peg_base_pos_local) # z-coordinate of position?
         peg_noise_pos_in_gripper = 2 * (
             torch.rand((self.num_envs, 3), dtype=torch.float32, device=self.device)
             - 0.5
@@ -276,6 +284,9 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         self.peg_angvel[env_ids, :] = 0.0
 
         indices = env_ids.to(dtype=torch.int32)
+        print("checkpoint1 ", env_ids)
+        
+        
         self.pegs.set_world_poses(
             self.peg_pos[env_ids] + self.env_pos[env_ids],
             self.peg_quat[env_ids],
@@ -285,7 +296,8 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
             torch.cat((self.peg_linvel[env_ids], self.peg_angvel[env_ids]), dim=1),
             indices,
         )
-
+        print("checkpoint2 ", env_ids)
+        print("self.peg_pos[env_ids] + self.env_pos[env_ids]=",self.peg_pos[env_ids] + self.env_pos[env_ids])
         # Randomize root state of bolt
         hole_noise_xy = 2 * (
             torch.rand((self.num_envs, 2), dtype=torch.float32, device=self.device)
@@ -396,12 +408,12 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         self.progress_buf[:] += 1
 
         if self._env._world.is_playing():
-            self.refresh_base_tensors()
-            self.refresh_env_tensors()
-            self._refresh_task_tensors()
-            self.get_observations()
-            self.calculate_metrics()
-            self.get_extras()
+            self.refresh_base_tensors()     # ??? # from factory_schema_class_base.py-file?
+            self.refresh_env_tensors()      # from env .py-file 
+            self._refresh_task_tensors()    # from current .py-file
+            self.get_observations()         # from current .py-file
+            self.calculate_metrics()        # from current .py-file
+            self.get_extras()               # ???
 
         return self.obs_buf, self.rew_buf, self.reset_buf, self.extras
 

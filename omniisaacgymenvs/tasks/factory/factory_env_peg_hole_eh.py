@@ -376,6 +376,11 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
 
         # Peg tensors
         self.peg_pos, self.peg_quat = self.pegs.get_world_poses(clone=False)            # positions in world frame of the prims with shape (M,3), quaternion orientations in world frame of the prims (scalar-first (w,x,y,z), shape (M,4))
+        ''' get world_poses(indices, clone)
+        indices: size (M,) Where M <= size of the encapsulated prims in the view. Defaults to None (i.e: all prims in the view).
+        here: M=num_envs?
+        clone (bool, optional) – True to return a clone of the internal buffer. Otherwise False. Defaults to True.
+        '''
         self.peg_pos -= self.env_pos                                                    # A-=B is equal to A=A-B; peg'position relative to env position. env position is absolute to world
 
         ### TODO: WHAT is a com pos --> Center of mass position --> only needed in screw task?
