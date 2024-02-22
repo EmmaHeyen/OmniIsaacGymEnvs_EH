@@ -9,7 +9,7 @@ peg_hole_1:
         # height: 0.0032  # height of nut -- needed?
         # flat_length: 0.00404145  # length of flat surface -- needed?
     hole: # width, head_height etc. needed? Wenn ja, dann grundsätzlich andere variablen als für bolt nehmen!!
-        usd_path_windows: 'C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\Repo\learning_robot\peg_hole\hole\hole.usd'
+        usd_path_windows: 'C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\Repo\learning_robot\peg_hole\hole\hole_norootjoint.usd'
         usd_path_linux: '/home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.0-hotfix.1/standalone_examples/data/PegHole_eh_stl_converted/Hole_eh_stl.usd'
         height: 0.05 # Höhe (in m) --> Einheit richtig?
         width: 0.1 # Breite (in m) (quadratische Grundfläche) --> Einheit richtig?

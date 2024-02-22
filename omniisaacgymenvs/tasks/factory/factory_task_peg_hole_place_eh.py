@@ -221,15 +221,15 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         self.dof_pos[env_ids] = torch.cat(
             (
                 torch.tensor(
-                    self.cfg_task.randomize.franka_arm_initial_dof_pos,
+                    self.cfg_task.randomize.franka_arm_initial_dof_pos, # franka_arm_initial_dof_pos: [0.00871, -0.10368, -0.00794, -1.49139, -0.00083,  1.38774,  0.7861]
                     device=self.device,
                 ).repeat((len(env_ids), 1)),
                 # (self.peg_widths * 0.5)
-                (self.peg_widths * 5)
+                (self.peg_widths * 0.5)                                 # gripper pos?
                 # (self.nut_widths_max * 0.5)
                 * 1.1,  # buffer on gripper DOF pos to prevent initial contact
                 # (self.peg_widths * 0.5) * 1.1,
-                (self.peg_widths * 0.5) * 1.1
+                (self.peg_widths * 0.5) * 1.1                           # gripper pos?
                 # (self.nut_widths_max * 0.5) * 1.1,
             ),  # buffer on gripper DOF pos to prevent initial contact
             dim=-1,
@@ -298,7 +298,7 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         )
         print("checkpoint2 ", env_ids)
         print("self.peg_pos[env_ids] + self.env_pos[env_ids]=",self.peg_pos[env_ids] + self.env_pos[env_ids])
-        # Randomize root state of bolt
+        # Randomize root state of hole
         hole_noise_xy = 2 * (
             torch.rand((self.num_envs, 2), dtype=torch.float32, device=self.device)
             - 0.5
