@@ -33,10 +33,6 @@ Inherits base class and abstract environment class. Inherited by nut-bolt task c
 Configuration defined in FactoryEnvNutBolt.yaml. Asset info defined in factory_asset_info_nut_bolt.yaml.
 """
 
-# """
-# For Linux: "alias PYTHON_PATH=~/.local/share/ov/pkg/isaac_sim-*/python.sh"
-# For Windows: "doskey PYTHON_PATH=C:\Users\emmah\AppData\Local\ov\pkg\isaac_sim-2023.1.1\python.bat $*"
-# """
 
 
 
@@ -49,7 +45,7 @@ from omni.isaac.core.prims import RigidPrimView, XFormPrim
 from omni.isaac.core.utils.nucleus import get_assets_root_path
 from omni.isaac.core.utils.stage import add_reference_to_stage
 from omniisaacgymenvs.tasks.base.rl_task import RLTask
-from omni.physx.scripts import physicsUtils, utils
+from omni.physx.scripts import physicsUtils, utils, deformableUtils
 
 from omniisaacgymenvs.robots.articulations.views.factory_franka_view import (
     FactoryFrankaView,
@@ -66,6 +62,7 @@ ops="windows" # (choose if "windows" or "linux")
 class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
     def __init__(self, name, sim_config, env) -> None:
         """Initialize base superclass. Initialize instance variables."""
+        # print("init")
 
         super().__init__(name, sim_config, env)
 
@@ -74,6 +71,7 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
 
 ### CHECK HERE
     def _get_env_yaml_params(self):
+        # print("_get_env_yaml_params")
         """Initialize instance variables from YAML files."""
 
         cs = hydra.core.config_store.ConfigStore.instance()
@@ -95,6 +93,7 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
 
 
     def update_config(self, sim_config):
+        # print("update_config")
         self._sim_config = sim_config
         self._cfg = sim_config.config
         self._task_cfg = sim_config.task_config
@@ -108,28 +107,44 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
 
     def set_up_scene(self, scene) -> None:
         """Import assets. Add to scene."""
+        # print("set_up_scene")
 
         # Increase buffer size to prevent overflow for Place and Screw tasks
+        # print(" get physx context")
         physxSceneAPI = self._env._world.get_physics_context()._physx_scene_api
         physxSceneAPI.CreateGpuCollisionStackSizeAttr().Set(256 * 1024 * 1024)
-
+        # print("import franka assets")
         self.import_franka_assets(add_to_stage=True) # defined in factory_base --> probably fine as is
         self.create_peg_hole_material()
+        # print("RLTask set up scene")
         RLTask.set_up_scene(self, scene, replicate_physics=False)
+        # print("import assets")
         self._import_env_assets(add_to_stage=True)
 
+        # self.frankas = FactoryFrankaView(
+        #     prim_paths_expr="/World/envs/.*/franka", name="frankas_view"
+        # )
+        # self.pegs = RigidPrimView(
+        #     prim_paths_expr="/World/envs/.*/peg/peg.*",
+        #     name="pegs_view",
+        #     track_contact_forces=True,
+        # )
+        # self.holes = RigidPrimView(
+        #     prim_paths_expr="/World/envs/.*/hole/hole.*",
+        #     name="holes_view",
+        #     track_contact_forces=True,
+        # )
+        # print("FactoryFrankaView")
         self.frankas = FactoryFrankaView(
             prim_paths_expr="/World/envs/.*/franka", name="frankas_view"
         )
+        # print("RigidPrimView")
         self.pegs = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/peg/peg.*",
-            name="pegs_view",
-            track_contact_forces=True,
+            prim_paths_expr="/World/envs/.*/peg/peg.*", name="pegs_view", track_contact_forces=True,
         )
+        # print("RigidPrimView2")#
         self.holes = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/hole/hole.*",
-            name="holes_view",
-            track_contact_forces=True,
+            prim_paths_expr="/World/envs/.*/hole/hole.*", name="holes_view", track_contact_forces=True,
         )
 
         scene.add(self.pegs)
@@ -140,73 +155,133 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
         scene.add(self.frankas._rfingers)
         scene.add(self.frankas._fingertip_centered)
 
+
+        # # print("add pegs")
+        # scene.add(self.pegs)
+        # # print("add holes")
+        # scene.add(self.holes)
+        # # print("add frankas")
+        # scene.add(self.frankas)
+        # # print("add _hands")#
+        # scene.add(self.frankas._hands)
+        # print("add _lfingers")
+        # scene.add(self.frankas._lfingers)
+        # print("add _rfingers")
+        # scene.add(self.frankas._rfingers)
+        # print("add _fingertip_centered")
+        # scene.add(self.frankas._fingertip_centered)
+        # print("done setting up scene")
+
         return
 
     def initialize_views(self, scene) -> None:
         """Initialize views for extension workflow."""
+        # print("initialize_views")
 
         super().initialize_views(scene)
 
         self.import_franka_assets(add_to_stage=False)
         self._import_env_assets(add_to_stage=False)
 
+
+        # print("remove frankas view ")
         if scene.object_exists("frankas_view"):
             scene.remove_object("frankas_view", registry_only=True)
+        # print("remove  pegs view ")
         if scene.object_exists("pegs_view"):
             scene.remove_object("pegs_view", registry_only=True)
+        # print("remove holes view ")
         if scene.object_exists("holes_view"):
             scene.remove_object("holes_view", registry_only=True)
+        # print("remove hands view ")#
         if scene.object_exists("hands_view"):
             scene.remove_object("hands_view", registry_only=True)
+        # print("remove lfingers_view ")
         if scene.object_exists("lfingers_view"):
             scene.remove_object("lfingers_view", registry_only=True)
+        # print("remove rfingers_view ")
         if scene.object_exists("rfingers_view"):
             scene.remove_object("rfingers_view", registry_only=True)
+        # print("remove fingertips_view ")
         if scene.object_exists("fingertips_view"):
             scene.remove_object("fingertips_view", registry_only=True)
-
+        # print("FactoryFrankaView")
         self.frankas = FactoryFrankaView(
             prim_paths_expr="/World/envs/.*/franka", name="frankas_view"
         )
+        print("RigidPrimView")
         self.pegs = RigidPrimView(
             prim_paths_expr="/World/envs/.*/peg/peg.*", name="pegs_view"
         )
+        print("RigidPrimView2")
         self.holes = RigidPrimView(
             prim_paths_expr="/World/envs/.*/hole/hole.*", name="holes_view"
         )
-
+        # print("add pegs")
         scene.add(self.pegs)
+        # print("add holes")
         scene.add(self.holes)
+        # print("add frankas")
         scene.add(self.frankas)
+        # print("add _hands")
         scene.add(self.frankas._hands)
+        # print("add _lfingers")
         scene.add(self.frankas._lfingers)
+        # print("add _rfingers")##
         scene.add(self.frankas._rfingers)
+        # print("add _fingertip_centered")
         scene.add(self.frankas._fingertip_centered)
 
     def create_peg_hole_material(self):
         """Define peg and hole material."""
+        # print("create_peg_hole_material")
 
-        self.PegHolePhysicsMaterialPath = "/World/Physics_Materials/PegHoleMaterial"
+        # self.PegHolePhysicsMaterialPath = "/World/Physics_Materials/PegHoleMaterial"
+        self.PegPhysicsMaterialPath = "/World/Physics_Materials/PegMaterial"
+        self.PegPhysicsMaterialPath_deformable = "/World/Physics_Materials/PegMaterial_deform"
+        self.HolePhysicsMaterialPath = "/World/Physics_Materials/HoleMaterial"
 
         utils.addRigidBodyMaterial(
             self._stage,
-            self.PegHolePhysicsMaterialPath,
+            self.HolePhysicsMaterialPath,
             density=self.cfg_env.env.peg_hole_density,                  # from config file (FactoryEnvPegHole_eh.yaml)
-            staticFriction=self.cfg_env.env.peg_hole_friction,          # from config file (FactoryEnvPegHole_eh.yaml)
-            dynamicFriction=self.cfg_env.env.peg_hole_friction,         # from config file (FactoryEnvPegHole_eh.yaml)
+            staticFriction=self.cfg_env.env.peg_hole_friction,         # from config file (FactoryEnvPegHole_eh.yaml)
+            dynamicFriction=self.cfg_env.env.peg_hole_friction,       # from config file (FactoryEnvPegHole_eh.yaml)
             restitution=0.0,
+        )
+        # utils.addRigidBodyMaterial(
+        #     self._stage,
+        #     self.PegPhysicsMaterialPath,
+        #     density=self.cfg_env.env.peg_hole_density,                  # from config file (FactoryEnvPegHole_eh.yaml)
+        #     # staticFriction=peg_hole_friction,  
+        #     staticFriction=self.cfg_env.env.peg_hole_friction,         # from config file (FactoryEnvPegHole_eh.yaml)
+        #     # dynamicFriction=peg_hole_friction,   
+        #     dynamicFriction=self.cfg_env.env.peg_hole_friction,       # from config file (FactoryEnvPegHole_eh.yaml)
+        #     restitution=0.0,
+        # )
+
+        deformableUtils.add_deformable_body_material( # test 25.03.2024
+            self._stage,
+            self.PegPhysicsMaterialPath_deformable,
+            damping_scale=None,
+            density=None,
+            dynamic_friction=None,
+            elasticity_damping=None,
+            poissons_ratio=0.4,
+            youngs_modulus=240000,
         )
 
     def _import_env_assets(self, add_to_stage=True):
         """Set peg and hole asset options. Import assets."""
-
+        # print("_import_env_assets")
+        print("1")
         assets_root_path = get_assets_root_path()
         if ops=="linux":
             usd_path="usd_path_linux"
         if ops=="windows":
             usd_path="usd_path_windows"   
 
-        
+        print("2")
         self.peg_heights = []
         self.peg_widths = []
         self.hole_widths = []
@@ -215,14 +290,14 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
         # self.bolt_shank_lengths = []
         # self.thread_pitches = []
 
-        # assets_root_path = get_assets_root_path()
-
+        
+        print("3")
         for i in range(0, self._num_envs):                                              # für jede einzelne env
             j = np.random.randint(0, len(self.cfg_env.env.desired_subassemblies))       # desired subassemblies aus config datei von env
             subassembly = self.cfg_env.env.desired_subassemblies[j]                     # z.B. desired_subassembly = ['peg_hole_1', 'peg_hole_1']. Aktuell nur diese desired_subassembly möglich. 
             components = list(self.asset_info_peg_hole[subassembly])                    # werden hier zufällig verschiedene Varianten für jede einzelne env ausgewählt? (in diesem Fall alle gleich da beide Elemente in desired_subassemblies identisch sind?) 
             # print("components_list: ", components)
-
+            # print("4:,",i)
             peg_translation = torch.tensor(                                             # passt das so??
                 [
                     0.0,
@@ -233,7 +308,7 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
             )
             peg_orientation = torch.tensor([1.0, 0.0, 0.0, 0.0], device=self._device)
 
-
+            # print("5:,",i)
 
             # ANNAHME: Wir nehmen nur eine Variante von subassemblies, daher brauchen wir die heights etc nicht? 
             # Und: heights etc. bereits durch cad-datei vorgegeben?
@@ -246,20 +321,21 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
             self.peg_widths.append(peg_width)
 
             peg_file = self.asset_info_peg_hole[subassembly][components[0]][usd_path] # aus factory_asset_info_nut_bolt datei; müsste auch über asset path funktionieren
-
+            # print("peg_file: ",peg_file)
+            # print("5:,",i)
             if add_to_stage:                                                            # immer TRUE?? (s.oben in def _import_env_assets..)
                 add_reference_to_stage(peg_file, f"/World/envs/env_{i}" + "/peg")
                 # peg_prim=add_reference_to_stage(peg_file, f"/World/envs/env_{i}" + "/peg")
-                
+                # print("6:,",i)
                 XFormPrim(
                     prim_path=f"/World/envs/env_{i}" + "/peg",
                     translation=peg_translation,
                     orientation=peg_orientation,
                 )
                 # UsdPhysics.CollisionAPI.Apply(peg_prim)
-
+                # print("6:,",i)
                 self._stage.GetPrimAtPath(
-                    f"/World/envs/env_{i}" + f"/peg/{components[0]}/collisions" # does not work so far, because i have no usd file with that node --> update 19.01.: works now but not for hole yet
+                    f"/World/envs/env_{i}" + f"/peg/{components[0]}/collisions" 
                 ).SetInstanceable(
                     False
                 )  # This is required to be able to edit physics material
@@ -269,9 +345,10 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
                         f"/World/envs/env_{i}"
                         + f"/peg/{components[0]}/collisions/mesh_01"
                     ),
-                    self.PegHolePhysicsMaterialPath,
+                    # self.PegHolePhysicsMaterialPath,
+                    self.PegPhysicsMaterialPath_deformable, # test 25.03.2024 deformable prim
                 )
-
+                # print("7:,",i)
                 ##### TODO: Check out task config file -->does task config file only have to have the same name as the task?
                 # applies articulation settings from the task configuration yaml file
                 self._sim_config.apply_articulation_settings(
@@ -279,7 +356,7 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
                     self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/peg"),
                     self._sim_config.parse_actor_config("peg"),
                 )
-
+            # print("8:,",i)
             hole_translation = torch.tensor(
                 [0.0, 0.0, self.cfg_base.env.table_height], device=self._device                             # from config file FactoryBase.yaml
             )
@@ -300,19 +377,19 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
             # self.bolt_head_heights.append(bolt_head_height)
             # self.bolt_shank_lengths.append(bolt_shank_length) 
             hole_file = self.asset_info_peg_hole[subassembly][components[1]][usd_path]
-
+            # print("9:,",i)
             if add_to_stage:
                 add_reference_to_stage(hole_file, f"/World/envs/env_{i}" + "/hole")
                 # hole_prim=add_reference_to_stage(hole_file, f"/World/envs/env_{i}" + "/hole")
 
                 # UsdPhysics.CollisionAPI.Apply(hole_prim)
-
+                # print("10: ",i)
                 XFormPrim(
                     prim_path=f"/World/envs/env_{i}" + "/hole",
                     translation=hole_translation,
                     orientation=hole_orientation,
                 )
-
+                # print("11: ",i)
                 self._stage.GetPrimAtPath(
                     f"/World/envs/env_{i}" + f"/hole/{components[1]}/collisions"
                 ).SetInstanceable(
@@ -324,9 +401,10 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
                         f"/World/envs/env_{i}"
                         + f"/hole/{components[1]}/collisions/mesh_01"
                     ),
-                    self.PegHolePhysicsMaterialPath,
+                    # self.PegHolePhysicsMaterialPath,
+                    self.HolePhysicsMaterialPath,
                 )
-
+                # print("12: ",i)
                 # applies articulation settings from the task configuration yaml file
                 self._sim_config.apply_articulation_settings(
                     "hole",
@@ -339,7 +417,7 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
 
 
         ####TODO: How do i transform this to my problem???
-                
+        # print("13: ")        
         # For computing body COM pos
         self.peg_heights = torch.tensor(
             self.peg_heights, device=self._device
@@ -352,8 +430,15 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
             self.hole_drill_hole_heights, device=self._device
         ).unsqueeze(-1)
 
+        self.list_of_zeros = [0 for _ in range(self.num_envs)]
+        
+        self.base_pos_zeros = torch.tensor(
+            self.list_of_zeros, device=self._device
+        ).unsqueeze(-1)
 
 
+
+        # print("14: ")
 
         # For setting initial state - 
         self.peg_widths = torch.tensor( # --> used when resetting gripper  
@@ -370,9 +455,11 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
         # self.thread_pitches = torch.tensor(
         #     self.thread_pitches, device=self._device
         # ).unsqueeze(-1)
+        # print("15")
 
     def refresh_env_tensors(self):
         """Refresh tensors."""
+        # print("refresh_env_tensors")
 
         # Peg tensors
         self.peg_pos, self.peg_quat = self.pegs.get_world_poses(clone=False)            # positions in world frame of the prims with shape (M,3), quaternion orientations in world frame of the prims (scalar-first (w,x,y,z), shape (M,4))
@@ -389,7 +476,7 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
             quat=self.peg_quat,         # "measured" via get_world_poses
 
 
-            ### TODO: what to put here (offset) --> Schwerpunkt wenn fertig assembled??
+            ### TODO: what to put here (offset) --> Schwerpunkt wenn fertig assembled?? TODO
             offset=self.hole_drill_hole_heights + self.peg_heights * 0.5,
             device=self.device,
         )

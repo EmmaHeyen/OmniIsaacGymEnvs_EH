@@ -85,7 +85,7 @@ env:
   numActions: 12
 
   num_gripper_move_sim_steps: 40  # number of timesteps to reserve for moving gripper before first step of episode
-  num_gripper_close_sim_steps: 40  # number of timesteps to reserve for closing gripper onto nut during each reset
+  num_gripper_close_sim_steps: 1000  # number of timesteps to reserve for closing gripper onto nut during each reset
 
 randomize:
   franka_arm_initial_dof_pos: [0.00871, -0.10368, -0.00794, -1.49139, -0.00083,  1.38774,  0.7861]

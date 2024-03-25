@@ -56,14 +56,14 @@ from omniisaacgymenvs.tasks.factory.factory_schema_config_task import (
 class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
     def __init__(self, name, sim_config, env, offset=None) -> None:
         """Initialize environment superclass. Initialize instance variables."""
-
+        # print("init")
         super().__init__(name, sim_config, env)
 
         self._get_task_yaml_params()
 
     def _get_task_yaml_params(self) -> None:
         """Initialize instance variables from YAML files."""
-
+        # print("_get_task_yaml_params")
         cs = hydra.core.config_store.ConfigStore.instance()
         cs.store(name="factory_schema_config_task", node=FactorySchemaConfigTask)
 
@@ -86,7 +86,7 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
 
     def post_reset(self) -> None:
         """Reset the world. Called only once, before simulation begins."""
-
+        # print("post_reset")
         if self.cfg_task.sim.disable_gravity:
             self.disable_gravity()
 
@@ -105,11 +105,17 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
 
     def _acquire_task_tensors(self) -> None:
         """Acquire tensors."""
-
+        # print("_acquire_task_tensors")
         # Nut-bolt tensors
         self.nut_base_pos_local = self.bolt_head_heights * torch.tensor(
             [0.0, 0.0, 1.0], device=self.device
         ).repeat((self.num_envs, 1))
+
+
+        # self.nut_base_pos_local = self.nut_heights * torch.tensor( # try 2
+        #     [0.0, 0.0, 1.0], device=self.device
+        # ).repeat((self.num_envs, 1))
+        
         bolt_heights = self.bolt_head_heights + self.bolt_shank_lengths
         self.bolt_tip_pos_local = bolt_heights * torch.tensor(
             [0.0, 0.0, 1.0], device=self.device
@@ -139,7 +145,7 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
 
     def pre_physics_step(self, actions) -> None:
         """Reset environments. Apply actions from policy. Simulation step called after this method."""
-
+        # print("pre_physics_step")
         if not self.world.is_playing():
             return
 
@@ -177,7 +183,7 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
 
     def reset_idx(self, env_ids, randomize_gripper_pose) -> None:
         """Reset specified environments."""
-
+        print("reset_idx")
         self._reset_franka(env_ids)
         self._reset_object(env_ids)
 
@@ -215,7 +221,7 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
 
     def _reset_franka(self, env_ids) -> None:
         """Reset DOF states and DOF targets of Franka."""
-
+        # print("reset_franka")
         self.dof_pos[env_ids] = torch.cat(
             (
                 torch.tensor(
@@ -237,13 +243,15 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
 
     def _reset_object(self, env_ids) -> None:
         """Reset root states of nut and bolt."""
-
+        # print("reset_object")
         # Randomize root state of nut within gripper
         self.nut_pos[env_ids, 0] = 0.0
         self.nut_pos[env_ids, 1] = 0.0
         fingertip_midpoint_pos_reset = 0.58781  # self.fingertip_midpoint_pos at reset
         nut_base_pos_local = self.bolt_head_heights.squeeze(-1)
-        self.nut_pos[env_ids, 2] = fingertip_midpoint_pos_reset - nut_base_pos_local
+        # nut_base_pos_local = self.nut_heights.squeeze(-1) # try 2. Assumption: should not make such a big difference because of 
+        
+        self.nut_pos[env_ids, 2] = fingertip_midpoint_pos_reset #- nut_base_pos_local # try 3
         nut_noise_pos_in_gripper = 2 * (
             torch.rand((self.num_envs, 3), dtype=torch.float32, device=self.device)
             - 0.5
@@ -316,7 +324,7 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
 
     def _reset_buffers(self, env_ids) -> None:
         """Reset buffers."""
-
+        # print("_reset_buffers")
         self.reset_buf[env_ids] = 0
         self.progress_buf[env_ids] = 0
 
@@ -324,7 +332,7 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
         self, actions, ctrl_target_gripper_dof_pos, do_scale
     ) -> None:
         """Apply actions from policy as position/rotation/force/torque targets."""
-
+        # print("_apply_actions_as_ctrl_targets")
         # Interpret actions as target pos displacements and set pos target
         pos_actions = actions[:, 0:3]
         if do_scale:
@@ -388,7 +396,7 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
         self,
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         """Step buffers. Refresh tensors. Compute observations and reward. Reset environments."""
-
+        # print("post_physics_step")
         self.progress_buf[:] += 1
 
         if self.world.is_playing():
@@ -403,8 +411,16 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
 
     def _refresh_task_tensors(self) -> None:
         """Refresh tensors."""
-
+        # print("_refresh_task_tensors")
         # Compute pos of keypoints on gripper, nut, and bolt in world frame
+        '''
+        def tf_combine(q1, t1, q2, t2):
+        return quat_mul(q1, q2), quat_apply(q1, t2) + t1
+
+        -->combines two transformations, first applying the rotation of the second transformation to the translation of the second transformation ...
+        ... and then adding it to the translation of the first transformation. ...
+        ...The combined rotation is obtained by multiplying the quaternions of the two transformations.
+        '''
         for idx, keypoint_offset in enumerate(self.keypoint_offsets):
             self.keypoints_nut[:, idx] = tf_combine(
                 self.nut_quat,
@@ -421,7 +437,7 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
 
     def get_observations(self) -> dict:
         """Compute observations."""
-
+        # print("get_observations")
         # Shallow copies of tensors
         obs_tensors = [
             self.fingertip_midpoint_pos,
@@ -447,7 +463,7 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
 
     def calculate_metrics(self) -> None:
         """Update reset and reward buffers."""
-
+        # print("calculate_metrics")
         self._update_reset_buf()
         self._update_rew_buf()
 
@@ -463,7 +479,7 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
 
     def _update_rew_buf(self) -> None:
         """Compute reward at current timestep."""
-
+        # print("_update_rew_buf")
         keypoint_reward = -self._get_keypoint_dist()
         action_penalty = (
             torch.norm(self.actions, p=2, dim=-1)
@@ -489,16 +505,15 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
 
         keypoint_offsets = torch.zeros((num_keypoints, 3), device=self.device)
         keypoint_offsets[:, -1] = (
-            torch.linspace(0.0, 1.0, num_keypoints, device=self.device) - 0.5
+            torch.linspace(0.0, 1.0, num_keypoints, device=self.device) - 0.5 
         )
-
         return keypoint_offsets
 
     def _get_keypoint_dist(self) -> torch.Tensor:
         """Get keypoint distance between nut and bolt."""
 
         keypoint_dist = torch.sum(
-            torch.norm(self.keypoints_bolt - self.keypoints_nut, p=2, dim=-1), dim=-1
+            torch.norm(self.keypoints_bolt - self.keypoints_nut, p=2, dim=-1), dim=-1 # Euclidian norm
         )
 
         return keypoint_dist
@@ -513,7 +528,7 @@ class FactoryTaskNutBoltPlace(FactoryEnvNutBolt, FactoryABCTask):
         self.ctrl_target_fingertip_midpoint_pos = torch.tensor(
             [0.0, 0.0, self.cfg_base.env.table_height], device=self.device
         ) + torch.tensor(
-            self.cfg_task.randomize.fingertip_midpoint_pos_initial, device=self.device
+            self.cfg_task.randomize.fingertip_midpoint_pos_initial, device=self.device #fingertip_midpoint_pos_initial: [0.0, 0.0, 0.2]  # initial position of midpoint between fingertips above table
         )
         self.ctrl_target_fingertip_midpoint_pos = (
             self.ctrl_target_fingertip_midpoint_pos.unsqueeze(0).repeat(

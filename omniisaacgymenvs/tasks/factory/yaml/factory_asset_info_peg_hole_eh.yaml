@@ -1,6 +1,8 @@
 peg_hole_1:
     peg: # width, height etc. needed? Wenn ja, dann grundsätzlich andere variablen als für nut nehmen!!
-        usd_path_windows: 'C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\Repo\learning_robot\peg_hole\peg\peg.usd'
+        # absc usd_path_windows: 'C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\Repo\learning_robot\peg_hole\peg\peg_0222.usd'
+        usd_path_windows: 'C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\Repo\learning_robot\peg_hole\peg\peg_test_0229.usd'
+        # usd_path_windows: 'C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\Repo\learning_robot\peg_hole\peg\peg_0222.usd'
         usd_path_linux: '/home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.0-hotfix.1/standalone_examples/data/PegHole_eh_stl_converted/Peg_eh_stl.usd'
         width: 0.03 # durchmesser (in m) --> Einheit richtig?
         height: 0.1 # Höhe (in m) --> Einheit richtig? 
@@ -9,11 +11,11 @@ peg_hole_1:
         # height: 0.0032  # height of nut -- needed?
         # flat_length: 0.00404145  # length of flat surface -- needed?
     hole: # width, head_height etc. needed? Wenn ja, dann grundsätzlich andere variablen als für bolt nehmen!!
-        usd_path_windows: 'C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\Repo\learning_robot\peg_hole\hole\hole_norootjoint.usd'
+        usd_path_windows: 'C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\Repo\learning_robot\peg_hole\hole\hole_0222.usd'
         usd_path_linux: '/home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.0-hotfix.1/standalone_examples/data/PegHole_eh_stl_converted/Hole_eh_stl.usd'
         height: 0.05 # Höhe (in m) --> Einheit richtig?
         width: 0.1 # Breite (in m) (quadratische Grundfläche) --> Einheit richtig?
-        drill_hole_height: 0.03 # Lochtiefe (in m) --> Einheit richtig?
+        drill_hole_height: 0.02 # Bohrungstiefe (unteres Ende der Bohrung ist so hoch) (in m) --> Einheit richtig?
         # width: 0.004  # major diameter of bolt -- needed?
         # head_height: 0.004  # height of bolt head -- needed?
         # shank_length: 0.016  # length of bolt shank -- needed?

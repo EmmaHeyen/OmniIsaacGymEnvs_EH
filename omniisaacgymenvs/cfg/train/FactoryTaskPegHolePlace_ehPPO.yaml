@@ -35,7 +35,7 @@ params:
 
   config:
     name: ${resolve_default:FactoryTaskPegHolePlace_eh,${....experiment}}
-    full_experiment_name: ${.name}
+    full_experiment_name: FactoryTaskPegHolePlace_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise_3successbonus_0.05closeerrorthresh_changedkeypointholetotopminus0.005 #${.name}
     device: ${....rl_device}
     device_name: ${....rl_device}
     env_name: rlgpu
@@ -56,7 +56,7 @@ params:
     schedule_type: standard
     kl_threshold: 0.016
     score_to_win: 20000
-    max_epochs: ${resolve_default:400,${....max_iterations}}
+    max_epochs: 400 #${resolve_default:400,${....max_iterations}} # default:400
     save_best_after: 50
     save_frequency: 100
     print_stats: True

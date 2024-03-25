@@ -29,6 +29,7 @@
 import traceback
 try:
     from .extension import RLExtension, get_instance
+    print("EH")
     # import omniisaacgymenvs.tests
 except Exception as e:
     pass

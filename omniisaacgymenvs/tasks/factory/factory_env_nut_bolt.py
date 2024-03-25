@@ -65,7 +65,7 @@ class FactoryEnvNutBolt(FactoryBase, FactoryABCEnv):
 
     def _get_env_yaml_params(self):
         """Initialize instance variables from YAML files."""
-
+        # print("_get_env_yaml_params")
         cs = hydra.core.config_store.ConfigStore.instance()
         cs.store(name="factory_schema_config_env", node=FactorySchemaConfigEnv)
 
@@ -84,6 +84,7 @@ class FactoryEnvNutBolt(FactoryBase, FactoryABCEnv):
         ]  # strip superfluous nesting
 
     def update_config(self, sim_config):
+        # print("update_config")
         self._sim_config = sim_config
         self._cfg = sim_config.config
         self._task_cfg = sim_config.task_config
@@ -97,7 +98,7 @@ class FactoryEnvNutBolt(FactoryBase, FactoryABCEnv):
 
     def set_up_scene(self, scene) -> None:
         """Import assets. Add to scene."""
-
+        # print("set_up_scene")
         # Increase buffer size to prevent overflow for Place and Screw tasks
         physxSceneAPI = self.world.get_physics_context()._physx_scene_api
         physxSceneAPI.CreateGpuCollisionStackSizeAttr().Set(256 * 1024 * 1024)
@@ -133,7 +134,7 @@ class FactoryEnvNutBolt(FactoryBase, FactoryABCEnv):
 
     def initialize_views(self, scene) -> None:
         """Initialize views for extension workflow."""
-
+        # print("initialize_views")
         super().initialize_views(scene)
 
         self.import_franka_assets(add_to_stage=False)
@@ -174,7 +175,7 @@ class FactoryEnvNutBolt(FactoryBase, FactoryABCEnv):
 
     def create_nut_bolt_material(self):
         """Define nut and bolt material."""
-
+        # print("create_nut_bolt_material")
         self.nutboltPhysicsMaterialPath = "/World/Physics_Materials/NutBoltMaterial"
 
         utils.addRigidBodyMaterial(
@@ -188,7 +189,7 @@ class FactoryEnvNutBolt(FactoryBase, FactoryABCEnv):
 
     def _import_env_assets(self, add_to_stage=True):
         """Set nut and bolt asset options. Import assets."""
-
+        # print("_import_env_assets")
         self.nut_heights = []
         self.nut_widths_max = []
         self.bolt_widths = []
@@ -333,7 +334,7 @@ class FactoryEnvNutBolt(FactoryBase, FactoryABCEnv):
 
     def refresh_env_tensors(self):
         """Refresh tensors."""
-
+        # print("refresh_env_tensors")
         # Nut tensors
         self.nut_pos, self.nut_quat = self.nuts.get_world_poses(clone=False)
         self.nut_pos -= self.env_pos
