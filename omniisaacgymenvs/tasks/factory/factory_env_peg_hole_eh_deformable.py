@@ -488,12 +488,28 @@ class FactoryEnvPegHole_eh_deformable(FactoryBase, FactoryABCEnv):
         # print("refresh_env_tensors")
 
         # Peg tensors
-        ''' get world_poses(indices, clone)
-        indices: size (M,) Where M <= size of the encapsulated prims in the view. Defaults to None (i.e: all prims in the view).
-        here: M=num_envs?
-        clone (bool, optional) – True to return a clone of the internal buffer. Otherwise False. Defaults to True.
         '''
-        self.peg_pos = self.pegs.get_simulation_mesh_nodal_positions(clone=False) # keine ahnung was das macht
+        def get_simulation_mesh_nodal_positions(
+        self, indices: Optional[Union[np.ndarray, list, torch.Tensor]] = None, clone: bool = True
+    ) -> Union[np.ndarray, torch.Tensor]:
+        """Gets the nodal positions of the simulation mesh for the deformable bodies indicated by the indices.
+
+        Args:
+            indices (Optional[Union[np.ndarray, list, torch.Tensor]], optional): indices to specify which deformable prims to query. Shape (M,).
+                                                                                 Where M <= size of the encapsulated prims in the view.
+                                                                                 Defaults to None (i.e: all prims in the view).
+            clone (bool, optional): True to return a clone of the internal buffer. Otherwise False. Defaults to True.
+
+        Returns:
+            Union[Tuple[np.ndarray, np.ndarray], Tuple[torch.Tensor, torch.Tensor]]: position tensor with shape (M, max_simulation_mesh_vertices_per_body, 3)
+        """
+
+        def get_simulation_mesh_nodal_velocities(
+        self, indices: Optional[Union[np.ndarray, list, torch.Tensor]] = None, clone: bool = True
+    ) -> Union[np.ndarray, torch.Tensor]:
+        """Gets the vertex velocities for the deformable bodies indicated by the indices."""
+        '''
+        self.peg_pos = self.pegs.get_simulation_mesh_nodal_positions(clone=False) # position tensor with shape (M, max_simulation_mesh_vertices_per_body, 3) where M <= size of the encapsulated prims in the view.
         self.peg_velocities = self.pegs.get_simulation_mesh_nodal_velocities(clone=False) # keine ahnung was das macht
         print("shape peg_pos: ",self.peg_pos.shape) # ([128,176,3])
         print("shape peg_vel: ",self.peg_velocities.shape) # ([128,176,3])
