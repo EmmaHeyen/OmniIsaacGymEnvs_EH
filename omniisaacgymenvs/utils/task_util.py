@@ -51,6 +51,7 @@ def import_tasks():
     from omniisaacgymenvs.tasks.warp.humanoid import HumanoidLocomotionTask as HumanoidLocomotionTaskWarp
 
     from omniisaacgymenvs.tasks.factory.factory_task_peg_hole_place_eh import FactoryTaskPegHolePlace_eh
+    from omniisaacgymenvs.tasks.factory.factory_task_peg_hole_place_eh_deformable import FactoryTaskPegHolePlace_eh_deformable
 
     # Mappings from strings to environments
     task_map = {
@@ -74,6 +75,7 @@ def import_tasks():
         "ShadowHandOpenAI_FF": ShadowHandTask,
         "ShadowHandOpenAI_LSTM": ShadowHandTask,
         "FactoryTaskPegHolePlace_eh": FactoryTaskPegHolePlace_eh,
+        "FactoryTaskPegHolePlace_eh_deformable": FactoryTaskPegHolePlace_eh_deformable, 
     }
 
     task_map_warp = {

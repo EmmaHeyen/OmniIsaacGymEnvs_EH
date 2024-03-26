@@ -165,6 +165,10 @@ class FrankaDeformableTask(RLTask):
 
         tube_positions = self.deformableView.get_simulation_mesh_nodal_positions(clone=False)
         tube_velocities = self.deformableView.get_simulation_mesh_nodal_velocities(clone=False)
+        print("shape tube_positions: ",tube_positions.shape) # [(1024, 281, 3)]
+        print("shape tube_velocities: ",tube_velocities.shape) # # [(1024, 281, 3)]
+        print("shape env_pos: ", self._env_pos.shape) # # [(1024, 3)] n_envs=1024
+
 
         self.tube_front_positions = tube_positions[:, 200, :] - self._env_pos
         self.tube_front_velocities = tube_velocities[:, 200, :]

@@ -66,11 +66,10 @@ from omni.isaac.core.prims.soft.deformable_prim_view import DeformablePrimView
 
 ops="linux" # (choose if "windows" or "linux")
 
-class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
+class FactoryEnvPegHole_eh_deformable(FactoryBase, FactoryABCEnv):
     def __init__(self, name, sim_config, env) -> None:
         """Initialize base superclass. Initialize instance variables."""
         # print("init")
-
         super().__init__(name, sim_config, env)
 
         self._get_env_yaml_params()
@@ -85,12 +84,12 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
         cs.store(name="factory_schema_config_env", node=FactorySchemaConfigEnv)
 
         config_path = (
-            "task/FactoryEnvPegHole_eh.yaml"  # relative to Hydra search path (cfg dir)
+            "task/FactoryEnvPegHole_eh_deformable.yaml"  # relative to Hydra search path (cfg dir)
         )
         self.cfg_env = hydra.compose(config_name=config_path)
         self.cfg_env = self.cfg_env["task"]  # strip superfluous nesting
 
-        asset_info_path = "../tasks/factory/yaml/factory_asset_info_peg_hole_eh.yaml"
+        asset_info_path = "../tasks/factory/yaml/factory_asset_info_peg_hole_eh_deformable.yaml"
         self.asset_info_peg_hole=hydra.compose(config_name=asset_info_path)
         self.asset_info_peg_hole = self.asset_info_peg_hole[""][""][""]["tasks"][
             "factory"
@@ -145,48 +144,53 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
         self.frankas = FactoryFrankaView(
             prim_paths_expr="/World/envs/.*/franka", name="frankas_view"
         )
-        print("RigidPrimView")
-        self.pegs = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/peg/peg.*", name="pegs_view", track_contact_forces=True,
-        )
+        # print("RigidPrimView")
+        # self.pegs = RigidPrimView(
+        #     prim_paths_expr="/World/envs/.*/peg/peg.*", name="pegs_view", track_contact_forces=True,
+        # )
+        print("deformablePrimView_deformable_peg1") 
+        self.pegs = DeformablePrimView( 
+            prim_paths_expr="/World/envs/.*/peg/peg/collisions/mesh_01", name="pegs_view_deform") # muss hier noch mesh_01 hin?
+        print("deformablePrimView_deformable_peg2") 
 
 
 
-        # print("RigidPrimView2")#
+
+        print("RigidPrimView2")
         self.holes = RigidPrimView(
             prim_paths_expr="/World/envs/.*/hole/hole.*", name="holes_view", track_contact_forces=True,
         )
-        scene.add(self.pegs)
-        # scene.add(self.pegs)
-        scene.add(self.holes)
-        scene.add(self.frankas)
-        scene.add(self.frankas._hands)
-        scene.add(self.frankas._lfingers)
-        scene.add(self.frankas._rfingers)
-        scene.add(self.frankas._fingertip_centered)
 
-
-        # # print("add pegs")
         # scene.add(self.pegs)
-        # # print("add holes")
         # scene.add(self.holes)
-        # # print("add frankas")
         # scene.add(self.frankas)
-        # # print("add _hands")#
         # scene.add(self.frankas._hands)
-        # print("add _lfingers")
         # scene.add(self.frankas._lfingers)
-        # print("add _rfingers")
         # scene.add(self.frankas._rfingers)
-        # print("add _fingertip_centered")
         # scene.add(self.frankas._fingertip_centered)
-        # print("done setting up scene")
+
+
+        print("add pegs")
+        scene.add(self.pegs)
+        print("add holes")
+        scene.add(self.holes)
+        print("add frankas")
+        scene.add(self.frankas)
+        print("add _hands")#
+        scene.add(self.frankas._hands)
+        print("add _lfingers")
+        scene.add(self.frankas._lfingers)
+        print("add _rfingers")
+        scene.add(self.frankas._rfingers)
+        print("add _fingertip_centered")
+        scene.add(self.frankas._fingertip_centered)
+        print("done setting up scene")
 
         return
 
     def initialize_views(self, scene) -> None:
         """Initialize views for extension workflow."""
-        # print("initialize_views")
+        print("initialize_views")
 
         super().initialize_views(scene)
 
@@ -198,8 +202,9 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
         if scene.object_exists("frankas_view"):
             scene.remove_object("frankas_view", registry_only=True)
         # print("remove  pegs view ")
-        if scene.object_exists("pegs_view"):
-            scene.remove_object("pegs_view", registry_only=True)
+
+        if scene.object_exists("pegs_view_deform"): 
+            scene.remove_object("pegs_view_deform", registry_only=True)
         # print("remove holes view ")
         if scene.object_exists("holes_view"):
             scene.remove_object("holes_view", registry_only=True)
@@ -219,10 +224,17 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
         self.frankas = FactoryFrankaView(
             prim_paths_expr="/World/envs/.*/franka", name="frankas_view"
         )
-        print("RigidPrimView")
-        self.pegs = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/peg/peg.*", name="pegs_view"
+        # print("RigidPrimView")
+        # self.pegs = RigidPrimView(
+        #     prim_paths_expr="/World/envs/.*/peg/peg.*", name="pegs_view"
+        # )
+
+        print("deformablePrimView_deformable_peg3") # test 25.03.2024 deformable peg
+        self.pegs = DeformablePrimView(
+            prim_paths_expr="/World/envs/.*/peg/peg/collisions/mesh_01", name="pegs_view_deform" # muss hier noch mesh_01 hin?
         )
+        print("deformablePrimView_deformable_peg4") 
+
 
 
         print("RigidPrimView2")
@@ -250,7 +262,8 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
         # print("create_peg_hole_material")
 
         # self.PegHolePhysicsMaterialPath = "/World/Physics_Materials/PegHoleMaterial"
-        self.PegPhysicsMaterialPath = "/World/Physics_Materials/PegMaterial"
+        # self.PegPhysicsMaterialPath = "/World/Physics_Materials/PegMaterial"
+        self.PegPhysicsMaterialPath_deformable = "/World/Physics_Materials/PegMaterial_deform"
         self.HolePhysicsMaterialPath = "/World/Physics_Materials/HoleMaterial"
 
         utils.addRigidBodyMaterial(
@@ -261,17 +274,27 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
             dynamicFriction=self.cfg_env.env.peg_hole_friction,       # from config file (FactoryEnvPegHole_eh.yaml)
             restitution=0.0,
         )
-        utils.addRigidBodyMaterial(
+        # utils.addRigidBodyMaterial(
+        #     self._stage,
+        #     self.PegPhysicsMaterialPath,
+        #     density=self.cfg_env.env.peg_hole_density,                  # from config file (FactoryEnvPegHole_eh.yaml)
+        #     # staticFriction=peg_hole_friction,  
+        #     staticFriction=self.cfg_env.env.peg_hole_friction,         # from config file (FactoryEnvPegHole_eh.yaml)
+        #     # dynamicFriction=peg_hole_friction,   
+        #     dynamicFriction=self.cfg_env.env.peg_hole_friction,       # from config file (FactoryEnvPegHole_eh.yaml)
+        #     restitution=0.0,
+        # )
+        print("add deform material")
+        deformableUtils.add_deformable_body_material( # test 25.03.2024
             self._stage,
-            self.PegPhysicsMaterialPath,
-            density=self.cfg_env.env.peg_hole_density,                  # from config file (FactoryEnvPegHole_eh.yaml)
-            # staticFriction=peg_hole_friction,  
-            staticFriction=self.cfg_env.env.peg_hole_friction,         # from config file (FactoryEnvPegHole_eh.yaml)
-            # dynamicFriction=peg_hole_friction,   
-            dynamicFriction=self.cfg_env.env.peg_hole_friction,       # from config file (FactoryEnvPegHole_eh.yaml)
-            restitution=0.0,
+            self.PegPhysicsMaterialPath_deformable,
+            damping_scale=None,
+            density=None,
+            dynamic_friction=None,
+            elasticity_damping=None,
+            poissons_ratio=None,
+            youngs_modulus=None,
         )
-
 
     def _import_env_assets(self, add_to_stage=True):
         """Set peg and hole asset options. Import assets."""
@@ -323,7 +346,7 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
             self.peg_widths.append(peg_width)
 
             peg_file = self.asset_info_peg_hole[subassembly][components[0]][usd_path] # aus factory_asset_info_nut_bolt datei; müsste auch über asset path funktionieren
-            # print("peg_file: ",peg_file)
+            print("peg_file: ",peg_file)
             # print("5:,",i)
             if add_to_stage:                                                            # immer TRUE?? (s.oben in def _import_env_assets..)
                 add_reference_to_stage(peg_file, f"/World/envs/env_{i}" + "/peg")
@@ -337,10 +360,11 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
                 # UsdPhysics.CollisionAPI.Apply(peg_prim)
                 # print("6:,",i)
                 self._stage.GetPrimAtPath(
-                    f"/World/envs/env_{i}" + f"/peg/{components[0]}/collisions" 
+                    f"/World/envs/env_{i}" + f"/peg/{components[0]}/collisions/mesh_01" 
                 ).SetInstanceable(
                     False
                 )  # This is required to be able to edit physics material
+                print("add material to peg prim")
                 physicsUtils.add_physics_material_to_prim(
                     self._stage,
                     self._stage.GetPrimAtPath(
@@ -348,7 +372,7 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
                         + f"/peg/{components[0]}/collisions/mesh_01"
                     ),
                     # self.PegHolePhysicsMaterialPath,
-                    self.PegPhysicsMaterialPath, 
+                    self.PegPhysicsMaterialPath_deformable, # test 25.03.2024 deformable prim
                 )
                 # print("7:,",i)
                 ##### TODO: Check out task config file -->does task config file only have to have the same name as the task?
@@ -393,7 +417,7 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
                 )
                 # print("11: ",i)
                 self._stage.GetPrimAtPath(
-                    f"/World/envs/env_{i}" + f"/hole/{components[1]}/collisions"
+                    f"/World/envs/env_{i}" + f"/hole/{components[1]}/collisions/mesh_01"
                 ).SetInstanceable(
                     False
                 )  # This is required to be able to edit physics material
@@ -464,12 +488,18 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
         # print("refresh_env_tensors")
 
         # Peg tensors
-        self.peg_pos, self.peg_quat = self.pegs.get_world_poses(clone=False)            # positions in world frame of the prims with shape (M,3), quaternion orientations in world frame of the prims (scalar-first (w,x,y,z), shape (M,4))
         ''' get world_poses(indices, clone)
         indices: size (M,) Where M <= size of the encapsulated prims in the view. Defaults to None (i.e: all prims in the view).
         here: M=num_envs?
         clone (bool, optional) – True to return a clone of the internal buffer. Otherwise False. Defaults to True.
         '''
+        self.peg_pos = self.pegs.get_simulation_mesh_nodal_positions(clone=False) # keine ahnung was das macht
+        self.peg_velocities = self.pegs.get_simulation_mesh_nodal_velocities(clone=False) # keine ahnung was das macht
+        print("shape peg_pos: ",self.peg_pos.shape) # ([128,176,3])
+        print("shape peg_vel: ",self.peg_velocities.shape) # ([128,176,3])
+        print("shape env_pos: ", self.env_pos.shape) # ([128,3])
+
+
         self.peg_pos -= self.env_pos                                                    # A-=B is equal to A=A-B; peg'position relative to env position. env position is absolute to world
 
         ### TODO: WHAT is a com pos --> Center of mass position --> only needed in screw task?

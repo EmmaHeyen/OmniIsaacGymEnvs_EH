@@ -1,9 +1,9 @@
 peg_hole_1:
     peg: # width, height etc. needed? Wenn ja, dann grundsätzlich andere variablen als für nut nehmen!!
         # absc usd_path_windows: 'C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\Repo\learning_robot\peg_hole\peg\peg_0222.usd'
-        usd_path_windows: 'C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\Repo\learning_robot\peg_hole\peg\peg_test_0229.usd'
+        # usd_path_windows: 'C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\Repo\learning_robot\peg_hole\peg\peg_test_0229.usd'
         # usd_path_windows: 'C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\Repo\learning_robot\peg_hole\peg\peg_0222.usd'
-        usd_path_linux: '/home/mnn_eh/Documents/MA/CAD/peg_test_0229.usd'
+        usd_path_linux: '/home/mnn_eh/Documents/MA/CAD/peg_test_0229_deform.usd'
         width: 0.03 # durchmesser (in m) --> Einheit richtig?
         height: 0.1 # Höhe (in m) --> Einheit richtig? 
         # width_min: 0.007  # distance from flat surface to flat surface -- needed?

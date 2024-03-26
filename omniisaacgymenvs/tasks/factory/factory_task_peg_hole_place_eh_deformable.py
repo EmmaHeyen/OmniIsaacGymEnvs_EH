@@ -30,17 +30,26 @@
 
 # Inherits nut-bolt environment class and abstract task class (not enforced). Can be executed with
 
-# cd OmniIsaacGymEnvs_EH/omniisaacgymenvs
-# OR: cd OmniIsaacGymEnvs/omniisaacgymenvs
-# PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskPegHolePlace_eh
-# tensorboard: PYTHON_PATH -m tensorboard.main --logdir runs/FactoryTaskPegHolePlace_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise/summaries (run from cd OmniIsaacGymEnvs/omniisaacgymenvs)
-# running: PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskPegHolePlace_eh test=True checkpoint=runs/FactoryTaskPegHolePlace_eh_400epochs_0.1mass_0.3friction-both_0.3actionpenalty_withNoise/nn/FactoryTaskPegHolePlace_eh.pth  (ANPASSEN)
+# cd OmniIsaacGymEnvs/omniisaacgymenvs
+
+# PYTHON_PATH:
+# For Linux: alias PYTHON_PATH=~/.local/share/ov/pkg/isaac_sim-2023.1.1/python.sh
+# For Windows: doskey PYTHON_PATH=C:\Users\emmah\AppData\Local\ov\pkg\isaac_sim-2023.1.1\python.bat $* 
+
+# TRAINING:
+# PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskPegHolePlace_eh_deformable
+
+# tensorboard: 
+# PYTHON_PATH -m tensorboard.main --logdir runs/FactoryTaskPegHolePlace_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise/summaries (run from cd OmniIsaacGymEnvs/omniisaacgymenvs)
+ 
+# RUNNING CHECKPOINT:
+# PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskPegHolePlace_eh test=True checkpoint=runs/FactoryTaskPegHolePlace_eh_400epochs_0.1mass_0.3friction-both_0.3actionpenalty_withNoise/nn/FactoryTaskPegHolePlace_eh.pth  (ANPASSEN)
+
 # extension workflow:
 # windows: C:/Users/emmah/AppData/Local/ov/pkg/isaac_sim-2023.1.1/isaac-sim.gym.bat --ext-folder "C:\Users\emmah"
 # linux: /home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/isaac-sim.gym.sh --ext-folder /home/mnn_eh
 
-# # For Linux: alias PYTHON_PATH=~/.local/share/ov/pkg/isaac_sim-2023.1.1/python.sh
-# # For Windows: doskey PYTHON_PATH=C:\Users\emmah\AppData\Local\ov\pkg\isaac_sim-2023.1.1\python.bat $* 
+
 # """
 
 import asyncio
@@ -56,14 +65,14 @@ import omni.isaac.core.utils.torch as torch_utils
 from omni.isaac.core.utils.torch.transformations import tf_combine
 
 import omniisaacgymenvs.tasks.factory.factory_control as fc
-from omniisaacgymenvs.tasks.factory.factory_env_peg_hole_eh import FactoryEnvPegHole_eh # TODO: richtig so??
+from omniisaacgymenvs.tasks.factory.factory_env_peg_hole_eh_deformable import FactoryEnvPegHole_eh_deformable 
 from omniisaacgymenvs.tasks.factory.factory_schema_class_task import FactoryABCTask
 from omniisaacgymenvs.tasks.factory.factory_schema_config_task import (
     FactorySchemaConfigTask,
 )
 
 
-class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
+class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, FactoryABCTask):
     def __init__(self, name, sim_config, env, offset=None) -> None:
         """Initialize environment superclass. Initialize instance variables."""
         # print("init")
@@ -83,15 +92,15 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
             self.cfg_task.rl.max_episode_length
         )  # required instance var for VecTask
 
-        asset_info_path = "../tasks/factory/yaml/factory_asset_info_peg_hole_eh.yaml"  # relative to Gym's Hydra search path (cfg dir)
+        asset_info_path = "../tasks/factory/yaml/factory_asset_info_peg_hole_eh_deformable.yaml"  # relative to Gym's Hydra search path (cfg dir)
         self.asset_info_peg_hole = hydra.compose(config_name=asset_info_path)
         self.asset_info_peg_hole = self.asset_info_peg_hole[""][""][""]["tasks"][
             "factory"
         ][
             "yaml"
         ]  # strip superfluous nesting
-        # TODO: adjust yaml for ppo --> done
-        ppo_path = "train/FactoryTaskPegHolePlace_ehPPO.yaml"  # relative to Gym's Hydra search path (cfg dir)
+
+        ppo_path = "train/FactoryTaskPegHolePlace_eh_deformablePPO.yaml"  # relative to Gym's Hydra search path (cfg dir)
         self.cfg_ppo = hydra.compose(config_name=ppo_path)
         self.cfg_ppo = self.cfg_ppo["train"]  # strip superfluous nesting
 
