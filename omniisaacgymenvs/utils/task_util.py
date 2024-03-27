@@ -86,7 +86,6 @@ def import_tasks():
 
     return task_map, task_map_warp
 
-
 def initialize_task(config, env, init_sim=True):
     from omniisaacgymenvs.utils.config_utils.sim_config import SimConfig
 

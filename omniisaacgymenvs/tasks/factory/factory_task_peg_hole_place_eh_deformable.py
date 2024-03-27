@@ -106,7 +106,7 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
 
     def post_reset(self) -> None:
         """Reset the world. Called only once, before simulation begins."""
-        # print("post_reset")
+        print("post_reset")
 
         if self.cfg_task.sim.disable_gravity:
             self.disable_gravity()
@@ -116,6 +116,7 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
 
         self.refresh_base_tensors()
         self.refresh_env_tensors()
+        print("got to refresh task tensors")
         self._refresh_task_tensors()
 
         # Reset all envs
@@ -123,6 +124,8 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
         asyncio.ensure_future(
             self.reset_idx_async(indices, randomize_gripper_pose=False)
         )
+        self.initial_peg_positions = self.pegs.get_simulation_mesh_nodal_positions()
+        self.initial_peg_velocities = self.pegs.get_simulation_mesh_nodal_velocities()
 
     def _acquire_task_tensors(self) -> None:
         """Acquire tensors."""
@@ -184,7 +187,7 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
 
     def pre_physics_step(self, actions) -> None:
         """Reset environments. Apply actions from policy. Simulation step called after this method."""
-        # print("pre_physics_step")
+        print("pre_physics_step")
         if not self._env._world.is_playing():
             return
 
@@ -222,7 +225,7 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
 
     def reset_idx(self, env_ids, randomize_gripper_pose) -> None:
         """Reset specified environments."""
-        # print("reset_idx")
+        print("reset_idx")
         self._reset_franka(env_ids)
         self._reset_object(env_ids)
 
@@ -285,13 +288,11 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
 
     def _reset_object(self, env_ids) -> None:
         """Reset root states of nut and bolt."""
-        # print("reset_object")
+        print("reset_object")
         # Randomize root state of nut within gripper
-        self.peg_pos[env_ids, 0] = 0.0 # x-coordinate of position?
-        self.peg_pos[env_ids, 1] = 0.0 # y-coordinate of position?
+        self.peg_pos_middle[env_ids, 0] = 0.0 # x-coordinate of position
+        self.peg_pos_middle[env_ids, 1] = 0.0 # y-coordinate of position
 
-        # self.peg_pos[env_ids, 0] = 1.0 # makes no difference??
-        # self.peg_pos[env_ids, 1] = 1.0 # makes no difference??
 
 
         # TODO: check out if value for fingertip_midpoint_pos_reset has to be adjusted (was 0.58781 before) (franka_finger_length=0.053671, from factory_asset_info_franka_table)
@@ -310,49 +311,56 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
         # peg_base_pos_local = self.peg_heights.squeeze(-1) *0.2 # try 4; mesh I constructed in isaac sim -->KOS in the middle
 
 
-        self.peg_pos[env_ids, 2] = fingertip_midpoint_pos_reset - peg_base_pos_local*0.5 # z-coordinate of position? TODO: ist peg_base_local random gewählt -->irgendein Abstand der ungefähr passen könnte, damit abstand zwischen fingertip_midpoint_pos_reset und bolt
-        peg_noise_pos_in_gripper = 2 * ( 
-            torch.rand((self.num_envs, 3), dtype=torch.float32, device=self.device)
-            - 0.5
-        )  # [-1, 1]
-        peg_noise_pos_in_gripper = peg_noise_pos_in_gripper @ torch.diag(
-            torch.tensor(
-                self.cfg_task.randomize.peg_noise_pos_in_gripper, device=self.device
-            )
-        )
-        self.peg_pos[env_ids, :] += peg_noise_pos_in_gripper[env_ids] 
+        self.peg_pos_middle[env_ids, 2] = fingertip_midpoint_pos_reset - peg_base_pos_local*0.5 # z-coordinate of position TODO: ist peg_base_local random gewählt -->irgendein Abstand der ungefähr passen könnte, damit abstand zwischen fingertip_midpoint_pos_reset und bolt
+        # peg_noise_pos_in_gripper = 2 * ( 
+        #     torch.rand((self.num_envs, 3), dtype=torch.float32, device=self.device)
+        #     - 0.5
+        # )  # [-1, 1]
+        # peg_noise_pos_in_gripper = peg_noise_pos_in_gripper @ torch.diag(
+        #     torch.tensor(
+        #         self.cfg_task.randomize.peg_noise_pos_in_gripper, device=self.device
+        #     )
+        # )
+        # self.peg_pos[env_ids, :] += peg_noise_pos_in_gripper[env_ids] 
 
-        peg_rot_euler = torch.tensor(
-            [0.0, 0.0, math.pi * 0.5], device=self.device
-        ).repeat(len(env_ids), 1)
-        peg_noise_rot_in_gripper = 2 * (
-            torch.rand(self.num_envs, dtype=torch.float32, device=self.device) - 0.5
-        )  # [-1, 1]
-        peg_noise_rot_in_gripper *= self.cfg_task.randomize.peg_noise_rot_in_gripper
-        peg_rot_euler[:, 2] += peg_noise_rot_in_gripper  
-        peg_rot_quat = torch_utils.quat_from_euler_xyz(
-            peg_rot_euler[:, 0], peg_rot_euler[:, 1], peg_rot_euler[:, 2]
-        )
-        self.peg_quat[env_ids, :] = peg_rot_quat
+        # peg_rot_euler = torch.tensor(
+        #     [0.0, 0.0, math.pi * 0.5], device=self.device
+        # ).repeat(len(env_ids), 1)
+        # # peg_noise_rot_in_gripper = 2 * (
+        # #     torch.rand(self.num_envs, dtype=torch.float32, device=self.device) - 0.5
+        # # )  # [-1, 1]
+        # # peg_noise_rot_in_gripper *= self.cfg_task.randomize.peg_noise_rot_in_gripper
+        # peg_rot_euler[:, 2] += peg_noise_rot_in_gripper  
+        # peg_rot_quat = torch_utils.quat_from_euler_xyz(
+        #     peg_rot_euler[:, 0], peg_rot_euler[:, 1], peg_rot_euler[:, 2]
+        # )
+        # self.peg_quat[env_ids, :] = peg_rot_quat
 
-        self.peg_linvel[env_ids, :] = 0.0
-        self.peg_angvel[env_ids, :] = 0.0
+        self.peg_velocities[env_ids, :]=0.0
+        # self.peg_linvel[env_ids, :] = 0.0
+        # self.peg_angvel[env_ids, :] = 0.0
 
         indices = env_ids.to(dtype=torch.int32)
-        # print("checkpoint1 ", env_ids)
-        
 
-        self.pegs.set_world_poses(
-            self.peg_pos[env_ids] + self.env_pos[env_ids],
-            self.peg_quat[env_ids],
-            indices,
-        )
+        # print("checkpoint1 ", env_ids)
+        self.pegs.set_simulation_mesh_nodal_positions(self.initial_peg_positions[env_ids], indices)
+        self.pegs.set_simulation_mesh_nodal_velocities(self.initial_peg_velocities[env_ids], indices)
+
+
+
+
+
+        # self.pegs.set_world_poses(
+        #     self.peg_pos[env_ids] + self.env_pos[env_ids],
+        #     # self.peg_quat[env_ids],
+        #     indices,
+        # )
     
 
-        self.pegs.set_velocities(
-            torch.cat((self.peg_linvel[env_ids], self.peg_angvel[env_ids]), dim=1),
-            indices,
-        )
+        # self.pegs.set_velocities(
+        #     torch.cat((self.peg_linvel[env_ids], self.peg_angvel[env_ids]), dim=1),
+        #     indices,
+        # )
 
         # print("checkpoint2 ", env_ids)
         # print("self.peg_pos[env_ids] + self.env_pos[env_ids]=",self.peg_pos[env_ids] + self.env_pos[env_ids])
@@ -408,7 +416,7 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
         self, actions, ctrl_target_gripper_dof_pos, do_scale # do_scale:bool
     ) -> None:
         """Apply actions from policy as position/rotation/force/torque targets."""
-        # print("_apply_actions_as_ctrl_targets")
+        print("_apply_actions_as_ctrl_targets")
         # Interpret actions as target pos displacements and set pos target
         pos_actions = actions[:, 0:3]
         if do_scale:
@@ -472,21 +480,29 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
         self,
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         """Step buffers. Refresh tensors. Compute observations and reward. Reset environments."""
-        # print("post_physics_step")
+        print("post_physics_step")
         self.progress_buf[:] += 1
 
         if self._env._world.is_playing():
-            self.refresh_base_tensors()     # ??? # from factory_schema_class_base.py-file?
+            self.refresh_base_tensors()     # from factory_base.py-file
             self.refresh_env_tensors()      # from env .py-file 
             self._refresh_task_tensors()    # from current .py-file
             self.get_observations()         # from current .py-file
             self.calculate_metrics()        # from current .py-file
-            self.get_extras()               # ???
+            self.get_extras()               # form rl_task.py
+
+        print("obs_buf shape: ",len(self.obs_buf))
+        print("rew_buf shape: ", len(self.rew_buf))
+        print("reset_buf shape: ",len(self.reset_buf))
+        print("extras shape: ", len(self.extras))
+                        
+        print("post_physiscs_step done")
 
         return self.obs_buf, self.rew_buf, self.reset_buf, self.extras
 
     def _refresh_task_tensors(self) -> None:
         """Refresh tensors."""
+        print("refresh_task_tensors")
         # Compute pos of keypoints on gripper, nut, and bolt in world frame
         # print("_refresh_task_tensors")
 
@@ -497,11 +513,13 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
         .. and then adding it to the translation of the first transformation. ..
         ..The combined rotation is obtained by multiplying the quaternions of the two transformations.
         '''
+        print("shape of peg_pos[:,88,:]: ", self.peg_pos[:,88,:].shape)
 
         for idx, keypoint_offset in enumerate(self.keypoint_offsets): # keypoints are placed in even distance in a line in z-direction 
             self.keypoints_peg[:, idx] = tf_combine(
-                self.peg_quat,
-                self.peg_pos,
+                # self.peg_quat,
+                self.identity_quat,
+                self.peg_pos[:,88,:],
                 self.identity_quat,
                 (keypoint_offset - self.peg_base_pos_local), # before:keypoint_offset + self.peg_base_pos_local (changed on 05/03/2024; 14:16) 
             )[1]
@@ -509,7 +527,7 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
                 self.hole_quat,
                 self.hole_pos,
                 self.identity_quat,
-                (keypoint_offset + self.hole_tip_pos_local-0.005),  # before:  keypoint_offset + self.hole_tip_pos_local (changed on 05/03/2024; 14:16) # try 07/03/2024: change from bottom of drill hole (keypoint_offset + self.hole_drill_hole_heights) to center of hole, on cube surface (hole_tip_pos_local)
+                (keypoint_offset + self.hole_tip_pos_local-0.005),  # before:  keypoint_offspost_et + self.hole_tip_pos_local (changed on 05/03/2024; 14:16) # try 07/03/2024: change from bottom of drill hole (keypoint_offset + self.hole_drill_hole_heights) to center of hole, on cube surface (hole_tip_pos_local)
             )[1]
 
     def get_observations(self) -> dict:
@@ -521,11 +539,22 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
             self.fingertip_midpoint_quat,
             self.fingertip_midpoint_linvel,
             self.fingertip_midpoint_angvel,
-            self.peg_pos,
-            self.peg_quat,
+            self.peg_pos[:,88,:],
+            # self.peg_quat,
             self.hole_pos,
             self.hole_quat,
         ]
+
+        # print("obs_tensors shape",obs_tensors.shape)
+        # print("fingertip_midpoint_pos shape",self.fingertip_midpoint_pos.shape)
+        # print("fingertip_midpoint_quat shape",self.fingertip_midpoint_quat.shape)
+        # print("fingertip_midpoint_linvel shape",self.fingertip_midpoint_linvel.shape)
+        # print("fingertip_midpoint_angvel shape",self.fingertip_midpoint_angvel.shape)
+        # print("peg_pos shape",self.peg_pos.shape)
+        # print("hole_pos shape",self.hole_pos.shape)
+
+
+
 
         if self.cfg_task.rl.add_obs_hole_tip_pos: # TODO: edit in task config file (add_obs_hole_tip_pos is boolean value) # add observation of bolt tip position
             obs_tensors += [self.hole_tip_pos_local]
@@ -535,18 +564,18 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
         )  # shape = (num_envs, num_observations)
 
         observations = {self.frankas.name: {"obs_buf": self.obs_buf}}
-
+        print("get_observations done")
         return observations
 
     def calculate_metrics(self) -> None:
         """Update reset and reward buffers."""
-        # print("calculate_metrics")
+        print("calculate_metrics")
         self._update_reset_buf()
         self._update_rew_buf()
 
     def _update_reset_buf(self) -> None:
         """Assign environments for reset if successful or failed."""
-        # print("_update_reset_buf")
+        print("_update_reset_buf")
         # If max episode length has been reached
         self.reset_buf[:] = torch.where(
             self.progress_buf[:] >= self.max_episode_length - 1,
@@ -556,7 +585,7 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
 
     def _update_rew_buf(self) -> None:
         """Compute reward at current timestep."""
-        # print("_update_rew_buf")
+        print("_update_rew_buf")
         keypoint_reward = -self._get_keypoint_dist()
         action_penalty = (
             torch.norm(self.actions, p=2, dim=-1)
@@ -696,7 +725,7 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
         SimulationContext.step(self._env._world, render=True)
 
     async def _randomize_gripper_pose_async(self, env_ids, sim_steps) -> None:
-        """Move gripper to random pose."""
+        """Move gripper to random pose.Async method used in extension workflow."""
 
         # Step once to update PhysX with new joint positions and velocities from reset_franka()
         self._env._world.physics_sim_view.flush()

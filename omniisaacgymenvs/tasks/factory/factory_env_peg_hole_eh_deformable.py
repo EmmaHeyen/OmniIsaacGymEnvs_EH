@@ -26,11 +26,11 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""Factory: class for nut-bolt env.
+"""Factory: class for peg-hole env.
 
-Inherits base class and abstract environment class. Inherited by nut-bolt task classes. Not directly executed.
+Inherits base class and abstract environment class. Inherited by peg-hole task classes. Not directly executed.
 
-Configuration defined in FactoryEnvNutBolt.yaml. Asset info defined in factory_asset_info_nut_bolt.yaml.
+Configuration defined in FactoryEnvPegHole_eh_deformable.yaml. Asset info defined in factory_asset_info_peg_hole_eh_deformable.yaml.
 """
 
 
@@ -346,7 +346,7 @@ class FactoryEnvPegHole_eh_deformable(FactoryBase, FactoryABCEnv):
             self.peg_widths.append(peg_width)
 
             peg_file = self.asset_info_peg_hole[subassembly][components[0]][usd_path] # aus factory_asset_info_nut_bolt datei; müsste auch über asset path funktionieren
-            print("peg_file: ",peg_file)
+            # print("peg_file: ",peg_file)
             # print("5:,",i)
             if add_to_stage:                                                            # immer TRUE?? (s.oben in def _import_env_assets..)
                 add_reference_to_stage(peg_file, f"/World/envs/env_{i}" + "/peg")
@@ -364,7 +364,7 @@ class FactoryEnvPegHole_eh_deformable(FactoryBase, FactoryABCEnv):
                 ).SetInstanceable(
                     False
                 )  # This is required to be able to edit physics material
-                print("add material to peg prim")
+                # print("add material to peg prim")
                 physicsUtils.add_physics_material_to_prim(
                     self._stage,
                     self._stage.GetPrimAtPath(
@@ -462,26 +462,12 @@ class FactoryEnvPegHole_eh_deformable(FactoryBase, FactoryABCEnv):
             self.list_of_zeros, device=self._device
         ).unsqueeze(-1)
 
-
-
         # print("14: ")
 
         # For setting initial state - 
         self.peg_widths = torch.tensor( # --> used when resetting gripper  
             self.peg_widths, device=self._device
         ).unsqueeze(-1)
-        # self.bolt_shank_lengths = torch.tensor( # --> used when resetting object in screw task
-        #     self.bolt_shank_lengths, device=self._device
-        # ).unsqueeze(-1)
-
-        # # For defining success or failure (only for screw task)
-        # self.bolt_widths = torch.tensor(
-        #     self.bolt_widths, device=self._device
-        # ).unsqueeze(-1)
-        # self.thread_pitches = torch.tensor(
-        #     self.thread_pitches, device=self._device
-        # ).unsqueeze(-1)
-        # print("15")
 
     def refresh_env_tensors(self):
         """Refresh tensors."""
@@ -510,44 +496,51 @@ class FactoryEnvPegHole_eh_deformable(FactoryBase, FactoryABCEnv):
         """Gets the vertex velocities for the deformable bodies indicated by the indices."""
         '''
         self.peg_pos = self.pegs.get_simulation_mesh_nodal_positions(clone=False) # position tensor with shape (M, max_simulation_mesh_vertices_per_body, 3) where M <= size of the encapsulated prims in the view.
-        self.peg_velocities = self.pegs.get_simulation_mesh_nodal_velocities(clone=False) # keine ahnung was das macht
-        print("shape peg_pos: ",self.peg_pos.shape) # ([128,176,3])
-        print("shape peg_vel: ",self.peg_velocities.shape) # ([128,176,3])
-        print("shape env_pos: ", self.env_pos.shape) # ([128,3])
+        self.peg_velocities = self.pegs.get_simulation_mesh_nodal_velocities(clone=False) # velocity tensor with shape (M, max_simulation_mesh_vertices_per_body, 3)
+        # print("shape peg_pos: ",self.peg_pos.shape) # ([128,176,3])
+        # print("shape peg_vel: ",self.peg_velocities.shape) # ([128,176,3])
+        # print("shape env_pos: ", self.env_pos.shape) # ([128,3])
 
+        self.peg_pos_middle = self.peg_pos[:,88,:] # middle part?
+        self.peg_pos_middle -= self.env_pos                                                    # A-=B is equal to A=A-B; peg'position relative to env position. env position is absolute to world
 
-        self.peg_pos -= self.env_pos                                                    # A-=B is equal to A=A-B; peg'position relative to env position. env position is absolute to world
-
-        ### TODO: WHAT is a com pos --> Center of mass position --> only needed in screw task?
-        self.peg_com_pos = fc.translate_along_local_z(                                  # translate_along_local_z(pos, quat, offset, device). Translate global body position along local Z-axis and express in global coordinates
-            pos=self.peg_pos,           # "measured" via get_world_poses
-            quat=self.peg_quat,         # "measured" via get_world_poses
-
-
-            ### TODO: what to put here (offset) --> Schwerpunkt wenn fertig assembled?? TODO
-            offset=self.hole_drill_hole_heights + self.peg_heights * 0.5,
-            device=self.device,
+        self.identity_quat = ( # TODO quat berücksichtigen?
+            torch.tensor([1.0, 0.0, 0.0, 0.0], device=self.device)
+            .unsqueeze(0)
+            .repeat(self.num_envs, 1)
         )
-        self.peg_com_quat = self.peg_quat  # always equal
 
-        peg_velocities = self.pegs.get_velocities(clone=False)
-        self.peg_linvel = peg_velocities[:, 0:3]        # linear velocities
-        self.peg_angvel = peg_velocities[:, 3:6]        # angular velocities
+        # ### TODO: WHAT is a com pos --> Center of mass position --> only needed in screw task?
+        # self.peg_com_pos = fc.translate_along_local_z(                                  # translate_along_local_z(pos, quat, offset, device). Translate global body position along local Z-axis and express in global coordinates
+        #     pos=self.peg_pos,           # "measured" via get_world_poses
+        #     # quat=self.peg_quat,   
+        #     quat=self.identity_quat,      # "measured" via get_world_poses
 
-        # ?? neded for my task? (so far only copied and adjusted from nut_bolt_place env)
-        self.peg_com_linvel = self.peg_linvel + torch.cross(        # torch.cross(input, other, dim=None, *, out=None) → Tensor 
-                                                                    # Returns the cross product of vectors in dimension dim of input and other.
+
+        #     ### TODO: what to put here (offset) --> Schwerpunkt wenn fertig assembled?? TODO
+        #     offset=self.hole_drill_hole_heights + self.peg_heights * 0.5,
+        #     device=self.device,
+        # )
+        # self.peg_com_quat = self.peg_quat  # always equal
+
+        # peg_velocities = self.pegs.get_velocities(clone=False)
+        # self.peg_linvel = peg_velocities[:, 0:3]        # linear velocities
+        # self.peg_angvel = peg_velocities[:, 3:6]        # angular velocities
+
+        # ?? needed for my task? (so far only copied and adjusted from nut_bolt_place env)
+        # self.peg_com_linvel = self.peg_linvel + torch.cross(        # torch.cross(input, other, dim=None, *, out=None) → Tensor 
+        #                                                             # Returns the cross product of vectors in dimension dim of input and other.
             
-            self.peg_angvel,                                        # input
-            (self.peg_com_pos - self.peg_pos),                      # other
-            dim=1
-        )
-        self.peg_com_angvel = self.peg_angvel  # always equal
+        #     self.peg_angvel,                                        # input
+        #     (self.peg_com_pos - self.peg_pos),                      # other
+        #     dim=1
+        # )
+        # self.peg_com_angvel = self.peg_angvel  # always equal
 
-        self.peg_force = self.pegs.get_net_contact_forces(clone=False)
+        # self.peg_force = self.pegs.get_net_contact_forces(clone=False)
 
         # Hole tensors
         self.hole_pos, self.hole_quat = self.holes.get_world_poses(clone=False)
         self.hole_pos -= self.env_pos
 
-        self.hole_force = self.holes.get_net_contact_forces(clone=False)
+        # self.hole_force = self.holes.get_net_contact_forces(clone=False)

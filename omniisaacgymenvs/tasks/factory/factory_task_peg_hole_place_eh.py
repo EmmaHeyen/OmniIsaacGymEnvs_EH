@@ -467,12 +467,12 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         self.progress_buf[:] += 1
 
         if self._env._world.is_playing():
-            self.refresh_base_tensors()     # ??? # from factory_schema_class_base.py-file?
+            self.refresh_base_tensors()     # from factory_base.py file?
             self.refresh_env_tensors()      # from env .py-file 
             self._refresh_task_tensors()    # from current .py-file
             self.get_observations()         # from current .py-file
             self.calculate_metrics()        # from current .py-file
-            self.get_extras()               # ???
+            self.get_extras()               # form rl_task.py
 
         return self.obs_buf, self.rew_buf, self.reset_buf, self.extras
 
