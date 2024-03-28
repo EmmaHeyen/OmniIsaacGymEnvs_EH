@@ -416,7 +416,7 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
         self, actions, ctrl_target_gripper_dof_pos, do_scale # do_scale:bool
     ) -> None:
         """Apply actions from policy as position/rotation/force/torque targets."""
-        print("_apply_actions_as_ctrl_targets")
+        # print("_apply_actions_as_ctrl_targets")
         # Interpret actions as target pos displacements and set pos target
         pos_actions = actions[:, 0:3]
         if do_scale:
@@ -491,7 +491,7 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
             self.calculate_metrics()        # from current .py-file
             self.get_extras()               # form rl_task.py
 
-        print("obs_buf shape: ",len(self.obs_buf))
+        print("obs_buf shape: ",self.obs_buf.shape)
         print("rew_buf shape: ", len(self.rew_buf))
         print("reset_buf shape: ",len(self.reset_buf))
         print("extras shape: ", len(self.extras))
@@ -545,15 +545,14 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
             self.hole_quat,
         ]
 
-        # print("obs_tensors shape",obs_tensors.shape)
-        # print("fingertip_midpoint_pos shape",self.fingertip_midpoint_pos.shape)
-        # print("fingertip_midpoint_quat shape",self.fingertip_midpoint_quat.shape)
-        # print("fingertip_midpoint_linvel shape",self.fingertip_midpoint_linvel.shape)
-        # print("fingertip_midpoint_angvel shape",self.fingertip_midpoint_angvel.shape)
-        # print("peg_pos shape",self.peg_pos.shape)
-        # print("hole_pos shape",self.hole_pos.shape)
-
-
+        # print("obs_tensors len",len(obs_tensors))
+        # print("fingertip_midpoint_pos shape",self.fingertip_midpoint_pos.shape) # torch.Size([128, 3])
+        # print("fingertip_midpoint_quat shape",self.fingertip_midpoint_quat.shape) # torch.Size([128, 4])
+        # print("fingertip_midpoint_linvel shape",self.fingertip_midpoint_linvel.shape) # torch.Size([128, 3])
+        # print("fingertip_midpoint_angvel shape",self.fingertip_midpoint_angvel.shape) # torch.Size([128, 3])
+        # print("peg_pos[:, 88, :] shape",self.peg_pos[:,88,:].shape) # torch.Size([128, 3])
+        # print("hole_pos shape",self.hole_pos.shape) # torch.Size([128, 3])
+        # print("hole_quat shape: ", self.hole_quat.shape) # torch.Size([128, 4])
 
 
         if self.cfg_task.rl.add_obs_hole_tip_pos: # TODO: edit in task config file (add_obs_hole_tip_pos is boolean value) # add observation of bolt tip position
@@ -562,6 +561,10 @@ class FactoryTaskPegHolePlace_eh_deformable(FactoryEnvPegHole_eh_deformable, Fac
         self.obs_buf = torch.cat(
             obs_tensors, dim=-1
         )  # shape = (num_envs, num_observations)
+        print("shape obs_buf: ",self.obs_buf.shape) # torch.Size([128, 23]) --> should be 27 for everthing to work fine, quat is missing with dimension (128,4) --> makes sense.
+        # why does it have to be of dimension (128,27)? --> because current_var current_var and current_mean in running_mean_std.py in forward:  torch.Size([27])
+
+
 
         observations = {self.frankas.name: {"obs_buf": self.obs_buf}}
         print("get_observations done")

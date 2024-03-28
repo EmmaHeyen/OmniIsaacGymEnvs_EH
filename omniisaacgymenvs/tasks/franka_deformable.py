@@ -193,7 +193,24 @@ class FrankaDeformableTask(RLTask):
             ),
             dim=-1,
         )
-       
+        a=franka_dof_vel * self.dof_vel_scale
+        print("shape dof_pos_scaled",dof_pos_scaled.shape)
+        print("shape franka_dof_vel * self.dof_vel_scale,",a.shape)
+        print("shape self.tube_back_velocities",self.tube_back_velocities.shape)
+        print("shape front_to_gripper",front_to_gripper.shape)
+        print("shape to_front_goal",to_front_goal.shape)
+        print("shape to_back_goal",to_back_goal.shape)
+        print("shape self.tube_front_positions",self.tube_front_positions.shape)
+        print("shape self.tube_front_velocities",self.tube_front_velocities.shape)
+        print("shape self.tube_back_positions",self.tube_back_positions.shape)
+
+
+     
+        
+
+
+        self.tube_back_velocities,
+    
         observations = {
             self._frankas.name: {
                 "obs_buf": self.obs_buf
