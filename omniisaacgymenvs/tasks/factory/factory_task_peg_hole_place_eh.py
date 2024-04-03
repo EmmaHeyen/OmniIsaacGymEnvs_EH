@@ -29,9 +29,10 @@
 # """Factory: Class for nut-bolt place task.
 
 # Inherits nut-bolt environment class and abstract task class (not enforced). Can be executed with
+# For Linux: alias PYTHON_PATH=~/.local/share/ov/pkg/isaac_sim-2023.1.1/python.sh
+# For Windows: doskey PYTHON_PATH=C:\Users\emmah\AppData\Local\ov\pkg\isaac_sim-2023.1.1\python.bat $* 
 
-# cd OmniIsaacGymEnvs_EH/omniisaacgymenvs
-# OR: cd OmniIsaacGymEnvs/omniisaacgymenvs
+# cd OmniIsaacGymEnvs/omniisaacgymenvs
 # PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskPegHolePlace_eh
 # tensorboard: PYTHON_PATH -m tensorboard.main --logdir runs/FactoryTaskPegHolePlace_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise/summaries (run from cd OmniIsaacGymEnvs/omniisaacgymenvs)
 # running: PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskPegHolePlace_eh test=True checkpoint=runs/FactoryTaskPegHolePlace_eh_400epochs_0.1mass_0.3friction-both_0.3actionpenalty_withNoise/nn/FactoryTaskPegHolePlace_eh.pth  (ANPASSEN)
@@ -39,8 +40,7 @@
 # windows: C:/Users/emmah/AppData/Local/ov/pkg/isaac_sim-2023.1.1/isaac-sim.gym.bat --ext-folder "C:\Users\emmah"
 # linux: /home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/isaac-sim.gym.sh --ext-folder /home/mnn_eh
 
-# # For Linux: alias PYTHON_PATH=~/.local/share/ov/pkg/isaac_sim-2023.1.1/python.sh
-# # For Windows: doskey PYTHON_PATH=C:\Users\emmah\AppData\Local\ov\pkg\isaac_sim-2023.1.1\python.bat $* 
+
 # """
 
 import asyncio
@@ -502,6 +502,7 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
                 self.identity_quat,
                 (keypoint_offset + self.hole_tip_pos_local-0.005),  # before:  keypoint_offset + self.hole_tip_pos_local (changed on 05/03/2024; 14:16) # try 07/03/2024: change from bottom of drill hole (keypoint_offset + self.hole_drill_hole_heights) to center of hole, on cube surface (hole_tip_pos_local)
             )[1]
+        # print("keypoints_shape: ",self.keypoints_peg.shape) # [123, 4, 3]
 
     def get_observations(self) -> dict:
         """Compute observations."""

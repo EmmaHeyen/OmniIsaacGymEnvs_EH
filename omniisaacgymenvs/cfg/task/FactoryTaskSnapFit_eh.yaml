@@ -4,7 +4,7 @@ defaults:
   - _self_
   # - /factory_schema_config_task
 
-name: FactoryTaskPegHolePlace_eh
+name: FactoryTaskSnapFit_eh
 physics_engine: ${..physics_engine}
 
 sim:

@@ -65,7 +65,7 @@ from omni.isaac.core.prims.soft.deformable_prim_view import DeformablePrimView
 
 ops="windows" # (choose if "windows" or "linux")
 
-class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
+class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
     def __init__(self, name, sim_config, env) -> None:
         """Initialize base superclass. Initialize instance variables."""
         # print("init")
@@ -127,39 +127,24 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
         # print("import assets")
         self._import_env_assets(add_to_stage=True)
 
-        # self.frankas = FactoryFrankaView(
-        #     prim_paths_expr="/World/envs/.*/franka", name="frankas_view"
-        # )
-        # self.pegs = RigidPrimView(
-        #     prim_paths_expr="/World/envs/.*/peg/peg.*",
-        #     name="pegs_view",
-        #     track_contact_forces=True,
-        # )
-        # self.holes = RigidPrimView(
-        #     prim_paths_expr="/World/envs/.*/hole/hole.*",
-        #     name="holes_view",
-        #     track_contact_forces=True,
-        # )
+
         # print("FactoryFrankaView")
         self.frankas = FactoryFrankaView(
             prim_paths_expr="/World/envs/.*/franka", name="frankas_view"
         )
-        # print("DeformablePrimView") # TODO: deformable primvies
-        self.males_arms = DeformablePrimView( 
-            prim_paths_expr="/World/envs/.*/male/male/collisions/mesh_01_arms.*", name="males_arms_view", track_contact_forces=True,
-        )
-        self.males_base = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/male/male/collisions/mesh_01_base.*", name="males_base_view", track_contact_forces=True,
+
+        self.males = RigidPrimView(
+            prim_paths_expr="/World/envs/.*/male/male/collisions/mesh_01.*", name="males_view", track_contact_forces=True, # TODO: adjust male.usd correctly; rigid prim view has to get the mesh paths as input
         )
 
         # print("RigidPrimView")
         self.females = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/female/female.*", name="females_view", track_contact_forces=True,
+            prim_paths_expr="/World/envs/.*/female/female.*", name="females_view", track_contact_forces=True, # TODO: adjust female.usd correctly
         )
 
         # TODO: scene.add
-        scene.add(self.pegs)
-        scene.add(self.holes)
+        scene.add(self.males)
+        scene.add(self.females)
         scene.add(self.frankas)
         scene.add(self.frankas._hands)
         scene.add(self.frankas._lfingers)
@@ -181,14 +166,13 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
         # print("remove frankas view ")
         if scene.object_exists("frankas_view"):
             scene.remove_object("frankas_view", registry_only=True)
-        # print("remove  pegs view ")
-        if scene.object_exists("male_arms_view"):
-            scene.remove_object("male_arms_view", registry_only=True)
-        if scene.object_exists("male_base_view"):
-            scene.remove_object("male_base_view", registry_only=True)
-        # print("remove holes view ")
-        if scene.object_exists("female_view"):
-            scene.remove_object("female_view", registry_only=True)
+        # print("remove  male view ")
+        if scene.object_exists("males_view"):
+            scene.remove_object("males_view", registry_only=True)
+
+        # print("remove female view ")
+        if scene.object_exists("females_view"):
+            scene.remove_object("females_view", registry_only=True)
         # print("remove hands view ")#
         if scene.object_exists("hands_view"):
             scene.remove_object("hands_view", registry_only=True)
@@ -203,15 +187,12 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
             scene.remove_object("fingertips_view", registry_only=True)
         # print("FactoryFrankaView")
             
-        #TODO: deformable Prim View??
         self.frankas = FactoryFrankaView(
             prim_paths_expr="/World/envs/.*/franka", name="frankas_view"
         )
-        self.males_arms = DeformablePrimView( 
-            prim_paths_expr="/World/envs/.*/male/male/collisions/mesh_01_arms.*", name="males_arms_view"
-        )
-        self.males_base = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/male/male/collisions/mesh_01_base.*", name="males_base_view"
+
+        self.males = RigidPrimView(
+            prim_paths_expr="/World/envs/.*/male/male/collisions/mesh_01_base.*", name="males_view"
         )
         # print("RigidPrimView")
         self.females = RigidPrimView(
@@ -236,33 +217,33 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
         scene.add(self.frankas._fingertip_centered)
 
     def create_snap_fit_material(self): #TODO: only for female und male_base?
-        """Define peg and hole material."""
-        # print("create_peg_hole_material")
+        """Define snapfit material."""
+        # print("create_snapfit_material")
 
-        # self.PegHolePhysicsMaterialPath = "/World/Physics_Materials/PegHoleMaterial"
-        self.MaleBasePhysicsMaterialPath = "/World/Physics_Materials/MaleBaseMaterial"
-        self.FemalePhysicsMaterialPath = "/World/Physics_Materials/FemalesMaterial"
+
+        self.MalePhysicsMaterialPath = "/World/Physics_Materials/MaleMaterial"
+        self.FemalePhysicsMaterialPath = "/World/Physics_Materials/FemaleMaterial"
 
         utils.addRigidBodyMaterial(
             self._stage,
             self.FemalesPhysicsMaterialPath,
-            density=self.cfg_env.env.peg_hole_density,                  # from config file (FactoryEnvSnapFit_eh.yaml)
-            staticFriction=self.cfg_env.env.snap_fit_friction,         # from config file ((FactoryEnvSnapFit_eh.yaml)
+            density=self.cfg_env.env.snap_fit_density,                  # from config file (FactoryEnvSnapFit_eh.yaml) # TODO: does density defined her overwrite the density/mass in usd? I guess it does not overwrite the mass?
+            staticFriction=self.cfg_env.env.snap_fit_friction,         # from config file ((FactoryEnvSnapFit_eh.yaml) # TODO: reserach values for friction
             dynamicFriction=self.cfg_env.env.snap_fit_friction,       # from config file (FactoryEnvSnapFit_eh.yaml)
             restitution=0.0,
         )
         utils.addRigidBodyMaterial(
             self._stage,
             self.MaleBasePhysicsMaterialPath,
-            density=self.cfg_env.env.peg_hole_density,                  # from config file (FactoryEnvSnapFit_eh.yaml)
-            staticFriction=self.cfg_env.env.snap_fit_friction,         # from config file ((FactoryEnvSnapFit_eh.yaml)
+            density=self.cfg_env.env.snap_fit_density,                  # from config file (FactoryEnvSnapFit_eh.yaml) # TODO: does density defined her overwrite the density/mass in usd? I guess it does not overwrite the mass?
+            staticFriction=self.cfg_env.env.snap_fit_friction,         # from config file ((FactoryEnvSnapFit_eh.yaml) # TODO: reserach values for friction
             dynamicFriction=self.cfg_env.env.snap_fit_friction,       # from config file (FactoryEnvSnapFit_eh.yaml)
             restitution=0.0,
         )
 
 
     def _import_env_assets(self, add_to_stage=True): #TODO
-        """Set peg and hole asset options. Import assets."""
+        """Set snap-fit asset options. Import assets."""
         # print("_import_env_assets")
         print("1")
         assets_root_path = get_assets_root_path()
@@ -272,60 +253,56 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
             usd_path="usd_path_windows"   
 
         print("2")
-        self.peg_heights = []
-        self.peg_widths = []
-        self.hole_widths = []
-        self.hole_heights = []
-        self.hole_drill_hole_heights=[]
-        # self.bolt_shank_lengths = []
-        # self.thread_pitches = []
+        self.male_heights = []
+        self.male_widths = []
+        self.female_widths = []
+        self.female_heights = [] # TODO: check whether we need more lists to store any more values
 
-        
         print("3")
         for i in range(0, self._num_envs):                                              # für jede einzelne env
             j = np.random.randint(0, len(self.cfg_env.env.desired_subassemblies))       # desired subassemblies aus config datei von env
-            subassembly = self.cfg_env.env.desired_subassemblies[j]                     # z.B. desired_subassembly = ['peg_hole_1', 'peg_hole_1']. Aktuell nur diese desired_subassembly möglich. 
-            components = list(self.asset_info_peg_hole[subassembly])                    # werden hier zufällig verschiedene Varianten für jede einzelne env ausgewählt? (in diesem Fall alle gleich da beide Elemente in desired_subassemblies identisch sind?) 
+            subassembly = self.cfg_env.env.desired_subassemblies[j]                     # z.B. desired_subassembly = ['snap_fit_1', 'snap_fit_1']. Aktuell nur diese desired_subassembly möglich. 
+            components = list(self.asset_info_snap_fit[subassembly])                    # werden hier zufällig verschiedene Varianten für jede einzelne env ausgewählt? (in diesem Fall alle gleich da beide Elemente in desired_subassemblies identisch sind?) 
             # print("components_list: ", components)
             # print("4:,",i)
-            peg_translation = torch.tensor(                                             # passt das so??
+            male_translation = torch.tensor(                                             # passt das so??
                 [
                     0.0,
-                    self.cfg_env.env.peg_lateral_offset,
+                    self.cfg_env.env.male_lateral_offset,
                     self.cfg_base.env.table_height,                                     # from config file FactoryBase.yaml
                 ],
                 device=self._device,
             )
-            peg_orientation = torch.tensor([1.0, 0.0, 0.0, 0.0], device=self._device)
+            male_orientation = torch.tensor([1.0, 0.0, 0.0, 0.0], device=self._device)  # TODO: maybe has to be adjusted? 
 
             # print("5:,",i)
 
             # ANNAHME: Wir nehmen nur eine Variante von subassemblies, daher brauchen wir die heights etc nicht? 
             # Und: heights etc. bereits durch cad-datei vorgegeben?
 
-            peg_height = self.asset_info_peg_hole[subassembly][components[0]]["height"] # aus factory_asset_info_nut_bolt datei
-            peg_width = self.asset_info_peg_hole[subassembly][components[0]][       # aus factory_asset_info_nut_bolt datei
+            male_height = self.asset_info_snap_fit[subassembly][components[0]]["height"] # aus factory_asset_info_nut_bolt datei
+            male_width = self.asset_info_snap_fit[subassembly][components[0]][           # aus factory_asset_info_nut_bolt datei
                 "width"
             ]
-            self.peg_heights.append(peg_height)                                         # nut_height=height of nut. different for different subassemblies --> is probably measurement of nut
-            self.peg_widths.append(peg_width)
+            self.male_heights.append(male_height)                                         # nut_height=height of nut. different for different subassemblies --> is probably measurement of nut
+            self.male_widths.append(male_width)
 
-            peg_file = self.asset_info_peg_hole[subassembly][components[0]][usd_path] # aus factory_asset_info_nut_bolt datei; müsste auch über asset path funktionieren
-            # print("peg_file: ",peg_file)
+            male_file = self.asset_info_snap_fit[subassembly][components[0]][usd_path]   # aus factory_asset_info_nut_bolt datei; müsste auch über asset path funktionieren
+            # print("male_file: ",male_file)
             # print("5:,",i)
-            if add_to_stage:                                                            # immer TRUE?? (s.oben in def _import_env_assets..)
-                add_reference_to_stage(peg_file, f"/World/envs/env_{i}" + "/peg")
-                # peg_prim=add_reference_to_stage(peg_file, f"/World/envs/env_{i}" + "/peg")
+            if add_to_stage:                                                            # immer TRUE?? (s.oben in def _import_env_assets..) --> JA
+                add_reference_to_stage(male_file, f"/World/envs/env_{i}" + "/male")
+                # male_prim=add_reference_to_stage(male_file, f"/World/envs/env_{i}" + "/male")
                 # print("6:,",i)
                 XFormPrim(
-                    prim_path=f"/World/envs/env_{i}" + "/peg",
-                    translation=peg_translation,
-                    orientation=peg_orientation,
+                    prim_path=f"/World/envs/env_{i}" + "/male",
+                    translation=male_translation,
+                    orientation=male_orientation,
                 )
-                # UsdPhysics.CollisionAPI.Apply(peg_prim)
+                
                 # print("6:,",i)
                 self._stage.GetPrimAtPath(
-                    f"/World/envs/env_{i}" + f"/peg/{components[0]}/collisions" 
+                    f"/World/envs/env_{i}" + f"/male/{components[0]}/collisions" 
                 ).SetInstanceable(
                     False
                 )  # This is required to be able to edit physics material
@@ -333,55 +310,50 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
                     self._stage,
                     self._stage.GetPrimAtPath(
                         f"/World/envs/env_{i}"
-                        + f"/peg/{components[0]}/collisions/mesh_01"
+                        + f"/male/{components[0]}/collisions/mesh_01"
                     ),
-                    # self.PegHolePhysicsMaterialPath,
-                    self.PegPhysicsMaterialPath,
+                    
+                    self.MalePhysicsMaterialPath,
                 )
                 # print("7:,",i)
-                ##### TODO: Check out task config file -->does task config file only have to have the same name as the task?
+                ##### TODO: Check out task config file --> does task config file only have to have the same name as the task?
+
                 # applies articulation settings from the task configuration yaml file
                 self._sim_config.apply_articulation_settings(
-                    "peg",
-                    self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/peg"),
-                    self._sim_config.parse_actor_config("peg"),
+                    "male",
+                    self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/male"),
+                    self._sim_config.parse_actor_config("male"),
                 )
             # print("8:,",i)
-            hole_translation = torch.tensor(
+            female_translation = torch.tensor(
                 [0.0, 0.0, self.cfg_base.env.table_height], device=self._device                             # from config file FactoryBase.yaml
             )
-            hole_orientation = torch.tensor([1.0, 0.0, 0.0, 0.0], device=self._device)
+            female_orientation = torch.tensor([1.0, 0.0, 0.0, 0.0], device=self._device)
 
-            hole_width = self.asset_info_peg_hole[subassembly][components[1]]["width"]                      # quadratische Grundfläche 
-            hole_height = self.asset_info_peg_hole[subassembly][components[1]]["height"]
-            hole_drill_hole_height = self.asset_info_peg_hole[subassembly][components[1]]["drill_hole_height"]    # Länge Bohrloch  
+            female_width = self.asset_info_snap_fit[subassembly][components[1]]["width"]                      # quadratische Grundfläche 
+            female_height = self.asset_info_snap_fit[subassembly][components[1]]["height"]
+            
+
+            self.female_widths.append(female_width)
+            self.female_heights.append(female_height)
 
 
-            # ANNAHME: Wir nehmen nur eine Variante von subassemblies, daher brauchen wir die heights-listen etc nicht? 
-            # Und: heights etc. bereits durch cad-datei vorgegeben? (Für hole statt bolt müsste man auch andere variablen nehmen)
-            # vorgehen (240116): erstal mitnehmen, maße aus cad-file übernommen. (siehe factory_asset_info_peg_hole_eh.yaml)
-            self.hole_widths.append(hole_width)
-            self.hole_heights.append(hole_height)
-            self.hole_drill_hole_heights.append(hole_drill_hole_height)
-
-            # self.bolt_head_heights.append(bolt_head_height)
-            # self.bolt_shank_lengths.append(bolt_shank_length) 
-            hole_file = self.asset_info_peg_hole[subassembly][components[1]][usd_path]
+            female_file = self.asset_info_snap_fit[subassembly][components[1]][usd_path]
             # print("9:,",i)
             if add_to_stage:
-                add_reference_to_stage(hole_file, f"/World/envs/env_{i}" + "/hole")
-                # hole_prim=add_reference_to_stage(hole_file, f"/World/envs/env_{i}" + "/hole")
+                add_reference_to_stage(female_file, f"/World/envs/env_{i}" + "/female")
+                # female_prim=add_reference_to_stage(female_file, f"/World/envs/env_{i}" + "/female")
 
-                # UsdPhysics.CollisionAPI.Apply(hole_prim)
+                # UsdPhysics.CollisionAPI.Apply(female_prim)
                 # print("10: ",i)
                 XFormPrim(
-                    prim_path=f"/World/envs/env_{i}" + "/hole",
-                    translation=hole_translation,
-                    orientation=hole_orientation,
+                    prim_path=f"/World/envs/env_{i}" + "/female",
+                    translation=female_translation,
+                    orientation=female_orientation,
                 )
                 # print("11: ",i)
                 self._stage.GetPrimAtPath(
-                    f"/World/envs/env_{i}" + f"/hole/{components[1]}/collisions"
+                    f"/World/envs/env_{i}" + f"/female/{components[1]}/collisions"
                 ).SetInstanceable(
                     False
                 )  # This is required to be able to edit physics material
@@ -389,36 +361,32 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
                     self._stage,
                     self._stage.GetPrimAtPath(
                         f"/World/envs/env_{i}"
-                        + f"/hole/{components[1]}/collisions/mesh_01"
+                        + f"/female/{components[1]}/collisions/mesh_01"
                     ),
-                    # self.PegHolePhysicsMaterialPath,
-                    self.HolePhysicsMaterialPath,
+                    self.FemalePhysicsMaterialPath,
                 )
                 # print("12: ",i)
                 # applies articulation settings from the task configuration yaml file
                 self._sim_config.apply_articulation_settings(
-                    "hole",
-                    self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/hole"),
-                    self._sim_config.parse_actor_config("hole"),
+                    "female",
+                    self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/female"),
+                    self._sim_config.parse_actor_config("female"),
                 )
-
-            # thread_pitch = self.asset_info_peg_hole[subassembly]["thread_pitch"]            # Gewindegang
-            # self.thread_pitches.append(thread_pitch)
 
 
         ####TODO: How do i transform this to my problem???
         # print("13: ")        
         # For computing body COM pos
-        self.peg_heights = torch.tensor(
-            self.peg_heights, device=self._device
+        self.male_heights_heights = torch.tensor(
+            self._heights, device=self._device
         ).unsqueeze(-1) # adds a new dimension at the last axis (-1) of the tensor
-        self.hole_heights = torch.tensor(
-            self.hole_heights, device=self._device
+        self.female_heights = torch.tensor(
+            self.female_heights, device=self._device
         ).unsqueeze(-1)
 
-        self.hole_drill_hole_heights = torch.tensor(
-            self.hole_drill_hole_heights, device=self._device
-        ).unsqueeze(-1)
+        # self.hole_drill_hole_heights = torch.tensor( # TODO: what is the snap-fit-equivalent?
+        #     self.hole_drill_hole_heights, device=self._device
+        # ).unsqueeze(-1)
 
         self.list_of_zeros = [0 for _ in range(self.num_envs)]
         
@@ -431,65 +399,53 @@ class FactoryEnvPegHole_eh(FactoryBase, FactoryABCEnv):
         # print("14: ")
 
         # For setting initial state - 
-        self.peg_widths = torch.tensor( # --> used when resetting gripper  
-            self.peg_widths, device=self._device
+        self.male_widths = torch.tensor( # --> used when resetting gripper  
+            self.male_widths, device=self._device
         ).unsqueeze(-1)
-        # self.bolt_shank_lengths = torch.tensor( # --> used when resetting object in screw task
-        #     self.bolt_shank_lengths, device=self._device
-        # ).unsqueeze(-1)
-
-        # # For defining success or failure (only for screw task)
-        # self.bolt_widths = torch.tensor(
-        #     self.bolt_widths, device=self._device
-        # ).unsqueeze(-1)
-        # self.thread_pitches = torch.tensor(
-        #     self.thread_pitches, device=self._device
-        # ).unsqueeze(-1)
-        # print("15")
 
     def refresh_env_tensors(self): #TODO
         """Refresh tensors."""
         # print("refresh_env_tensors")
 
-        # Peg tensors
-        self.peg_pos, self.peg_quat = self.pegs.get_world_poses(clone=False)            # positions in world frame of the prims with shape (M,3), quaternion orientations in world frame of the prims (scalar-first (w,x,y,z), shape (M,4))
+        # male tensors
+        self.male_pos, self.male_quat = self.males.get_world_poses(clone=False)            # positions in world frame of the prims with shape (M,3), quaternion orientations in world frame of the prims (scalar-first (w,x,y,z), shape (M,4))
         ''' get world_poses(indices, clone)
         indices: size (M,) Where M <= size of the encapsulated prims in the view. Defaults to None (i.e: all prims in the view).
         here: M=num_envs?
         clone (bool, optional) – True to return a clone of the internal buffer. Otherwise False. Defaults to True.
         '''
-        self.peg_pos -= self.env_pos                                                    # A-=B is equal to A=A-B; peg'position relative to env position. env position is absolute to world
+        self.male_pos -= self.env_pos                                                    # A-=B is equal to A=A-B; male position relative to env position. env position is absolute to world
 
         ### TODO: WHAT is a com pos --> Center of mass position --> only needed in screw task?
-        self.peg_com_pos = fc.translate_along_local_z(                                  # translate_along_local_z(pos, quat, offset, device). Translate global body position along local Z-axis and express in global coordinates
-            pos=self.peg_pos,           # "measured" via get_world_poses
-            quat=self.peg_quat,         # "measured" via get_world_poses
+        self.male_com_pos = fc.translate_along_local_z(                                  # translate_along_local_z(pos, quat, offset, device). Translate global body position along local Z-axis and express in global coordinates
+            pos=self.male_pos,           # "measured" via get_world_poses
+            quat=self.male_quat,         # "measured" via get_world_poses
 
 
-            ### TODO: what to put here (offset) --> Schwerpunkt wenn fertig assembled?? TODO
-            offset=self.hole_drill_hole_heights + self.peg_heights * 0.5,
+            ### TODO: what to put here (offset) 
+            offset=self.hole_drill_hole_heights + self.male_heights * 0.5, #  TODO: what is the snap-fit equivalent
             device=self.device,
         )
-        self.peg_com_quat = self.peg_quat  # always equal
+        self.male_com_quat = self.male_quat  # always equal
 
-        peg_velocities = self.pegs.get_velocities(clone=False)
-        self.peg_linvel = peg_velocities[:, 0:3]        # linear velocities
-        self.peg_angvel = peg_velocities[:, 3:6]        # angular velocities
+        male_velocities = self.males.get_velocities(clone=False)
+        self.male_linvel = male_velocities[:, 0:3]        # linear velocities
+        self.male_angvel = male_velocities[:, 3:6]        # angular velocities
 
         # ?? neded for my task? (so far only copied and adjusted from nut_bolt_place env)
-        self.peg_com_linvel = self.peg_linvel + torch.cross(        # torch.cross(input, other, dim=None, *, out=None) → Tensor 
+        self.male_com_linvel = self.male_linvel + torch.cross(        # torch.cross(input, other, dim=None, *, out=None) → Tensor 
                                                                     # Returns the cross product of vectors in dimension dim of input and other.
             
-            self.peg_angvel,                                        # input
-            (self.peg_com_pos - self.peg_pos),                      # other
+            self.male_angvel,                                        # input
+            (self.male_com_pos - self.male_pos),                      # other
             dim=1
         )
-        self.peg_com_angvel = self.peg_angvel  # always equal
+        self.male_com_angvel = self.male_angvel  # always equal
 
-        self.peg_force = self.pegs.get_net_contact_forces(clone=False)
+        self.male_force = self.males.get_net_contact_forces(clone=False)
 
-        # Hole tensors
-        self.hole_pos, self.hole_quat = self.holes.get_world_poses(clone=False)
-        self.hole_pos -= self.env_pos
+        # female tensors
+        self.female_pos, self.female_quat = self.females.get_world_poses(clone=False)
+        self.female_pos -= self.env_pos
 
-        self.hole_force = self.holes.get_net_contact_forces(clone=False)
+        self.female_force = self.females.get_net_contact_forces(clone=False)

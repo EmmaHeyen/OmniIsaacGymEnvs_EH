@@ -34,8 +34,8 @@ params:
   load_path: ${...checkpoint}
 
   config:
-    name: ${resolve_default:FactoryTaskPegHolePlace_eh,${....experiment}}
-    full_experiment_name: FactoryTaskPegHolePlace_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise_3successbonus_0.05closeerrorthresh_changedkeypointholetotop #${.name}
+    name: ${resolve_default:FactoryTaskSnapFit_eh,${....experiment}}
+    full_experiment_name: FactoryTaskSnapFit_eh_ADJUST-ACC-TO-PARAMS #${.name}
     device: ${....rl_device}
     device_name: ${....rl_device}
     env_name: rlgpu

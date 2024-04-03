@@ -32,9 +32,9 @@ Inherits nut-bolt environment class and abstract task class (not enforced). Can 
 PYTHON_PATH omniisaacgymenvs/scripts/rlgames_train.py task=FactoryTaskNutBoltPlace
 cd OmniIsaacGymEnvs_EH/omniisaacgymenvs
 OR: cd OmniIsaacGymEnvs/omniisaacgymenvs
-PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskPegHolePlace_eh
-tensorboard: PYTHON_PATH -m tensorboard.main --logdir runs/FactoryTaskPegHolePlace_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise/summaries (rund from cd OmniIsaacGymEnvs/omniisaacgymenvs)
-running: PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskPegHolePlace_eh test=True checkpoint=runs/FactoryTaskPegHolePlace_eh_400epochs_0.1mass_0.3friction-both_0.3actionpenalty_withNoise/nn/FactoryTaskPegHolePlace_eh.pth  (ANPASSEN)
+PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh
+tensorboard: PYTHON_PATH -m tensorboard.main --logdir runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise/summaries (rund from cd OmniIsaacGymEnvs/omniisaacgymenvs)
+running: PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh test=True checkpoint=runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0.3actionpenalty_withNoise/nn/FactoryTaskSnapFit_eh.pth  (ANPASSEN)
 # """
 # For Linux: alias PYTHON_PATH=~/.local/share/ov/pkg/isaac_sim-*/python.sh
 # For Windows: doskey PYTHON_PATH=C:\Users\emmah\AppData\Local\ov\pkg\isaac_sim-2023.1.1\python.bat $* 
@@ -53,14 +53,14 @@ import omni.isaac.core.utils.torch as torch_utils
 from omni.isaac.core.utils.torch.transformations import tf_combine
 
 import omniisaacgymenvs.tasks.factory.factory_control as fc
-from omniisaacgymenvs.tasks.factory.factory_env_peg_hole_eh import FactoryEnvPegHole_eh # TODO: richtig so??
+from omniisaacgymenvs.tasks.factory.factory_env_snap_fit_eh import FactoryEnvSnapFit_eh 
 from omniisaacgymenvs.tasks.factory.factory_schema_class_task import FactoryABCTask
 from omniisaacgymenvs.tasks.factory.factory_schema_config_task import (
     FactorySchemaConfigTask,
 )
 
 
-class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
+class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
     def __init__(self, name, sim_config, env, offset=None) -> None:
         """Initialize environment superclass. Initialize instance variables."""
         # print("init")
@@ -80,15 +80,15 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
             self.cfg_task.rl.max_episode_length
         )  # required instance var for VecTask
 
-        asset_info_path = "../tasks/factory/yaml/factory_asset_info_peg_hole_eh.yaml"  # relative to Gym's Hydra search path (cfg dir)
-        self.asset_info_peg_hole = hydra.compose(config_name=asset_info_path)
-        self.asset_info_peg_hole = self.asset_info_peg_hole[""][""][""]["tasks"][
+        asset_info_path = "../tasks/factory/yaml/factory_asset_info_snap_fit_eh.yaml"  # relative to Gym's Hydra search path (cfg dir)
+        self.asset_info_snap_fit = hydra.compose(config_name=asset_info_path)
+        self.asset_info_snap_fit = self.asset_info_snap_fit[""][""][""]["tasks"][
             "factory"
         ][
             "yaml"
         ]  # strip superfluous nesting
         # TODO: adjust yaml for ppo --> done
-        ppo_path = "train/FactoryTaskPegHolePlace_ehPPO.yaml"  # relative to Gym's Hydra search path (cfg dir)
+        ppo_path = "train/FactoryTaskSnapFit_ehPPO.yaml"  # relative to Gym's Hydra search path (cfg dir)
         self.cfg_ppo = hydra.compose(config_name=ppo_path)
         self.cfg_ppo = self.cfg_ppo["train"]  # strip superfluous nesting
 
@@ -130,7 +130,7 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         # ).repeat((self.num_envs, 1))  
 
         self.peg_base_pos_local = self.peg_heights * torch.tensor(    # result: list of tensors like torch.tensor([0.0, 0.0, bolt_head_height]) --> nut_pos_base local is equal to [0,0,bolt_head_height] for each env.
-            [0.0, 0.0, 1.0], device=self.device
+            [0.0, 0.0, 1.0], device=self.device # TODO: adjust to snap fi task
         ).repeat((self.num_envs, 1))*0.5
 
         # self.peg_base_pos_local = self.peg_heights * torch.tensor(    # try 4 (mesh i constructed in isaac sim, KOS in the middle of z)
@@ -139,8 +139,8 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
 
 
         
-        hole_heights = self.hole_heights 
-        self.hole_tip_pos_local = hole_heights * torch.tensor( # highest position of hole thingy
+        female_heights = self.female_heights 
+        self.female_tip_pos_local = female_heights * torch.tensor( # highest position of female thingy
             [0.0, 0.0, 1.0], device=self.device
         ).repeat((self.num_envs, 1))
 
@@ -153,12 +153,12 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
             self._get_keypoint_offsets(self.cfg_task.rl.num_keypoints)
             * self.cfg_task.rl.keypoint_scale 
         )
-        self.keypoints_peg = torch.zeros(  # tensor of zeros of size (num_envs, num_keypoints, 3)
+        self.keypoints_male = torch.zeros(  # tensor of zeros of size (num_envs, num_keypoints, 3)
             (self.num_envs, self.cfg_task.rl.num_keypoints, 3),
             dtype=torch.float32,
             device=self.device,
         )
-        self.keypoints_hole = torch.zeros_like(self.keypoints_peg, device=self.device) # tensor of zeros of same size as self.keypoints_peg
+        self.keypoints_female = torch.zeros_like(self.keypoints_male, device=self.device) # tensor of zeros of same size as self.keypoints_male
 
         self.identity_quat = (
             torch.tensor([1.0, 0.0, 0.0, 0.0], device=self.device)
@@ -214,8 +214,8 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         self._reset_franka(env_ids)
         self._reset_object(env_ids)
 
-        # Close gripper onto peg
-        self.disable_gravity()  # to prevent peg from falling
+        # Close gripper onto male
+        self.disable_gravity()  # to prevent male from falling
         self._close_gripper(sim_steps=self.cfg_task.env.num_gripper_close_sim_steps)    # num_gripper_close_sim_steps= number of timesteps to reserve for closing gripper onto nut during each reset (40)
         self.enable_gravity(gravity_mag=self.cfg_task.sim.gravity_mag)
 
@@ -232,8 +232,8 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         self._reset_franka(env_ids)
         self._reset_object(env_ids)
 
-        # Close gripper onto peg
-        self.disable_gravity()  # to prevent peg from falling
+        # Close gripper onto male
+        self.disable_gravity()  # to prevent male from falling
         await self._close_gripper_async(sim_steps=self.cfg_task.env.num_gripper_close_sim_steps)
         self.enable_gravity(gravity_mag=self.cfg_task.sim.gravity_mag)
 
@@ -255,11 +255,11 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
                     self.cfg_task.randomize.franka_arm_initial_dof_pos, # franka_arm_initial_dof_pos: [0.00871, -0.10368, -0.00794, -1.49139, -0.00083,  1.38774,  0.7861]
                     device=self.device,
                 ).repeat((len(env_ids), 1)),
-                # (self.peg_widths * 0.5)
-                (self.peg_widths * 0.5)                                 # gripper pos?
+                # (self.male_widths * 0.5)
+                (self.male_widths * 0.5)                                 # gripper pos?
                 * gripper_buffer,  # buffer on gripper DOF pos to prevent initial contact (was 1.1 before)
-                # (self.peg_widths * 0.5) * 1.1,
-                (self.peg_widths * 0.5) * gripper_buffer                # gripper pos?
+                # (self.male_widths * 0.5) * 1.1,
+                (self.male_widths * 0.5) * gripper_buffer                # gripper pos?
                 
             ),  # buffer on gripper DOF pos to prevent initial contact (was 1.1 before)
             dim=-1,
@@ -275,8 +275,8 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         """Reset root states of nut and bolt."""
         # print("reset_object")
         # Randomize root state of nut within gripper
-        self.peg_pos[env_ids, 0] = 0.0 # x-coordinate of position?
-        self.peg_pos[env_ids, 1] = 0.0 # y-coordinate of position?
+        self.male_pos[env_ids, 0] = 0.0 # x-coordinate of position?
+        self.male_pos[env_ids, 1] = 0.0 # y-coordinate of position?
 
         # self.peg_pos[env_ids, 0] = 1.0 # makes no difference??
         # self.peg_pos[env_ids, 1] = 1.0 # makes no difference??
@@ -294,91 +294,92 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         # peg_base_pos_local = self.base_pos_zeros.squeeze(-1)
 
 
-        peg_base_pos_local = self.peg_heights.squeeze(-1) * 0.5 # try 3
+        male_base_pos_local = self.peg_heights.squeeze(-1) * 0.5 # try 3 # TODO: adjust base_pos to snap fit task
         # peg_base_pos_local = self.peg_heights.squeeze(-1) *0.2 # try 4; mesh I constructed in isaac sim -->KOS in the middle
 
 
-        self.peg_pos[env_ids, 2] = fingertip_midpoint_pos_reset - peg_base_pos_local*0.5 # z-coordinate of position? TODO: ist peg_base_local random gewählt -->irgendein Abstand der ungefähr passen könnte, damit abstand zwischen fingertip_midpoint_pos_reset und bolt
-        peg_noise_pos_in_gripper = 2 * ( 
+        self.male_pos[env_ids, 2] = fingertip_midpoint_pos_reset - male_base_pos_local*0.5 # TODO: adjust male z pos of male to snapfit task ? TODO: ist peg_base_local random gewählt -->irgendein Abstand der ungefähr passen könnte, damit abstand zwischen fingertip_midpoint_pos_reset und bolt
+        male_noise_pos_in_gripper = 2 * ( 
             torch.rand((self.num_envs, 3), dtype=torch.float32, device=self.device)
             - 0.5
         )  # [-1, 1]
-        peg_noise_pos_in_gripper = peg_noise_pos_in_gripper @ torch.diag(
+        male_noise_pos_in_gripper = male_noise_pos_in_gripper @ torch.diag(
             torch.tensor(
-                self.cfg_task.randomize.peg_noise_pos_in_gripper, device=self.device
+                self.cfg_task.randomize.male_noise_pos_in_gripper, device=self.device
             )
         )
-        self.peg_pos[env_ids, :] += peg_noise_pos_in_gripper[env_ids] 
+        self.male_pos[env_ids, :] += male_noise_pos_in_gripper[env_ids] 
 
-        peg_rot_euler = torch.tensor(
+        male_rot_euler = torch.tensor(
             [0.0, 0.0, math.pi * 0.5], device=self.device
         ).repeat(len(env_ids), 1)
-        peg_noise_rot_in_gripper = 2 * (
+        male_noise_rot_in_gripper = 2 * (
             torch.rand(self.num_envs, dtype=torch.float32, device=self.device) - 0.5
         )  # [-1, 1]
-        peg_noise_rot_in_gripper *= self.cfg_task.randomize.peg_noise_rot_in_gripper
-        peg_rot_euler[:, 2] += peg_noise_rot_in_gripper  
-        peg_rot_quat = torch_utils.quat_from_euler_xyz(
-            peg_rot_euler[:, 0], peg_rot_euler[:, 1], peg_rot_euler[:, 2]
+        male_noise_rot_in_gripper *= self.cfg_task.randomize.male_noise_rot_in_gripper
+        male_rot_euler[:, 2] += male_noise_rot_in_gripper  
+        male_rot_quat = torch_utils.quat_from_euler_xyz(
+            male_rot_euler[:, 0], male_rot_euler[:, 1], male_rot_euler[:, 2]
         )
-        self.peg_quat[env_ids, :] = peg_rot_quat
+        self.male_quat[env_ids, :] = male_rot_quat
 
-        self.peg_linvel[env_ids, :] = 0.0
-        self.peg_angvel[env_ids, :] = 0.0
+        self.male_linvel[env_ids, :] = 0.0
+        self.male_angvel[env_ids, :] = 0.0
 
         indices = env_ids.to(dtype=torch.int32)
         # print("checkpoint1 ", env_ids)
         
         
-        self.pegs.set_world_poses(
-            self.peg_pos[env_ids] + self.env_pos[env_ids],
-            self.peg_quat[env_ids],
+        self.males.set_world_poses(
+            self.male_pos[env_ids] + self.env_pos[env_ids],
+            self.male_quat[env_ids],
             indices,
         )
-        self.pegs.set_velocities(
-            torch.cat((self.peg_linvel[env_ids], self.peg_angvel[env_ids]), dim=1),
+        self.males.set_velocities(
+            torch.cat((self.male_linvel[env_ids], self.male_angvel[env_ids]), dim=1),
             indices,
         )
         # print("checkpoint2 ", env_ids)
-        # print("self.peg_pos[env_ids] + self.env_pos[env_ids]=",self.peg_pos[env_ids] + self.env_pos[env_ids])
+        # print("self.male_pos[env_ids] + self.env_pos[env_ids]=",self.male_pos[env_ids] + self.env_pos[env_ids])
+
         # Randomize root state of hole
-        hole_noise_xy = 2 * (
+        female_noise_xy = 2 * (
             torch.rand((self.num_envs, 2), dtype=torch.float32, device=self.device)
             - 0.5
         )  # [-1, 1]
-        hole_noise_xy = hole_noise_xy @ torch.diag(
+        female_noise_xy = female_noise_xy @ torch.diag(
             torch.tensor(
-                self.cfg_task.randomize.hole_pos_xy_noise,
+                self.cfg_task.randomize.female_pos_xy_noise,
                 dtype=torch.float32,
                 device=self.device,
             )
         )
 
-        self.hole_pos[env_ids, 0] = ( # x
-            self.cfg_task.randomize.hole_pos_xy_initial[0] + hole_noise_xy[env_ids, 0]
+        self.female_pos[env_ids, 0] = ( # x
+            self.cfg_task.randomize.female_pos_xy_initial[0] + female_noise_xy[env_ids, 0]
         )
-        self.hole_pos[env_ids, 1] = ( # y
-            self.cfg_task.randomize.hole_pos_xy_initial[1] + hole_noise_xy[env_ids, 1]
+        self.female_pos[env_ids, 1] = ( # y
+            self.cfg_task.randomize.female_pos_xy_initial[1] + female_noise_xy[env_ids, 1]
         )
 
-        # self.hole_pos[env_ids, 0] = ( # x ###REMOVED NOISE FOR TESTING
-        #     self.cfg_task.randomize.hole_pos_xy_initial[0]
+        # self.female_pos[env_ids, 0] = ( # x ###REMOVED NOISE FOR TESTING
+        #     self.cfg_task.randomize.female_pos_xy_initial[0]
         # )
-        # self.hole_pos[env_ids, 1] = ( # y ###REMOVED NOISE FOR TESTING
-        #     self.cfg_task.randomize.hole_pos_xy_initial[1]
+        # self.female_pos[env_ids, 1] = ( # y ###REMOVED NOISE FOR TESTING
+        #     self.cfg_task.randomize.female_pos_xy_initial[1]
         # )
 
 
-        self.hole_pos[env_ids, 2] = self.cfg_base.env.table_height # z # table_height=0.4 (from cfg->task->FactoryBase.yaml)
+        self.female_pos[env_ids, 2] = self.cfg_base.env.table_height # z # table_height=0.4 (from cfg->task->FactoryBase.yaml)
 
-        self.hole_quat[env_ids, :] = torch.tensor(
+        self.female_quat[env_ids, :] = torch.tensor(
             [1.0, 0.0, 0.0, 0.0], dtype=torch.float32, device=self.device
         ).repeat(len(env_ids), 1)
 
         indices = env_ids.to(dtype=torch.int32)
-        self.holes.set_world_poses(
-            self.hole_pos[env_ids] + self.env_pos[env_ids],
-            self.hole_quat[env_ids],
+        self.females.set_world_poses(
+            self.female_pos[env_ids] + self.env_pos[env_ids],
+            self.female_quat[env_ids],
             indices,
         )
 
@@ -482,20 +483,28 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         .. and then adding it to the translation of the first transformation. ..
         ..The combined rotation is obtained by multiplying the quaternions of the two transformations.
         '''
+        # self.identity_quat = (
+        #     torch.tensor([1.0, 0.0, 0.0, 0.0], device=self.device)
+        #     .unsqueeze(0)
+        #     .repeat(self.num_envs, 1)
+        # )
 
         for idx, keypoint_offset in enumerate(self.keypoint_offsets): # keypoints are placed in even distance in a line in z-direction 
-            self.keypoints_peg[:, idx] = tf_combine(
-                self.peg_quat,
-                self.peg_pos,
+            self.keypoints_male[:, idx] = tf_combine( # TODO: adjust male_keypoints to snap fit task
+                self.male_quat,
+                self.male_pos,
                 self.identity_quat,
-                (keypoint_offset - self.peg_base_pos_local), # before:keypoint_offset + self.peg_base_pos_local (changed on 05/03/2024; 14:16) 
+                (keypoint_offset - self.male_base_pos_local), # before:keypoint_offset + self.peg_base_pos_local (changed on 05/03/2024; 14:16) 
             )[1]
-            self.keypoints_hole[:, idx] = tf_combine(
-                self.hole_quat,
-                self.hole_pos,
+            self.keypoints_female[:, idx] = tf_combine( # TODO: adjust female_keypoints to snap fit task
+                self.female_quat,
+                self.female_pos,
                 self.identity_quat,
-                (keypoint_offset + self.hole_tip_pos_local-0.03),  # before:  keypoint_offset + self.hole_tip_pos_local (changed on 05/03/2024; 14:16) # try 07/03/2024: change from bottom of drill hole (keypoint_offset + self.hole_drill_hole_heights) to center of hole, on cube surface (hole_tip_pos_local)
+                (keypoint_offset + self.female_tip_pos_local-0.03),  # before:  keypoint_offset + self.hole_tip_pos_local (changed on 05/03/2024; 14:16) # try 07/03/2024: change from bottom of drill hole (keypoint_offset + self.hole_drill_hole_heights) to center of hole, on cube surface (hole_tip_pos_local)
             )[1]
+
+
+            
 
     def get_observations(self) -> dict:
         """Compute observations."""
@@ -506,14 +515,14 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
             self.fingertip_midpoint_quat,
             self.fingertip_midpoint_linvel,
             self.fingertip_midpoint_angvel,
-            self.peg_pos,
-            self.peg_quat,
-            self.hole_pos,
-            self.hole_quat,
+            self.male_pos,
+            self.male_quat,
+            self.female_pos,
+            self.female_quat,
         ]
 
-        if self.cfg_task.rl.add_obs_hole_tip_pos: # TODO: edit in task config file (add_obs_hole_tip_pos is boolean value) # add observation of bolt tip position
-            obs_tensors += [self.hole_tip_pos_local]
+        if self.cfg_task.rl.add_obs_female_tip_pos: # TODO: edit in task config file (add_obs_female_tip_pos is boolean value) # add observation of bolt tip position
+            obs_tensors += [self.female_tip_pos_local]
 
         self.obs_buf = torch.cat(
             obs_tensors, dim=-1
@@ -564,9 +573,9 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
 
         if is_last_step:
             # Check if nut is close enough to bolt
-            is_peg_close_to_hole = self._check_peg_close_to_hole() # adjust threshold in task config file
-            self.rew_buf[:] += is_peg_close_to_hole * self.cfg_task.rl.success_bonus # if close to bolt, --> successbonus*1 else successbonus*0; sucess_bonus defined in cfg-task-yaml-file (currently =0)
-            self.extras["successes"] = torch.mean(is_peg_close_to_hole.float())
+            is_male_close_to_female = self._check_male_close_to_female() # adjust threshold in task config file
+            self.rew_buf[:] += is_male_close_to_female * self.cfg_task.rl.success_bonus # if close to bolt, --> successbonus*1 else successbonus*0; sucess_bonus defined in cfg-task-yaml-file (currently =0)
+            self.extras["successes"] = torch.mean(is_male_close_to_female.float())
 
     def _get_keypoint_offsets(self, num_keypoints) -> torch.Tensor:
         """Get uniformly-spaced keypoints along a line of unit length, centered at 0.
@@ -574,7 +583,7 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         # print("_get_keypoint_offsets")
         keypoint_offsets = torch.zeros((num_keypoints, 3), device=self.device)
         keypoint_offsets[:, -1] = ( # 
-            torch.linspace(0.0, 1.0, num_keypoints, device=self.device) - 0.5 #(try 06/04/2024: commented out the -0.5; went back on 07/03/2027 but with middle keypoint on topsurface of hole)
+            torch.linspace(0.0, 1.0, num_keypoints, device=self.device) - 0.5 #(try 06/03/2024: commented out the -0.5; went back on 07/03/2027 but with middle keypoint on topsurface of hole)
         ) 
         
 
@@ -584,7 +593,7 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
         """Get keypoint distance between nut and bolt."""
         # print("_get_keypoint_dist")
         keypoint_dist = torch.sum(
-            torch.norm(self.keypoints_hole - self.keypoints_peg, p=2, dim=-1), dim=-1
+            torch.norm(self.keypoints_female - self.keypoints_male, p=2, dim=-1), dim=-1
         )
 
         return keypoint_dist
@@ -816,17 +825,17 @@ class FactoryTaskPegHolePlace_eh(FactoryEnvPegHole_eh, FactoryABCTask):
             self._env._world.physics_sim_view.flush()
             await omni.kit.app.get_app().next_update_async()
 
-    def _check_peg_close_to_hole(self) -> torch.Tensor:
+    def _check_male_close_to_female(self) -> torch.Tensor:
         """Check if nut is close to bolt."""
-        # print("_check_peg_close_to_hole")
+        # print("_check_male_close_to_female")
         keypoint_dist = torch.norm(
-            self.keypoints_hole - self.keypoints_peg, p=2, dim=-1
+            self.keypoints_female - self.keypoints_male, p=2, dim=-1
         )
 
-        is_peg_close_to_hole = torch.where( # torch.where(condition, input, other) Returns tensor of elements selected from either input or other depending on condition (input if condition=true) 
+        is_male_close_to_female = torch.where( # torch.where(condition, input, other) Returns tensor of elements selected from either input or other depending on condition (input if condition=true) 
             torch.sum(keypoint_dist, dim=-1) < self.cfg_task.rl.close_error_thresh, # threshold below which nut is considered close enough to bolt
             torch.ones_like(self.progress_buf),                                     # TODO: adjust threshold?
             torch.zeros_like(self.progress_buf),
         )
 
-        return is_peg_close_to_hole
+        return is_male_close_to_female
