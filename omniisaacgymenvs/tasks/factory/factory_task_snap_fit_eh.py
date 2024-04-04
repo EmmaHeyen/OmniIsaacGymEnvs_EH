@@ -150,11 +150,11 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         keypoint_scale: 0.5  # length of line of keypoints
         '''
         self.keypoint_offsets = (
-            self._get_keypoint_offsets(self.cfg_task.rl.num_keypoints)
+            self._get_keypoint_offsets(self.cfg_task.rl.num_keypoints, self.cfg_task.rl.num_axes)
             * self.cfg_task.rl.keypoint_scale 
         )
         self.keypoints_male = torch.zeros(  # tensor of zeros of size (num_envs, num_keypoints, 3)
-            (self.num_envs, self.cfg_task.rl.num_keypoints, 3),
+            (self.num_envs, self.cfg_task.rl.num_keypoints*self.cfg_task.rl.num_axes, 3), # adjusted for snap-fit: multiplied num_keypoints by num_axes
             dtype=torch.float32,
             device=self.device,
         )
@@ -428,7 +428,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             rot_actions_quat, self.fingertip_midpoint_quat
         )
 
-        if self.cfg_ctrl["do_force_ctrl"]:
+        if self.cfg_ctrl["do_force_ctrl"]: # false for impedance controller
             # Interpret actions as target forces and target torques
             force_actions = actions[:, 6:9]
             if do_scale:
@@ -489,19 +489,35 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         #     .repeat(self.num_envs, 1)
         # )
 
+        # for idx, keypoint_offset in enumerate(self.keypoint_offsets): # keypoints are placed in even distance in a line in z-direction 
+        #     self.keypoints_male[:, idx] = tf_combine( # TODO: adjust male_keypoints to snap fit task
+        #         self.male_quat,
+        #         self.male_pos,
+        #         self.identity_quat,
+        #         (keypoint_offset - self.male_base_pos_local), # before:keypoint_offset + self.peg_base_pos_local (changed on 05/03/2024; 14:16) 
+        #     )[1]
+        #     self.keypoints_female[:, idx] = tf_combine( # TODO: adjust female_keypoints to snap fit task
+        #         self.female_quat,
+        #         self.female_pos,
+        #         self.identity_quat,
+        #         (keypoint_offset + self.female_tip_pos_local-0.03),  # before:  keypoint_offset + self.hole_tip_pos_local (changed on 05/03/2024; 14:16) # try 07/03/2024: change from bottom of drill hole (keypoint_offset + self.hole_drill_hole_heights) to center of hole, on cube surface (hole_tip_pos_local)
+        #     )[1]
+        
         for idx, keypoint_offset in enumerate(self.keypoint_offsets): # keypoints are placed in even distance in a line in z-direction 
-            self.keypoints_male[:, idx] = tf_combine( # TODO: adjust male_keypoints to snap fit task
+            self.keypoints_male[:, idx] = tf_combine( # TODO: adjust to male snapfit part
                 self.male_quat,
                 self.male_pos,
                 self.identity_quat,
-                (keypoint_offset - self.male_base_pos_local), # before:keypoint_offset + self.peg_base_pos_local (changed on 05/03/2024; 14:16) 
+                (keypoint_offset - self.male_base_pos_local), 
             )[1]
-            self.keypoints_female[:, idx] = tf_combine( # TODO: adjust female_keypoints to snap fit task
+            self.keypoints_female[:, idx] = tf_combine( # TODO: adjust to female snap fit part
                 self.female_quat,
                 self.female_pos,
                 self.identity_quat,
-                (keypoint_offset + self.female_tip_pos_local-0.03),  # before:  keypoint_offset + self.hole_tip_pos_local (changed on 05/03/2024; 14:16) # try 07/03/2024: change from bottom of drill hole (keypoint_offset + self.hole_drill_hole_heights) to center of hole, on cube surface (hole_tip_pos_local)
+                (keypoint_offset + self.female_tip_pos_local-0.03),  
             )[1]
+
+
 
 
             
@@ -577,14 +593,32 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             self.rew_buf[:] += is_male_close_to_female * self.cfg_task.rl.success_bonus # if close to bolt, --> successbonus*1 else successbonus*0; sucess_bonus defined in cfg-task-yaml-file (currently =0)
             self.extras["successes"] = torch.mean(is_male_close_to_female.float())
 
-    def _get_keypoint_offsets(self, num_keypoints) -> torch.Tensor:
+    def _get_keypoint_offsets(self, num_keypoints, num_axes) -> torch.Tensor:
         """Get uniformly-spaced keypoints along a line of unit length, centered at 0.
         Last column contains values ranging from -0.5 to 0.5 in a linearly spaced manner. The first two columns are filled with zeros. """
         # print("_get_keypoint_offsets")
-        keypoint_offsets = torch.zeros((num_keypoints, 3), device=self.device)
-        keypoint_offsets[:, -1] = ( # 
+        # keypoint_offsets = torch.zeros((num_keypoints, 3), device=self.device) 
+        # keypoint_offsets[:, -1] = ( # 
+        #     torch.linspace(0.0, 1.0, num_keypoints, device=self.device) - 0.5 #(try 06/03/2024: commented out the -0.5; went back on 07/03/2027 but with middle keypoint on topsurface of hole)
+        # ) 
+
+        # keypoint_offsets for snap-fit task: two axes right and left along one of the x or y axis (which one? --> TODO)
+        keypoint_offsets = torch.zeros((num_keypoints*num_axes, 3), device=self.device) # adjusted: num_keypoint * num_axes to get correct number of offsets for desired num of axes along which the keypoints are aligned
+        
+        for i in range(1,num_axes): # TODO: check if correct (https://www.tensorflow.org/guide/tensor_slicing)
+            keypoint_offsets[num_keypoints*(i-1):num_keypoints*i, -1]=(
+                torch.linspace(0.0, 1.0, num_keypoints, device=self.device) 
+            )
+
+
+        
+        keypoint_offsets[num_keypoints:, -1] = ( # 
             torch.linspace(0.0, 1.0, num_keypoints, device=self.device) - 0.5 #(try 06/03/2024: commented out the -0.5; went back on 07/03/2027 but with middle keypoint on topsurface of hole)
         ) 
+        keypoint_offsets[:num_keypoints:, -1] = ( # 
+            torch.linspace(0.0, 1.0, num_keypoints, device=self.device) - 0.5 #(try 06/03/2024: commented out the -0.5; went back on 07/03/2027 but with middle keypoint on topsurface of hole)
+        ) 
+
         
 
         return keypoint_offsets

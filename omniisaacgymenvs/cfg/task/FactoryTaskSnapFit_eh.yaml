@@ -109,7 +109,8 @@ rl:
 
   add_obs_hole_tip_pos: False  # add observation of bolt tip position
 
-  num_keypoints: 4  # number of keypoints used in reward
+  num_keypoints: 4  # number of keypoints used in reward PER AXIS!
+  num_axes: 2
   keypoint_scale: 0.5  # length of line of keypoints
 
   keypoint_reward_scale: 1.0  # scale on keypoint-based reward
