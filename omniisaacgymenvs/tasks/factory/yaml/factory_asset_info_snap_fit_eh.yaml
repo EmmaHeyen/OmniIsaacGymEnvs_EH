@@ -1,22 +1,24 @@
 snap_fit_1:
     male: 
         usd_path_windows: "C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\CAD RJ45\planar cantilever\nach AMAY\male\20240323_male_nach_AMAY.usd" 
-        # usd_path_linux:
-        width_handle: 0.026 # Breite Handle (in m) # TODO
-        height_handle: 0.01 # Höhe Handle (in m) # TODO
-        height_total: 0.0355 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
+        usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/male/20240402/bigger version/male_v2.usd"
+        thickness: 0.016
+        length_arm: 0.04
+        length_retention_feature: 0.010 # TODO
+        width_handle: 0.052 # Breite Handle (in m) 
+        height_handle: 0.02 # Höhe Handle (in m) 
+        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
 
 
     female: 
         usd_path_windows: "C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\CAD RJ45\planar cantilever\nach AMAY\female\usd_female\20240323_female.usd"
-        # usd_path_linux: 
-        width_base: 0.05 # Kantenlänge Base (quadratisch) (in m)  # TODO
-        height_base: 0.003 # Höhe Bodenplatte (in m) # TODO
+        usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/female/female_v2.usd"
+        width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
+        height_base: 0.002 # Höhe Bodenplatte (in m) 
         height_total: 0.025 # Höhe insgesamt inkl. Base (in m) # TODO
         insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
         height_cos: 0.014 # Höhe KOS (in m) # TODO
         shift_cos_from_center_y: 0.0135 #(in negative y) # TODO
 
        
-
 

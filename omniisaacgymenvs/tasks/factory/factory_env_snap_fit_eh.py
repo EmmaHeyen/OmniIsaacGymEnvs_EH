@@ -253,7 +253,9 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
             usd_path="usd_path_windows"   
 
         print("2")
-        self.male_heights = []
+        self.male_thickness=[]
+        self.male_heights_base=[]
+        self.male_heights_total = []
         self.male_widths = []
         self.female_widths = []
         self.female_heights = [] # TODO: check whether we need more lists to store any more values
@@ -280,17 +282,18 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
             # ANNAHME: Wir nehmen nur eine Variante von subassemblies, daher brauchen wir die heights etc nicht? 
             # Und: heights etc. bereits durch cad-datei vorgegeben?
 
-            male_height = self.asset_info_snap_fit[subassembly][components[0]]["height"] # aus factory_asset_info_nut_bolt datei
-            male_width = self.asset_info_snap_fit[subassembly][components[0]][           # aus factory_asset_info_nut_bolt datei
-                "width"
-            ]
-            self.male_heights.append(male_height)                                         # nut_height=height of nut. different for different subassemblies --> is probably measurement of nut
-            self.male_widths.append(male_width)
+            male_height_total = self.asset_info_snap_fit[subassembly][components[0]]["height_total"]    # aus factory_asset_info_nut_bolt datei
+            male_width = self.asset_info_snap_fit[subassembly][components[0]]["width"]      # aus factory_asset_info_nut_bolt datei
+            male_height_base=self.asset_info_snap_fit[subassembly][components[0]]["height_base"]
 
-            male_file = self.asset_info_snap_fit[subassembly][components[0]][usd_path]   # aus factory_asset_info_nut_bolt datei; müsste auch über asset path funktionieren
+            self.male_widths.append(male_width)
+            self.male_heights_total.append(male_height_total)
+            self.male_heights_base.append(male_height_base)   
+
+            male_file = self.asset_info_snap_fit[subassembly][components[0]][usd_path]      # aus factory_asset_info_nut_bolt datei; müsste auch über asset path funktionieren
             # print("male_file: ",male_file)
             # print("5:,",i)
-            if add_to_stage:                                                            # immer TRUE?? (s.oben in def _import_env_assets..) --> JA
+            if add_to_stage:                                                                # immer TRUE?? (s.oben in def _import_env_assets..) --> JA
                 add_reference_to_stage(male_file, f"/World/envs/env_{i}" + "/male")
                 # male_prim=add_reference_to_stage(male_file, f"/World/envs/env_{i}" + "/male")
                 # print("6:,",i)
@@ -377,8 +380,8 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         ####TODO: How do i transform this to my problem???
         # print("13: ")        
         # For computing body COM pos
-        self.male_heights_heights = torch.tensor(
-            self._heights, device=self._device
+        self.male_heights = torch.tensor(
+            self.male_heights, device=self._device
         ).unsqueeze(-1) # adds a new dimension at the last axis (-1) of the tensor
         self.female_heights = torch.tensor(
             self.female_heights, device=self._device
@@ -399,7 +402,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         # print("14: ")
 
         # For setting initial state - 
-        self.male_widths = torch.tensor( # --> used when resetting gripper  
+        self.male_thickness = torch.tensor( # --> used when resetting gripper  
             self.male_widths, device=self._device
         ).unsqueeze(-1)
 

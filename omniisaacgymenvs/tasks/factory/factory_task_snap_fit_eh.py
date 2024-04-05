@@ -26,16 +26,15 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""Factory: Class for nut-bolt place task.
+# """Factory: Class for nut-bolt place task.
 
-Inherits nut-bolt environment class and abstract task class (not enforced). Can be executed with
-PYTHON_PATH omniisaacgymenvs/scripts/rlgames_train.py task=FactoryTaskNutBoltPlace
-cd OmniIsaacGymEnvs_EH/omniisaacgymenvs
-OR: cd OmniIsaacGymEnvs/omniisaacgymenvs
-PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh
-tensorboard: PYTHON_PATH -m tensorboard.main --logdir runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise/summaries (rund from cd OmniIsaacGymEnvs/omniisaacgymenvs)
-running: PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh test=True checkpoint=runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0.3actionpenalty_withNoise/nn/FactoryTaskSnapFit_eh.pth  (ANPASSEN)
-# """
+# Inherits nut-bolt environment class and abstract task class (not enforced). Can be executed with: 
+
+# cd OmniIsaacGymEnvs/omniisaacgymenvs
+# PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh
+# tensorboard: PYTHON_PATH -m tensorboard.main --logdir runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise/summaries (rund from cd OmniIsaacGymEnvs/omniisaacgymenvs)
+# running: PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh test=True checkpoint=runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0.3actionpenalty_withNoise/nn/FactoryTaskSnapFit_eh.pth  (ANPASSEN)
+# # """
 # For Linux: alias PYTHON_PATH=~/.local/share/ov/pkg/isaac_sim-*/python.sh
 # For Windows: doskey PYTHON_PATH=C:\Users\emmah\AppData\Local\ov\pkg\isaac_sim-2023.1.1\python.bat $* 
 # """
@@ -129,16 +128,15 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         #     [0.0, 0.0, 1.0], device=self.device
         # ).repeat((self.num_envs, 1))  
 
-        self.peg_base_pos_local = self.peg_heights * torch.tensor(    # result: list of tensors like torch.tensor([0.0, 0.0, bolt_head_height]) --> nut_pos_base local is equal to [0,0,bolt_head_height] for each env.
+        self.male_base_pos_local = self.male_heights_total * torch.tensor(    # result: list of tensors like torch.tensor([0.0, 0.0, bolt_head_height]) --> nut_pos_base local is equal to [0,0,bolt_head_height] for each env.
             [0.0, 0.0, 1.0], device=self.device # TODO: adjust to snap fi task
-        ).repeat((self.num_envs, 1))*0.5
+        ).repeat((self.num_envs, 1))-0.5 * self.male_heights_base*torch.tensor([0.0, 0.0, 1.0], device=self.device).repeat((self.num_envs, 1))
 
         # self.peg_base_pos_local = self.peg_heights * torch.tensor(    # try 4 (mesh i constructed in isaac sim, KOS in the middle of z)
         #     [0.0, 0.0, 1.0], device=self.device
         # ).repeat((self.num_envs, 1))*0.2
 
-
-        
+       
         female_heights = self.female_heights 
         self.female_tip_pos_local = female_heights * torch.tensor( # highest position of female thingy
             [0.0, 0.0, 1.0], device=self.device
@@ -150,11 +148,11 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         keypoint_scale: 0.5  # length of line of keypoints
         '''
         self.keypoint_offsets = (
-            self._get_keypoint_offsets(self.cfg_task.rl.num_keypoints, self.cfg_task.rl.num_axes)
+            self._get_keypoint_offsets(self.cfg_task.rl.num_keypoints)
             * self.cfg_task.rl.keypoint_scale 
         )
         self.keypoints_male = torch.zeros(  # tensor of zeros of size (num_envs, num_keypoints, 3)
-            (self.num_envs, self.cfg_task.rl.num_keypoints*self.cfg_task.rl.num_axes, 3), # adjusted for snap-fit: multiplied num_keypoints by num_axes
+            (self.num_envs, self.cfg_task.rl.num_keypoints*2, 3), # adjusted for snap-fit: multiplied num_keypoints by 2 (number of axes)
             dtype=torch.float32,
             device=self.device,
         )
@@ -286,17 +284,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         fingertip_midpoint_pos_reset = 0.58781  # self.fingertip_midpoint_pos at reset # for  fingertip_midpoint_pos_reset = 0.28781 peg "jumped" ot of table?? (TODO)
         # print("fingertip_midpoint_pos_reset: ",fingertip_midpoint_pos_reset)
 
-        # peg_base_pos_local = self.hole_drill_hole_heights.squeeze(-1) # first try in setting peg_pos_base_local
-        
-        # peg_base_pos_local = self.peg_heights.squeeze(-1) # second try in setting peg_pos_base_local # TODO: check if adding 1mm to peg_heights makes sense? 
-        
-        
-        # peg_base_pos_local = self.base_pos_zeros.squeeze(-1)
-
-
-        male_base_pos_local = self.peg_heights.squeeze(-1) * 0.5 # try 3 # TODO: adjust base_pos to snap fit task
-        # peg_base_pos_local = self.peg_heights.squeeze(-1) *0.2 # try 4; mesh I constructed in isaac sim -->KOS in the middle
-
+        male_base_pos_local = self.male_heights_total.squeeze(-1) - 0.5*self.male_heights_base # try 3 # TODO: adjust base_pos to snap fit task
 
         self.male_pos[env_ids, 2] = fingertip_midpoint_pos_reset - male_base_pos_local*0.5 # TODO: adjust male z pos of male to snapfit task ? TODO: ist peg_base_local random gewählt -->irgendein Abstand der ungefähr passen könnte, damit abstand zwischen fingertip_midpoint_pos_reset und bolt
         male_noise_pos_in_gripper = 2 * ( 
@@ -517,11 +505,6 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                 (keypoint_offset + self.female_tip_pos_local-0.03),  
             )[1]
 
-
-
-
-            
-
     def get_observations(self) -> dict:
         """Compute observations."""
         # print("get_observations")
@@ -593,7 +576,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             self.rew_buf[:] += is_male_close_to_female * self.cfg_task.rl.success_bonus # if close to bolt, --> successbonus*1 else successbonus*0; sucess_bonus defined in cfg-task-yaml-file (currently =0)
             self.extras["successes"] = torch.mean(is_male_close_to_female.float())
 
-    def _get_keypoint_offsets(self, num_keypoints, num_axes) -> torch.Tensor:
+    def _get_keypoint_offsets(self, num_keypoints) -> torch.Tensor:
         """Get uniformly-spaced keypoints along a line of unit length, centered at 0.
         Last column contains values ranging from -0.5 to 0.5 in a linearly spaced manner. The first two columns are filled with zeros. """
         # print("_get_keypoint_offsets")
@@ -602,23 +585,30 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         #     torch.linspace(0.0, 1.0, num_keypoints, device=self.device) - 0.5 #(try 06/03/2024: commented out the -0.5; went back on 07/03/2027 but with middle keypoint on topsurface of hole)
         # ) 
 
-        # keypoint_offsets for snap-fit task: two axes right and left along one of the x or y axis (which one? --> TODO)
-        keypoint_offsets = torch.zeros((num_keypoints*num_axes, 3), device=self.device) # adjusted: num_keypoint * num_axes to get correct number of offsets for desired num of axes along which the keypoints are aligned
+        # keypoint_offsets for snap-fit task: two axes right and left along y axis 
+        # keypoint_offsets = torch.zeros((num_keypoints, 3), device=self.device) # tensor for only one axis of keypoints
         
-        for i in range(1,num_axes): # TODO: check if correct (https://www.tensorflow.org/guide/tensor_slicing)
-            keypoint_offsets[num_keypoints*(i-1):num_keypoints*i, -1]=(
-                torch.linspace(0.0, 1.0, num_keypoints, device=self.device) 
-            )
-
-
+        # print("tensor keypoint_offsets *from*: ",num_keypoints*(i-1))
+        # print("tensor keypoint_offsets *to*: ",num_keypoints*i+1)
         
-        keypoint_offsets[num_keypoints:, -1] = ( # 
-            torch.linspace(0.0, 1.0, num_keypoints, device=self.device) - 0.5 #(try 06/03/2024: commented out the -0.5; went back on 07/03/2027 but with middle keypoint on topsurface of hole)
-        ) 
-        keypoint_offsets[:num_keypoints:, -1] = ( # 
-            torch.linspace(0.0, 1.0, num_keypoints, device=self.device) - 0.5 #(try 06/03/2024: commented out the -0.5; went back on 07/03/2027 but with middle keypoint on topsurface of hole)
-        ) 
+        # TODO did concatenation work  properly?
+        keypoint_offsets_1=torch.zeros((num_keypoints, 3), device=self.device) # tensor for only one axis of keypoints
+        keypoint_offsets_2=torch.zeros((num_keypoints, 3), device=self.device) # tensor for only one axis of keypoints
 
+        keypoint_offsets_1[:, -1]=( # axis 1
+            torch.linspace(0.0, 1.0, num_keypoints, device=self.device)-0.5
+        )
+        keypoint_offsets_1[:, 1]= -2 # move keypoint axis 2 units in  negative y-direction
+        print("keypoint_offsets_1: ",keypoint_offsets_1)
+        
+        keypoint_offsets_2[:, -1]=( # axis 2
+            torch.linspace(0.0, 1.0, num_keypoints, device=self.device)-0.5
+        )
+        keypoint_offsets_2[:, 1]= 2 # move keypoint axis 2 units in positive y-direction
+        print("keypoint_offsets_2: ",keypoint_offsets_2)
+
+        keypoint_offsets=torch.cat((keypoint_offsets_1,keypoint_offsets_2),1)
+        print("keypoint_offset (concatenated)",keypoint_offsets)
         
 
         return keypoint_offsets
