@@ -35,7 +35,7 @@
 # tensorboard: PYTHON_PATH -m tensorboard.main --logdir runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise/summaries (rund from cd OmniIsaacGymEnvs/omniisaacgymenvs)
 # running: PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh test=True checkpoint=runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0.3actionpenalty_withNoise/nn/FactoryTaskSnapFit_eh.pth  (ANPASSEN)
 # # """
-# For Linux: alias PYTHON_PATH=~/.local/share/ov/pkg/isaac_sim-*/python.sh
+# For Linux: alias PYTHON_PATH=~/.local/share/ov/pkg/isaac_sim-2023.1.1/python.sh
 # For Windows: doskey PYTHON_PATH=C:\Users\emmah\AppData\Local\ov\pkg\isaac_sim-2023.1.1\python.bat $* 
 # """
 
@@ -130,7 +130,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
         self.male_base_pos_local = self.male_heights_total * torch.tensor(    # result: list of tensors like torch.tensor([0.0, 0.0, bolt_head_height]) --> nut_pos_base local is equal to [0,0,bolt_head_height] for each env.
             [0.0, 0.0, 1.0], device=self.device # TODO: adjust to snap fi task
-        ).repeat((self.num_envs, 1))-0.5 * self.male_heights_base*torch.tensor([0.0, 0.0, 1.0], device=self.device).repeat((self.num_envs, 1))
+        ).repeat((self.num_envs, 1))-self.male_heights_base*torch.tensor([0.0, 0.0, 1.0], device=self.device).repeat((self.num_envs, 1))*0.5
 
         # self.peg_base_pos_local = self.peg_heights * torch.tensor(    # try 4 (mesh i constructed in isaac sim, KOS in the middle of z)
         #     [0.0, 0.0, 1.0], device=self.device
@@ -138,9 +138,9 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
        
         female_heights = self.female_heights 
-        self.female_tip_pos_local = female_heights * torch.tensor( # highest position of female thingy
+        self.female_middle_point = female_heights * torch.tensor( # highest position of female thingy
             [0.0, 0.0, 1.0], device=self.device
-        ).repeat((self.num_envs, 1))
+        ).repeat((self.num_envs, 1))*0.5
 
         # Keypoint tensors
         '''
@@ -318,12 +318,12 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         # print("checkpoint1 ", env_ids)
         
         
-        self.males.set_world_poses(
+        self.males_base.set_world_poses(
             self.male_pos[env_ids] + self.env_pos[env_ids],
             self.male_quat[env_ids],
             indices,
         )
-        self.males.set_velocities(
+        self.males_base.set_velocities(
             torch.cat((self.male_linvel[env_ids], self.male_angvel[env_ids]), dim=1),
             indices,
         )
@@ -490,19 +490,31 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         #         self.identity_quat,
         #         (keypoint_offset + self.female_tip_pos_local-0.03),  # before:  keypoint_offset + self.hole_tip_pos_local (changed on 05/03/2024; 14:16) # try 07/03/2024: change from bottom of drill hole (keypoint_offset + self.hole_drill_hole_heights) to center of hole, on cube surface (hole_tip_pos_local)
         #     )[1]
-        
+        self.num_keypoints=self.cfg_task.rl.num_keypoints
         for idx, keypoint_offset in enumerate(self.keypoint_offsets): # keypoints are placed in even distance in a line in z-direction 
-            self.keypoints_male[:, idx] = tf_combine( # TODO: adjust to male snapfit part
+            self.keypoints_male_1[:, idx] = tf_combine( # TODO: adjust to male snapfit part
                 self.male_quat,
                 self.male_pos,
                 self.identity_quat,
-                (keypoint_offset - self.male_base_pos_local), 
+                (keypoint_offset[0:self.num_keypoints+1,:] - self.male_base_pos_local), 
             )[1]
-            self.keypoints_female[:, idx] = tf_combine( # TODO: adjust to female snap fit part
+            self.keypoints_male_2[:, idx] = tf_combine( # TODO: adjust to male snapfit part
+                self.male_quat,
+                self.male_pos,
+                self.identity_quat,
+                (keypoint_offset[self.num_keypoints+1:self.num_keypoints*2+1,:] - self.male_base_pos_local), 
+            )[1]
+            self.keypoints_female_1[:, idx] = tf_combine( # TODO: adjust to female snap fit part
                 self.female_quat,
                 self.female_pos,
                 self.identity_quat,
-                (keypoint_offset + self.female_tip_pos_local-0.03),  
+                (keypoint_offset[0:self.num_keypoints+1,:] + self.female_middle_point),  
+            )[1]
+            self.keypoints_female_2[:, idx] = tf_combine( # TODO: adjust to female snap fit part
+                self.female_quat,
+                self.female_pos,
+                self.identity_quat,
+                (keypoint_offset[self.num_keypoints+1:self.num_keypoints*2+1,:] + self.female_middle_point),  
             )[1]
 
     def get_observations(self) -> dict:
@@ -520,8 +532,8 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             self.female_quat,
         ]
 
-        if self.cfg_task.rl.add_obs_female_tip_pos: # TODO: edit in task config file (add_obs_female_tip_pos is boolean value) # add observation of bolt tip position
-            obs_tensors += [self.female_tip_pos_local]
+        # if self.cfg_task.rl.add_obs_female_tip_pos: # TODO: edit in task config file (add_obs_female_tip_pos is boolean value) # add observation of bolt tip position
+        #     obs_tensors += [self.female_tip_pos_local]
 
         self.obs_buf = torch.cat(
             obs_tensors, dim=-1
@@ -608,7 +620,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         print("keypoint_offsets_2: ",keypoint_offsets_2)
 
         keypoint_offsets=torch.cat((keypoint_offsets_1,keypoint_offsets_2),1)
-        print("keypoint_offset (concatenated)",keypoint_offsets)
+        print("keypoint_offset (concatenated): ",keypoint_offsets)
         
 
         return keypoint_offsets
