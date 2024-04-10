@@ -1,7 +1,10 @@
 snap_fit_1:
     male: 
         # usd_path_windows: "C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\CAD RJ45\planar cantilever\nach AMAY\male\20240323_male_nach_AMAY.usd" 
-        usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/male/20240402/bigger version/male_v2_fromSingleParts.usd"
+        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/male/20240402/bigger version/male_v2_fromSingleParts.usd"
+        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/male/20240402/bigger version/male_v2_fromSingleParts_jointsInCollisionPrims.usd"
+        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/male/20240402/bigger version/male_v2_NoRigidBodies.usd"
+        usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/male/20240402/bigger version/male_v2_NoRigidBodies_rearrangedCollisionAndVisuals.usd"
         thickness: 0.016
         length_arm: 0.04
         length_retention_feature: 0.010 # TODO

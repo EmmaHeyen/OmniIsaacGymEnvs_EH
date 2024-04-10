@@ -26,17 +26,29 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# """Factory: Class for nut-bolt place task.
+# """Factory: Class for snap-fit place task.
 
 # Inherits nut-bolt environment class and abstract task class (not enforced). Can be executed with: 
 
-# cd OmniIsaacGymEnvs/omniisaacgymenvs
-# PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh
-# tensorboard: PYTHON_PATH -m tensorboard.main --logdir runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise/summaries (rund from cd OmniIsaacGymEnvs/omniisaacgymenvs)
-# running: PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh test=True checkpoint=runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0.3actionpenalty_withNoise/nn/FactoryTaskSnapFit_eh.pth  (ANPASSEN)
-# # """
+# PYTHON_PATH: 
 # For Linux: alias PYTHON_PATH=~/.local/share/ov/pkg/isaac_sim-2023.1.1/python.sh
 # For Windows: doskey PYTHON_PATH=C:\Users\emmah\AppData\Local\ov\pkg\isaac_sim-2023.1.1\python.bat $* 
+
+# cd OmniIsaacGymEnvs/omniisaacgymenvs
+# PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh
+
+# TENSORBOARD:
+# PYTHON_PATH -m tensorboard.main --logdir runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise/summaries (rund from cd OmniIsaacGymEnvs/omniisaacgymenvs)
+# 
+# RUNNING: 
+# PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh test=True checkpoint=runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0.3actionpenalty_withNoise/nn/FactoryTaskSnapFit_eh.pth  (ANPASSEN)
+# 
+# EXTENSION WORKFLOW:
+# windows: C:/Users/emmah/AppData/Local/ov/pkg/isaac_sim-2023.1.1/isaac-sim.gym.bat --ext-folder "C:\Users\emmah"
+# linux: /home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/isaac-sim.gym.sh --ext-folder /home/mnn_eh
+
+# """
+
 # """
 
 import asyncio
@@ -86,7 +98,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         ][
             "yaml"
         ]  # strip superfluous nesting
-        # TODO: adjust yaml for ppo --> done
+        
         ppo_path = "train/FactoryTaskSnapFit_ehPPO.yaml"  # relative to Gym's Hydra search path (cfg dir)
         self.cfg_ppo = hydra.compose(config_name=ppo_path)
         self.cfg_ppo = self.cfg_ppo["train"]  # strip superfluous nesting
@@ -115,26 +127,10 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         """Acquire tensors."""
         # print("_acquire_task_tensors")
         # Nut-bolt tensors
-        
-        # self.peg_base_pos_local = self.hole_drill_hole_heights * torch.tensor(    # result: list of tensors like torch.tensor([0.0, 0.0, bolt_head_height]) --> nut_pos_base local is equal to [0,0,bolt_head_height] for each env.
-        #     [0.0, 0.0, 1.0], device=self.device
-        # ).repeat((self.num_envs, 1))                                        # repeat could be omitted since it should be len(bolt_head_height) = num_envs
-
-        # self.peg_base_pos_local = self.peg_heights * torch.tensor(    # result: list of tensors like torch.tensor([0.0, 0.0, bolt_head_height]) --> nut_pos_base local is equal to [0,0,bolt_head_height] for each env.
-        #     [0.0, 0.0, 1.0], device=self.device                         # TODO: check if 1mm should be added to peg_heights? to get similar thingy as in Factory paper?
-        # ).repeat((self.num_envs, 1))  
-        
-        # self.peg_base_pos_local = self.base_pos_zeros * torch.tensor(   # funktioniert irgendwie nicht?? ("carb ist not defined" oder so) # result: list of tensors like torch.tensor([0.0, 0.0, bolt_head_height]) --> nut_pos_base local is equal to [0,0,bolt_head_height] for each env.
-        #     [0.0, 0.0, 1.0], device=self.device
-        # ).repeat((self.num_envs, 1))  
-
+      
         self.male_base_pos_local = self.male_heights_total * torch.tensor(    # result: list of tensors like torch.tensor([0.0, 0.0, bolt_head_height]) --> nut_pos_base local is equal to [0,0,bolt_head_height] for each env.
-            [0.0, 0.0, 1.0], device=self.device # TODO: adjust to snap fi task
+            [0.0, 0.0, 1.0], device=self.device 
         ).repeat((self.num_envs, 1))-self.male_heights_base*torch.tensor([0.0, 0.0, 1.0], device=self.device).repeat((self.num_envs, 1))*0.5
-
-        # self.peg_base_pos_local = self.peg_heights * torch.tensor(    # try 4 (mesh i constructed in isaac sim, KOS in the middle of z)
-        #     [0.0, 0.0, 1.0], device=self.device
-        # ).repeat((self.num_envs, 1))*0.2
 
        
         female_heights = self.female_heights 
@@ -147,16 +143,21 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         num_keypoints: 4  # number of keypoints used in reward
         keypoint_scale: 0.5  # length of line of keypoints
         '''
-        self.keypoint_offsets = (
-            self._get_keypoint_offsets(self.cfg_task.rl.num_keypoints)
-            * self.cfg_task.rl.keypoint_scale 
-        )
-        self.keypoints_male = torch.zeros(  # tensor of zeros of size (num_envs, num_keypoints, 3)
-            (self.num_envs, self.cfg_task.rl.num_keypoints*2, 3), # adjusted for snap-fit: multiplied num_keypoints by 2 (number of axes)
+
+        self.keypoint_offsets_1,self.keypoint_offsets_2 = self._get_keypoint_offsets(self.cfg_task.rl.num_keypoints)
+
+        self.keypoint_offsets_1=self.keypoint_offsets_1 * self.cfg_task.rl.keypoint_scale 
+        self.keypoint_offsets_2=self.keypoint_offsets_2 * self.cfg_task.rl.keypoint_scale 
+
+        self.keypoints_male_1 = torch.zeros(  # tensor of zeros of size (num_envs, num_keypoints, 3)
+            (self.num_envs, self.cfg_task.rl.num_keypoints, 3), # adjusted for snap-fit: multiplied num_keypoints by 2 (number of axes)
             dtype=torch.float32,
             device=self.device,
         )
-        self.keypoints_female = torch.zeros_like(self.keypoints_male, device=self.device) # tensor of zeros of same size as self.keypoints_male
+
+        self.keypoints_male_2 = torch.zeros_like(self.keypoints_male_1, device=self.device) 
+        self.keypoints_female_1 = torch.zeros_like(self.keypoints_male_1, device=self.device) 
+        self.keypoints_female_2 = torch.zeros_like(self.keypoints_male_1, device=self.device) # tensor of zeros of same size as self.keypoints_male
 
         self.identity_quat = (
             torch.tensor([1.0, 0.0, 0.0, 0.0], device=self.device)
@@ -185,6 +186,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         self._apply_actions_as_ctrl_targets(
             actions=self.actions, ctrl_target_gripper_dof_pos=0.0, do_scale=True
         )
+        # print("pre_physics_step ende")
 
     async def pre_physics_step_async(self, actions) -> None:
         """Reset environments. Apply actions from policy. Simulation step called after this method."""
@@ -208,7 +210,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
     def reset_idx(self, env_ids, randomize_gripper_pose) -> None:
         """Reset specified environments."""
-        # print("reset_idx")
+        print("reset_idx")
         self._reset_franka(env_ids)
         self._reset_object(env_ids)
 
@@ -244,9 +246,10 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
     def _reset_franka(self, env_ids) -> None:
         """Reset DOF states and DOF targets of Franka."""
-        # print("_reset_franka")
+        print("_reset_franka")
         gripper_buffer=1.1  # buffer on gripper DOF pos to prevent initial contact (was 1.1 before)
         # print("gripper_buffer: ", gripper_buffer)
+
         self.dof_pos[env_ids] = torch.cat(
             (
                 torch.tensor(
@@ -254,10 +257,10 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                     device=self.device,
                 ).repeat((len(env_ids), 1)),
                 # (self.male_widths * 0.5)
-                (self.male_widths * 0.5)                                 # gripper pos?
+                (self.male_thicknesses * 0.5)                                 # finger pos
                 * gripper_buffer,  # buffer on gripper DOF pos to prevent initial contact (was 1.1 before)
                 # (self.male_widths * 0.5) * 1.1,
-                (self.male_widths * 0.5) * gripper_buffer                # gripper pos?
+                (self.male_thicknesses * 0.5) * gripper_buffer                # finger pos
                 
             ),  # buffer on gripper DOF pos to prevent initial contact (was 1.1 before)
             dim=-1,
@@ -268,25 +271,32 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         indices = env_ids.to(dtype=torch.int32)
         self.frankas.set_joint_positions(self.dof_pos[env_ids], indices=indices)
         self.frankas.set_joint_velocities(self.dof_vel[env_ids], indices=indices)
+        print("reset_franka ende")
 
     def _reset_object(self, env_ids) -> None:
         """Reset root states of nut and bolt."""
         # print("reset_object")
         # Randomize root state of nut within gripper
-        self.male_pos[env_ids, 0] = 0.0 # x-coordinate of position?
-        self.male_pos[env_ids, 1] = 0.0 # y-coordinate of position?
+        self.male_pos_base[env_ids, 0] = 0.0 # x-coordinate of position?
+        self.male_pos_base[env_ids, 1] = 0.0 # y-coordinate of position?
 
-        # self.peg_pos[env_ids, 0] = 1.0 # makes no difference??
-        # self.peg_pos[env_ids, 1] = 1.0 # makes no difference??
-
+        self.male_pos_armLeft[env_ids, 0] = self.male_pos_base[env_ids, 0] - 0.023
+        self.male_pos_armLeft[env_ids, 1] = self.male_pos_base[env_ids, 1]       # TODO right unit??
+        self.male_pos_armRight[env_ids, 0] = self.male_pos_base[env_ids, 0] + 0.023
+        self.male_pos_armRight[env_ids, 1] = self.male_pos_base[env_ids, 1]      # TODO: right unit??
 
         # TODO: check out if value for fingertip_midpoint_pos_reset has to be adjusted (was 0.58781 before) (franka_finger_length=0.053671, from factory_asset_info_franka_table)
         fingertip_midpoint_pos_reset = 0.58781  # self.fingertip_midpoint_pos at reset # for  fingertip_midpoint_pos_reset = 0.28781 peg "jumped" ot of table?? (TODO)
         # print("fingertip_midpoint_pos_reset: ",fingertip_midpoint_pos_reset)
 
-        male_base_pos_local = self.male_heights_total.squeeze(-1) - 0.5*self.male_heights_base # try 3 # TODO: adjust base_pos to snap fit task
+        male_base_pos_local = self.male_heights_total.squeeze(-1) - 0.5*self.male_heights_base.squeeze(-1) # try 3 # TODO: adjust base_pos to snap fit task
 
-        self.male_pos[env_ids, 2] = fingertip_midpoint_pos_reset - male_base_pos_local*0.5 # TODO: adjust male z pos of male to snapfit task ? TODO: ist peg_base_local random gewählt -->irgendein Abstand der ungefähr passen könnte, damit abstand zwischen fingertip_midpoint_pos_reset und bolt
+        self.male_pos_base[env_ids, 2] = fingertip_midpoint_pos_reset + 0.01 # TODO: adjust male z pos of male to snapfit task ? TODO: ist peg_base_local random gewählt -->irgendein Abstand der ungefähr passen könnte, damit abstand zwischen fingertip_midpoint_pos_reset und bolt
+        
+                   
+        self.male_pos_armLeft[env_ids, 2] = self.male_pos_base[env_ids, 2] - 0.01       # TODO right unit?
+        self.male_pos_armRight[env_ids, 2] = self.male_pos_base[env_ids,2] - 0.01       # TODO: right unit?
+        
         male_noise_pos_in_gripper = 2 * ( 
             torch.rand((self.num_envs, 3), dtype=torch.float32, device=self.device)
             - 0.5
@@ -296,7 +306,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                 self.cfg_task.randomize.male_noise_pos_in_gripper, device=self.device
             )
         )
-        self.male_pos[env_ids, :] += male_noise_pos_in_gripper[env_ids] 
+        # self.male_pos[env_ids, :] += male_noise_pos_in_gripper[env_ids]               # TODO: noise for base, armLeft and armRight
 
         male_rot_euler = torch.tensor(
             [0.0, 0.0, math.pi * 0.5], device=self.device
@@ -309,28 +319,59 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         male_rot_quat = torch_utils.quat_from_euler_xyz(
             male_rot_euler[:, 0], male_rot_euler[:, 1], male_rot_euler[:, 2]
         )
-        self.male_quat[env_ids, :] = male_rot_quat
+        # self.male_quat[env_ids, :] = male_rot_quat # TODO: noise
 
-        self.male_linvel[env_ids, :] = 0.0
-        self.male_angvel[env_ids, :] = 0.0
+        self.male_linvel_base[env_ids, :] = 0.0
+        self.male_angvel_base[env_ids, :] = 0.0
+
+        self.male_linvel_armRight[env_ids, :] = self.male_linvel_base[env_ids, :] 
+        self.male_angvel_armRight[env_ids, :] = self.male_angvel_base[env_ids, :] 
+        self.male_linvel_armLeft[env_ids, :] = self.male_linvel_base[env_ids, :] 
+        self.male_angvel_armLeft[env_ids, :] = self.male_angvel_base[env_ids, :] 
+
 
         indices = env_ids.to(dtype=torch.int32)
         # print("checkpoint1 ", env_ids)
-        
+               
+        self.male_quat_base=self.identity_quat
+        self.male_quat_armleft=self.identity_quat
+        self.male_quat_armRight=self.identity_quat
         
         self.males_base.set_world_poses(
-            self.male_pos[env_ids] + self.env_pos[env_ids],
-            self.male_quat[env_ids],
+            self.male_pos_base[env_ids] + self.env_pos[env_ids],
+            self.male_quat_base[env_ids],
             indices,
         )
         self.males_base.set_velocities(
-            torch.cat((self.male_linvel[env_ids], self.male_angvel[env_ids]), dim=1),
+            torch.cat((self.male_linvel_base[env_ids], self.male_angvel_base[env_ids]), dim=1),
             indices,
         )
+
+        self.males_armRight.set_world_poses(
+            self.male_pos_armRight[env_ids] + self.env_pos[env_ids],
+            self.male_quat_armRight[env_ids],
+            indices,
+        )
+        self.males_armRight.set_velocities(
+            torch.cat((self.male_linvel_armRight[env_ids], self.male_angvel_armRight[env_ids]), dim=1),
+            indices,
+        )
+
+        self.males_armLeft.set_world_poses(
+            self.male_pos_armLeft[env_ids] + self.env_pos[env_ids],
+            self.male_quat_armleft[env_ids],
+            indices,
+        )
+        self.males_armLeft.set_velocities(
+            torch.cat((self.male_linvel_armLeft[env_ids], self.male_angvel_armLeft[env_ids]), dim=1),
+            indices,
+        )
+
+
         # print("checkpoint2 ", env_ids)
         # print("self.male_pos[env_ids] + self.env_pos[env_ids]=",self.male_pos[env_ids] + self.env_pos[env_ids])
 
-        # Randomize root state of hole
+        # Randomize root state of female
         female_noise_xy = 2 * (
             torch.rand((self.num_envs, 2), dtype=torch.float32, device=self.device)
             - 0.5
@@ -343,19 +384,19 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             )
         )
 
-        self.female_pos[env_ids, 0] = ( # x
-            self.cfg_task.randomize.female_pos_xy_initial[0] + female_noise_xy[env_ids, 0]
-        )
-        self.female_pos[env_ids, 1] = ( # y
-            self.cfg_task.randomize.female_pos_xy_initial[1] + female_noise_xy[env_ids, 1]
-        )
+        # self.female_pos[env_ids, 0] = ( # x
+        #     self.cfg_task.randomize.female_pos_xy_initial[0] + female_noise_xy[env_ids, 0]
+        # )
+        # self.female_pos[env_ids, 1] = ( # y
+        #     self.cfg_task.randomize.female_pos_xy_initial[1] + female_noise_xy[env_ids, 1]
+        # )
 
-        # self.female_pos[env_ids, 0] = ( # x ###REMOVED NOISE FOR TESTING
-        #     self.cfg_task.randomize.female_pos_xy_initial[0]
-        # )
-        # self.female_pos[env_ids, 1] = ( # y ###REMOVED NOISE FOR TESTING
-        #     self.cfg_task.randomize.female_pos_xy_initial[1]
-        # )
+        self.female_pos[env_ids, 0] = ( # x ###REMOVED NOISE FOR TESTING # TODO: noise
+            self.cfg_task.randomize.female_pos_xy_initial[0]
+        )
+        self.female_pos[env_ids, 1] = ( # y ###REMOVED NOISE FOR TESTING  # TODO: noise
+            self.cfg_task.randomize.female_pos_xy_initial[1]
+        )
 
 
         self.female_pos[env_ids, 2] = self.cfg_base.env.table_height # z # table_height=0.4 (from cfg->task->FactoryBase.yaml)
@@ -370,6 +411,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             self.female_quat[env_ids],
             indices,
         )
+        # print("reset_object ende")
 
     def _reset_buffers(self, env_ids) -> None:
         # print("_reset_buffers")
@@ -379,10 +421,11 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         self.progress_buf[env_ids] = 0
 
     def _apply_actions_as_ctrl_targets(
-        self, actions, ctrl_target_gripper_dof_pos, do_scale # do_scale:bool
+        self, actions, ctrl_target_gripper_dof_pos, do_scale # do_scale:bool # immer false ausßer in pre_physics_step?
     ) -> None:
         """Apply actions from policy as position/rotation/force/torque targets."""
         # print("_apply_actions_as_ctrl_targets")
+
         # Interpret actions as target pos displacements and set pos target
         pos_actions = actions[:, 0:3]
         if do_scale:
@@ -395,6 +438,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
         # Interpret actions as target rot (axis-angle) displacements
         rot_actions = actions[:, 3:6]
+
         if do_scale:
             rot_actions = rot_actions @ torch.diag(
                 torch.tensor(self.cfg_task.rl.rot_action_scale, device=self.device)
@@ -402,6 +446,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
         # Convert to quat and set rot target
         angle = torch.norm(rot_actions, p=2, dim=-1)
+        
         axis = rot_actions / angle.unsqueeze(-1)
         rot_actions_quat = torch_utils.quat_from_angle_axis(angle, axis)
         if self.cfg_task.rl.clamp_rot:
@@ -478,44 +523,49 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         # )
 
         # for idx, keypoint_offset in enumerate(self.keypoint_offsets): # keypoints are placed in even distance in a line in z-direction 
-        #     self.keypoints_male[:, idx] = tf_combine( # TODO: adjust male_keypoints to snap fit task
+        #     self.keypoints_male[:, idx] = tf_combine( # adjust male_keypoints to snap fit task
         #         self.male_quat,
         #         self.male_pos,
         #         self.identity_quat,
         #         (keypoint_offset - self.male_base_pos_local), # before:keypoint_offset + self.peg_base_pos_local (changed on 05/03/2024; 14:16) 
         #     )[1]
-        #     self.keypoints_female[:, idx] = tf_combine( # TODO: adjust female_keypoints to snap fit task
+        #     self.keypoints_female[:, idx] = tf_combine( # adjust female_keypoints to snap fit task
         #         self.female_quat,
         #         self.female_pos,
         #         self.identity_quat,
         #         (keypoint_offset + self.female_tip_pos_local-0.03),  # before:  keypoint_offset + self.hole_tip_pos_local (changed on 05/03/2024; 14:16) # try 07/03/2024: change from bottom of drill hole (keypoint_offset + self.hole_drill_hole_heights) to center of hole, on cube surface (hole_tip_pos_local)
         #     )[1]
         self.num_keypoints=self.cfg_task.rl.num_keypoints
-        for idx, keypoint_offset in enumerate(self.keypoint_offsets): # keypoints are placed in even distance in a line in z-direction 
-            self.keypoints_male_1[:, idx] = tf_combine( # TODO: adjust to male snapfit part
-                self.male_quat,
-                self.male_pos,
+        for idx, keypoint_offset in enumerate(self.keypoint_offsets_1): # keypoints are placed in even distance in a line in z-direction 
+            self.keypoints_male_1[:, idx] = tf_combine(                 # shape keypoints_male_1: torch.Size([128, 4, 3])
+                self.male_quat_base,
+                self.male_pos_base,
                 self.identity_quat,
-                (keypoint_offset[0:self.num_keypoints+1,:] - self.male_base_pos_local), 
-            )[1]
-            self.keypoints_male_2[:, idx] = tf_combine( # TODO: adjust to male snapfit part
-                self.male_quat,
-                self.male_pos,
-                self.identity_quat,
-                (keypoint_offset[self.num_keypoints+1:self.num_keypoints*2+1,:] - self.male_base_pos_local), 
+                (keypoint_offset - self.male_base_pos_local), 
             )[1]
             self.keypoints_female_1[:, idx] = tf_combine( # TODO: adjust to female snap fit part
                 self.female_quat,
                 self.female_pos,
                 self.identity_quat,
-                (keypoint_offset[0:self.num_keypoints+1,:] + self.female_middle_point),  
+                (keypoint_offset + self.female_middle_point),  
+            )[1]
+
+            
+        for idx, keypoint_offset in enumerate(self.keypoint_offsets_2): # keypoints are placed in even distance in a line in z-direction 
+            self.keypoints_male_2[:, idx] = tf_combine( # TODO: adjust to male snapfit part
+                self.male_quat_base,
+                self.male_pos_base,
+                self.identity_quat,
+                (keypoint_offset - self.male_base_pos_local), 
             )[1]
             self.keypoints_female_2[:, idx] = tf_combine( # TODO: adjust to female snap fit part
                 self.female_quat,
                 self.female_pos,
                 self.identity_quat,
-                (keypoint_offset[self.num_keypoints+1:self.num_keypoints*2+1,:] + self.female_middle_point),  
+                (keypoint_offset + self.female_middle_point),  
             )[1]
+
+        # print("shape keypoint_female_2: ", self.keypoints_female_2.shape) # torch.Size([128, 4, 3])
 
     def get_observations(self) -> dict:
         """Compute observations."""
@@ -526,13 +576,13 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             self.fingertip_midpoint_quat,
             self.fingertip_midpoint_linvel,
             self.fingertip_midpoint_angvel,
-            self.male_pos,
-            self.male_quat,
+            self.male_pos_base,
+            self.male_quat_base,
             self.female_pos,
             self.female_quat,
         ]
 
-        # if self.cfg_task.rl.add_obs_female_tip_pos: # TODO: edit in task config file (add_obs_female_tip_pos is boolean value) # add observation of bolt tip position
+        # if self.cfg_task.rl.add_obs_female_tip_pos: # --> edit in task config file (add_obs_female_tip_pos is boolean value) # add observation of bolt tip position
         #     obs_tensors += [self.female_tip_pos_local]
 
         self.obs_buf = torch.cat(
@@ -603,36 +653,63 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         # print("tensor keypoint_offsets *from*: ",num_keypoints*(i-1))
         # print("tensor keypoint_offsets *to*: ",num_keypoints*i+1)
         
-        # TODO did concatenation work  properly?
+        # did concatenation work  properly? --> nope but i dont use the concatenation anymore
         keypoint_offsets_1=torch.zeros((num_keypoints, 3), device=self.device) # tensor for only one axis of keypoints
         keypoint_offsets_2=torch.zeros((num_keypoints, 3), device=self.device) # tensor for only one axis of keypoints
 
         keypoint_offsets_1[:, -1]=( # axis 1
             torch.linspace(0.0, 1.0, num_keypoints, device=self.device)-0.5
         )
-        keypoint_offsets_1[:, 1]= -2 # move keypoint axis 2 units in  negative y-direction
-        print("keypoint_offsets_1: ",keypoint_offsets_1)
+        keypoint_offsets_1[:, 1]= -0.02 # move keypoint axis 2 units in  negative y-direction # TODO: right units?
+        # print("keypoint_offsets_1: ",keypoint_offsets_1)
         
         keypoint_offsets_2[:, -1]=( # axis 2
             torch.linspace(0.0, 1.0, num_keypoints, device=self.device)-0.5
         )
-        keypoint_offsets_2[:, 1]= 2 # move keypoint axis 2 units in positive y-direction
-        print("keypoint_offsets_2: ",keypoint_offsets_2)
+        keypoint_offsets_2[:, 1]= 0.02 # move keypoint axis 2 units in positive y-direction # TODO: right units? --> check by adding cube at 0.02 to left/right to see if unit is right
+        # print("keypoint_offsets_2: ",keypoint_offsets_2)
 
         keypoint_offsets=torch.cat((keypoint_offsets_1,keypoint_offsets_2),1)
-        print("keypoint_offset (concatenated): ",keypoint_offsets)
+        # print("keypoint_offset (concatenated): ",keypoint_offsets)
         
 
-        return keypoint_offsets
+        return keypoint_offsets_1, keypoint_offsets_2
 
     def _get_keypoint_dist(self) -> torch.Tensor:
         """Get keypoint distance between nut and bolt."""
         # print("_get_keypoint_dist")
-        keypoint_dist = torch.sum(
-            torch.norm(self.keypoints_female - self.keypoints_male, p=2, dim=-1), dim=-1
+
+        # combinations (male_keypoints,female_kepoints): 
+        # (1,1) and (2,2), (1,2) and (2,1)
+        # a and b, c and d
+        
+        keypoint_dist_A1 = torch.sum(
+            torch.norm(self.keypoints_female_1 - self.keypoints_male_1, p=2, dim=-1), dim=-1 # frobenius norm
+        )
+        keypoint_dist_A2 = torch.sum(
+            torch.norm(self.keypoints_female_2 - self.keypoints_male_2, p=2, dim=-1), dim=-1
+        )
+        keypoint_dist_B1 = torch.sum(
+            torch.norm(self.keypoints_female_2 - self.keypoints_male_1, p=2, dim=-1), dim=-1
+        )
+        keypoint_dist_B2 = torch.sum(
+            torch.norm(self.keypoints_female_1 - self.keypoints_male_2, p=2, dim=-1), dim=-1
         )
 
-        return keypoint_dist
+        keypoint_dist_A=torch.add(keypoint_dist_A1,keypoint_dist_A2)
+        keypoint_dist_B=torch.add(keypoint_dist_B1,keypoint_dist_B2)
+
+
+        # Stack the tensors along a new axis (axis=1)
+        key_point_dist_stacked = torch.stack([keypoint_dist_A, keypoint_dist_B], dim=1)
+
+        # Find the maximum value along the new axis (axis=1)
+        keypoint_dist_min, _ = torch.min(key_point_dist_stacked, dim=1)
+
+        # print("key_point_dist_stacked: ",key_point_dist_stacked)
+        # print("keypoint_dist_min: ",keypoint_dist_min)       
+
+        return keypoint_dist_min
 
     def _randomize_gripper_pose(self, env_ids, sim_steps) -> None:
         """Move gripper to random pose."""
@@ -713,9 +790,10 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                 actions=actions,
                 ctrl_target_gripper_dof_pos=0.0,
                 do_scale=False,
+                # do_scale=True, # was False before # TODO
             )
 
-            SimulationContext.step(self._env._world, render=True)
+            SimulationContext.step(self._env._world, render=False)
 
         self.dof_vel[env_ids, :] = torch.zeros_like(self.dof_vel[env_ids])
 
@@ -724,6 +802,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
         # Step once to update PhysX with new joint velocities
         SimulationContext.step(self._env._world, render=True)
+        # print("_randomize_gripper_pose ende")
 
     async def _randomize_gripper_pose_async(self, env_ids, sim_steps) -> None:
         """Move gripper to random pose."""
@@ -805,6 +884,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                 actions=actions,
                 ctrl_target_gripper_dof_pos=0.0,
                 do_scale=False,
+                # do_scale=True, # was False before # TODO
             )
 
             self._env._world.physics_sim_view.flush()
@@ -834,7 +914,9 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         # Step sim
         for _ in range(sim_steps):
             self._apply_actions_as_ctrl_targets(
-                delta_hand_pose, gripper_dof_pos, do_scale=False
+                delta_hand_pose, gripper_dof_pos, 
+                do_scale=False
+                # do_scale=True # was False before # TODO
             )
             SimulationContext.step(self._env._world, render=True)
 
@@ -856,20 +938,44 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         # Step sim
         for _ in range(sim_steps):
             self._apply_actions_as_ctrl_targets(
-                delta_hand_pose, gripper_dof_pos, do_scale=False
+                delta_hand_pose, gripper_dof_pos, 
+                do_scale=False
+                # do_scale=True # was False before # TODO
             )
             self._env._world.physics_sim_view.flush()
             await omni.kit.app.get_app().next_update_async()
 
     def _check_male_close_to_female(self) -> torch.Tensor:
         """Check if nut is close to bolt."""
+        # TODO
         # print("_check_male_close_to_female")
-        keypoint_dist = torch.norm(
-            self.keypoints_female - self.keypoints_male, p=2, dim=-1
+
+        keypoint_dist_A1 = torch.sum(
+            torch.norm(self.keypoints_female_1 - self.keypoints_male_1, p=2, dim=-1), dim=-1 # frobenius norm
+        )
+        keypoint_dist_A2 = torch.sum(
+            torch.norm(self.keypoints_female_2 - self.keypoints_male_2, p=2, dim=-1), dim=-1
+        )
+        keypoint_dist_B1 = torch.sum(
+            torch.norm(self.keypoints_female_2 - self.keypoints_male_1, p=2, dim=-1), dim=-1
+        )
+        keypoint_dist_B2 = torch.sum(
+            torch.norm(self.keypoints_female_1 - self.keypoints_male_2, p=2, dim=-1), dim=-1
         )
 
+        keypoint_dist_A=torch.add(keypoint_dist_A1,keypoint_dist_A2)
+        keypoint_dist_B=torch.add(keypoint_dist_B1,keypoint_dist_B2)
+
+
+        # Stack the tensors along a new axis (axis=1)
+        key_point_dist_stacked = torch.stack([keypoint_dist_A, keypoint_dist_B], dim=1)
+
+        # Find the maximum value along the new axis (axis=1)
+        keypoint_dist_min, _ = torch.min(key_point_dist_stacked, dim=1)
+
+
         is_male_close_to_female = torch.where( # torch.where(condition, input, other) Returns tensor of elements selected from either input or other depending on condition (input if condition=true) 
-            torch.sum(keypoint_dist, dim=-1) < self.cfg_task.rl.close_error_thresh, # threshold below which nut is considered close enough to bolt
+            torch.sum(keypoint_dist_min, dim=-1) < self.cfg_task.rl.close_error_thresh, # threshold below which nut is considered close enough to bolt
             torch.ones_like(self.progress_buf),                                     # TODO: adjust threshold?
             torch.zeros_like(self.progress_buf),
         )

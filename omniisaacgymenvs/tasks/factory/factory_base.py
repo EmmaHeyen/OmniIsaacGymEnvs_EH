@@ -254,6 +254,7 @@ class FactoryBase(RLTask, FactoryABCBase):
         fingertip_centered_velocities = self.frankas._fingertip_centered.get_velocities(
             clone=False
         )
+        
         self.fingertip_centered_linvel = fingertip_centered_velocities[:, 0:3]
         self.fingertip_centered_angvel = fingertip_centered_velocities[:, 3:6]
         self.fingertip_centered_jacobian = self.franka_jacobian[:, 10, 0:6, 0:7]

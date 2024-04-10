@@ -111,7 +111,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
 
         self._get_env_yaml_params()
 
-    def set_up_scene(self, scene) -> None: #TODO
+    def set_up_scene(self, scene) -> None: 
         """Import assets. Add to scene."""
         # print("set_up_scene")
 
@@ -121,7 +121,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         physxSceneAPI.CreateGpuCollisionStackSizeAttr().Set(256 * 1024 * 1024)
         # print("import franka assets")
         self.import_franka_assets(add_to_stage=True) # defined in factory_base --> probably fine as is
-        self.create_snap_fit_material() #--> TODO: brauchen wir das? reicht es wenn wir das Material in usd festlegen?
+        self.create_snap_fit_material() #--> # TODO: brauchen wir das? reicht es wenn wir das Material in usd festlegen?
         # print("RLTask set up scene")
         RLTask.set_up_scene(self, scene, replicate_physics=False)
         # print("import assets")
@@ -133,27 +133,21 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
             prim_paths_expr="/World/envs/.*/franka", name="frankas_view"
         )
 
-        # self.males = RigidPrimView(
-        #     prim_paths_expr="/World/envs/.*/male/male/collisions.*", name="males_view", track_contact_forces=True, # TODO: adjust male.usd correctly; rigid prim view has to get the mesh paths as input
-        # )
-
         self.males_base = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_base/base/mesh_01.*", name="males_view_base", track_contact_forces=True, # TODO: adjust male.usd correctly; rigid prim view has to get the mesh paths as input
+            prim_paths_expr="/World/envs/.*/male/male/base.*", name="males_view_base", track_contact_forces=True, 
         )
         self.males_armRight = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_armRight/arm_right/mesh_02.*", name="males_view_armRight", track_contact_forces=True, # TODO: adjust male.usd correctly; rigid prim view has to get the mesh paths as input
+            prim_paths_expr="/World/envs/.*/male/male/arm_Right.*", name="males_view_armRight", track_contact_forces=True, 
         )
         self.males_armLeft = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_armLeft/arm_left/mesh_03.*", name="males_view_armLeft", track_contact_forces=True, # TODO: adjust male.usd correctly; rigid prim view has to get the mesh paths as input
+            prim_paths_expr="/World/envs/.*/male/male/arm_Left.*", name="males_view_armLeft", track_contact_forces=True, 
         )
 
-
-        # print("RigidPrimView")
+        # print("RigidPrimView_female")
         self.females = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/female/female/collisions.*", name="females_view", track_contact_forces=True, # TODO: adjust female.usd correctly
+            prim_paths_expr="/World/envs/.*/female/female.*", name="females_view", track_contact_forces=True, 
         )
 
-        # TODO: scene.add
         scene.add(self.males_base)
         scene.add(self.males_armRight)
         scene.add(self.males_armLeft)
@@ -167,7 +161,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
 
         return
 
-    def initialize_views(self, scene) -> None: #TODO
+    def initialize_views(self, scene) -> None: 
         """Initialize views for extension workflow."""
         # print("initialize_views")
 
@@ -205,18 +199,14 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
             prim_paths_expr="/World/envs/.*/franka", name="frankas_view"
         )
 
-        # self.males = RigidPrimView(
-        #     prim_paths_expr="/World/envs/.*/male/male/collisions.*", name="males_view"
-        # )
-
         self.males_base = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_base/base/mesh_01.*", name="males_view_base", track_contact_forces=True, # TODO: adjust male.usd correctly; rigid prim view has to get the mesh paths as input
+            prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_base.*", name="males_view_base", track_contact_forces=True, 
         )
         self.males_armRight = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_armRight/arm_right/mesh_02.*", name="males_view_armRight", track_contact_forces=True, # TODO: adjust male.usd correctly; rigid prim view has to get the mesh paths as input
+            prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_armRight.*", name="males_view_armRight", track_contact_forces=True, 
         )
         self.males_armLeft = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_armLeft/arm_left/mesh_03.*", name="males_view_armLeft", track_contact_forces=True, # TODO: adjust male.usd correctly; rigid prim view has to get the mesh paths as input
+            prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_armLeft.*", name="males_view_armLeft", track_contact_forces=True, 
         )
 
 
@@ -244,7 +234,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         # print("add _fingertip_centered")
         scene.add(self.frankas._fingertip_centered)
 
-    def create_snap_fit_material(self): #TODO: only for female und male_base?
+    def create_snap_fit_material(self): 
         """Define snapfit material."""
         # print("create_snapfit_material")
 
@@ -255,7 +245,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         utils.addRigidBodyMaterial(
             self._stage,
             self.FemalePhysicsMaterialPath,
-            density=self.cfg_env.env.snap_fit_density,                  # from config file (FactoryEnvSnapFit_eh.yaml) # TODO: does density defined her overwrite the density/mass in usd? I guess it does not overwrite the mass?
+            density=self.cfg_env.env.snap_fit_density,                  # from config file (FactoryEnvSnapFit_eh.yaml) # 
             staticFriction=self.cfg_env.env.snap_fit_friction,         # from config file ((FactoryEnvSnapFit_eh.yaml) # TODO: reserach values for friction
             dynamicFriction=self.cfg_env.env.snap_fit_friction,       # from config file (FactoryEnvSnapFit_eh.yaml)
             restitution=0.0,
@@ -263,14 +253,14 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         utils.addRigidBodyMaterial(
             self._stage,
             self.MalePhysicsMaterialPath,
-            density=self.cfg_env.env.snap_fit_density,                  # from config file (FactoryEnvSnapFit_eh.yaml) # TODO: does density defined her overwrite the density/mass in usd? I guess it does not overwrite the mass?
+            density=self.cfg_env.env.snap_fit_density,                  # from config file (FactoryEnvSnapFit_eh.yaml) #  does density defined her overwrite the density/mass in usd? I guess it does not overwrite the mass?
             staticFriction=self.cfg_env.env.snap_fit_friction,         # from config file ((FactoryEnvSnapFit_eh.yaml) # TODO: reserach values for friction
             dynamicFriction=self.cfg_env.env.snap_fit_friction,       # from config file (FactoryEnvSnapFit_eh.yaml)
             restitution=0.0,
         )
 
 
-    def _import_env_assets(self, add_to_stage=True): #TODO
+    def _import_env_assets(self, add_to_stage=True): 
         """Set snap-fit asset options. Import assets."""
         # print("_import_env_assets")
         print("1")
@@ -281,7 +271,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
             usd_path="usd_path_windows"   
 
         print("2")
-        self.male_thickness=[]
+        self.male_thicknesses=[]
         self.male_heights_base=[]
         self.male_heights_total = []
         self.male_widths_base = []
@@ -303,7 +293,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
                 ],
                 device=self._device,
             )
-            male_orientation = torch.tensor([1.0, 0.0, 0.0, 0.0], device=self._device)  # TODO: maybe has to be adjusted? 
+            male_orientation = torch.tensor([1.0, 0.0, 0.0, 0.0], device=self._device)  #  maybe has to be adjusted? --> turned by 90 degrees in usd
 
             # print("5:,",i)
 
@@ -313,10 +303,12 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
             male_height_total = self.asset_info_snap_fit[subassembly][components[0]]["height_total"]    # aus factory_asset_info_nut_bolt datei
             male_width_base = self.asset_info_snap_fit[subassembly][components[0]]["width_base"]      # aus factory_asset_info_nut_bolt datei
             male_height_base=self.asset_info_snap_fit[subassembly][components[0]]["height_base"]
+            male_thickness=self.asset_info_snap_fit[subassembly][components[0]]["thickness"]
 
             self.male_widths_base.append(male_width_base)
             self.male_heights_total.append(male_height_total)
             self.male_heights_base.append(male_height_base)   
+            self.male_thicknesses.append(male_thickness)   
 
             male_file = self.asset_info_snap_fit[subassembly][components[0]][usd_path]      # aus factory_asset_info_nut_bolt datei; müsste auch über asset path funktionieren
             # print("male_file: ",male_file)
@@ -333,7 +325,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
                 
                 # print("6:,",i)
                 self._stage.GetPrimAtPath(
-                    f"/World/envs/env_{i}" + f"/male/{components[0]}/collisions" 
+                    f"/World/envs/env_{i}" + f"/male/{components[0]}/base/collisions_base" 
                 ).SetInstanceable(
                     False
                 )  # This is required to be able to edit physics material
@@ -341,11 +333,37 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
                     self._stage,
                     self._stage.GetPrimAtPath(
                         f"/World/envs/env_{i}"
-                        + f"/male/{components[0]}/collisions"
+                        + f"/male/{components[0]}/base/collisions_base"
                     ),
-                    
                     self.MalePhysicsMaterialPath,
-                    
+                )
+
+
+                self._stage.GetPrimAtPath(
+                    f"/World/envs/env_{i}" + f"/male/{components[0]}/arm_Right/collisions_armRight" 
+                ).SetInstanceable(
+                    False
+                ) 
+                physicsUtils.add_physics_material_to_prim(
+                    self._stage,
+                    self._stage.GetPrimAtPath(
+                        f"/World/envs/env_{i}"
+                        + f"/male/{components[0]}/arm_Right/collisions_armRight"
+                    ),
+                    self.MalePhysicsMaterialPath,
+                )
+                self._stage.GetPrimAtPath(
+                    f"/World/envs/env_{i}" + f"/male/{components[0]}/arm_Left/collisions_armLeft" 
+                ).SetInstanceable(
+                    False
+                ) 
+                physicsUtils.add_physics_material_to_prim(
+                    self._stage,
+                    self._stage.GetPrimAtPath(
+                        f"/World/envs/env_{i}"
+                        + f"/male/{components[0]}/arm_Left/collisions_armLeft"
+                    ),
+                    self.MalePhysicsMaterialPath,
                 )
                 # print("7:,",i)
                 ##### TODO: Check out task config file --> does task config file only have to have the same name as the task?
@@ -430,48 +448,60 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         # print("14: ")
 
         # For setting initial state - 
-        self.male_thickness = torch.tensor( # --> used when resetting gripper  
-            self.male_thickness, device=self._device
+        self.male_thicknesses = torch.tensor( # --> used when resetting gripper  
+            self.male_thicknesses, device=self._device
         ).unsqueeze(-1)
 
-    def refresh_env_tensors(self): #TODO
+    def refresh_env_tensors(self): 
         """Refresh tensors."""
         # print("refresh_env_tensors")
-
-        # male tensors
-        self.male_pos, self.male_quat = self.males_base.get_world_poses(clone=False) #TODO: doese it work when i only set and get the pose of the male_base? Or do i need the poses of the arms aswell?            # positions in world frame of the prims with shape (M,3), quaternion orientations in world frame of the prims (scalar-first (w,x,y,z), shape (M,4))
         ''' get world_poses(indices, clone)
         indices: size (M,) Where M <= size of the encapsulated prims in the view. Defaults to None (i.e: all prims in the view).
         here: M=num_envs?
         clone (bool, optional) – True to return a clone of the internal buffer. Otherwise False. Defaults to True.
         '''
-        self.male_pos -= self.env_pos                                                    # A-=B is equal to A=A-B; male position relative to env position. env position is absolute to world
+        # male tensors
+        self.male_pos_base, self.male_quat_base = self.males_base.get_world_poses(clone=False) #TODO: does it work when i only set and get the pose of the male_base? Or do i need the poses of the arms aswell?            # positions in world frame of the prims with shape (M,3), quaternion orientations in world frame of the prims (scalar-first (w,x,y,z), shape (M,4))
+        self.male_pos_base -= self.env_pos                                                    # A-=B is equal to A=A-B; male position relative to env position. env position is absolute to world
+
+        self.male_pos_armLeft, male_quat_armLeft = self.males_armLeft.get_world_poses(clone=False) 
+        self.male_pos_armRight, male_quat_armRight = self.males_armRight.get_world_poses(clone=False) 
 
         ### TODO: WHAT is a com pos --> Center of mass position --> only needed in screw task?
         self.male_com_pos = fc.translate_along_local_z(                                  # translate_along_local_z(pos, quat, offset, device). Translate global body position along local Z-axis and express in global coordinates
-            pos=self.male_pos,           # "measured" via get_world_poses
-            quat=self.male_quat,         # "measured" via get_world_poses
+            pos=self.male_pos_base,           # "measured" via get_world_poses
+            quat=self.male_quat_base,         # "measured" via get_world_poses
 
 
             ### TODO: what to put here (offset) 
             offset=self.male_heights_total * 0.5, #  TODO: what is the snap-fit equivalent
             device=self.device,
         )
-        self.male_com_quat = self.male_quat  # always equal
+        self.male_com_quat = self.male_quat_base  # always equal
 
-        male_velocities = self.males_base.get_velocities(clone=False)
-        self.male_linvel = male_velocities[:, 0:3]        # linear velocities
-        self.male_angvel = male_velocities[:, 3:6]        # angular velocities
+        male_velocities_base = self.males_base.get_velocities(clone=False)
+        male_velocities_armRight = self.males_armRight.get_velocities(clone=False)
+        male_velocities_armLeft = self.males_armLeft.get_velocities(clone=False)
 
-        # ?? neded for my task? (so far only copied and adjusted from nut_bolt_place env)
-        self.male_com_linvel = self.male_linvel + torch.cross(        # torch.cross(input, other, dim=None, *, out=None) → Tensor 
+
+        self.male_linvel_base = male_velocities_base[:, 0:3]        # linear velocities # TODO: do I need velocities of the arms?
+        self.male_angvel_base = male_velocities_base[:, 3:6]        # angular velocities
+
+        self.male_linvel_armRight = male_velocities_base[:, 0:3] 
+        self.male_angvel_armRight = male_velocities_base[:, 3:6]
+        self.male_linvel_armLeft = male_velocities_base[:, 0:3] 
+        self.male_angvel_armLeft = male_velocities_base[:, 3:6]
+
+
+        # ?? needed for my task? (so far only copied and adjusted from nut_bolt_place env)
+        self.male_com_linvel = self.male_linvel_base + torch.cross(        # torch.cross(input, other, dim=None, *, out=None) → Tensor 
                                                                     # Returns the cross product of vectors in dimension dim of input and other.
             
-            self.male_angvel,                                        # input
-            (self.male_com_pos - self.male_pos),                      # other
+            self.male_angvel_base,                                        # input
+            (self.male_com_pos - self.male_pos_base),                      # other
             dim=1
         )
-        self.male_com_angvel = self.male_angvel  # always equal
+        self.male_com_angvel = self.male_angvel_base  # always equal
 
         self.male_force = self.males_base.get_net_contact_forces(clone=False) #TODO potential problems wenn wir nur die contact forces von base berücksichtigen?
 
