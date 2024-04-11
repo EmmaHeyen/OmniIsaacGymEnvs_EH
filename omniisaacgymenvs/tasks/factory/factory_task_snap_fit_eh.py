@@ -38,7 +38,7 @@
 # PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh
 
 # TENSORBOARD:
-# PYTHON_PATH -m tensorboard.main --logdir runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise/summaries (rund from cd OmniIsaacGymEnvs/omniisaacgymenvs)
+# PYTHON_PATH -m tensorboard.main --logdir runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise/summaries (run from cd OmniIsaacGymEnvs/omniisaacgymenvs)
 # 
 # RUNNING: 
 # PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh test=True checkpoint=runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0.3actionpenalty_withNoise/nn/FactoryTaskSnapFit_eh.pth  (ANPASSEN)
@@ -210,7 +210,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
     def reset_idx(self, env_ids, randomize_gripper_pose) -> None:
         """Reset specified environments."""
-        print("reset_idx")
+        # print("reset_idx")
         self._reset_franka(env_ids)
         self._reset_object(env_ids)
 
@@ -246,7 +246,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
     def _reset_franka(self, env_ids) -> None:
         """Reset DOF states and DOF targets of Franka."""
-        print("_reset_franka")
+        # print("_reset_franka")
         gripper_buffer=1.1  # buffer on gripper DOF pos to prevent initial contact (was 1.1 before)
         # print("gripper_buffer: ", gripper_buffer)
 
@@ -271,7 +271,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         indices = env_ids.to(dtype=torch.int32)
         self.frankas.set_joint_positions(self.dof_pos[env_ids], indices=indices)
         self.frankas.set_joint_velocities(self.dof_vel[env_ids], indices=indices)
-        print("reset_franka ende")
+        # print("reset_franka ende")
 
     def _reset_object(self, env_ids) -> None:
         """Reset root states of nut and bolt."""
@@ -906,10 +906,10 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
     def _move_gripper_to_dof_pos(self, gripper_dof_pos, sim_steps) -> None:
         """Move gripper fingers to specified DOF position using controller."""
-        print("_move_gripper_to_dof_pos")#
+        # print("_move_gripper_to_dof_pos")
         delta_hand_pose = torch.zeros(
             (self.num_envs, 6), device=self.device
-        )  # No hand motion
+        )  # No hand motion 
 
         # Step sim
         for _ in range(sim_steps):
