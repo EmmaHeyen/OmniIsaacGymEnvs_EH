@@ -119,6 +119,8 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         # print(" get physx context")
         physxSceneAPI = self._env._world.get_physics_context()._physx_scene_api
         physxSceneAPI.CreateGpuCollisionStackSizeAttr().Set(256 * 1024 * 1024)
+        # physxSceneAPI.CreateGpuFoundLostAggregatePairsCapacityAttr().Set(256 * 1024)
+        physxSceneAPI.CreateGpuFoundLostPairsCapacityAttr().Set(256 * 1024)
         # print("import franka assets")
         self.import_franka_assets(add_to_stage=True) # defined in factory_base --> probably fine as is
         self.create_snap_fit_material() #--> # TODO: brauchen wir das? reicht es wenn wir das Material in usd festlegen?
@@ -275,8 +277,11 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         self.male_heights_base=[]
         self.male_heights_total = []
         self.male_widths_base = []
+        self.male_keypoint_middle_points = []
         self.female_widths = []
         self.female_heights = [] # TODO: check whether we need more lists to store any more values
+
+
 
         print("3")
         for i in range(0, self._num_envs):                                              # für jede einzelne env
@@ -304,11 +309,13 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
             male_width_base = self.asset_info_snap_fit[subassembly][components[0]]["width_base"]      # aus factory_asset_info_nut_bolt datei
             male_height_base=self.asset_info_snap_fit[subassembly][components[0]]["height_base"]
             male_thickness=self.asset_info_snap_fit[subassembly][components[0]]["thickness"]
+            male_kp_middle_point=self.asset_info_snap_fit[subassembly][components[0]]["keypoint_middle_point_from_KOS"]
 
             self.male_widths_base.append(male_width_base)
             self.male_heights_total.append(male_height_total)
             self.male_heights_base.append(male_height_base)   
             self.male_thicknesses.append(male_thickness)   
+            self.male_keypoint_middle_points.append(male_kp_middle_point)
 
             male_file = self.asset_info_snap_fit[subassembly][components[0]][usd_path]      # aus factory_asset_info_nut_bolt datei; müsste auch über asset path funktionieren
             # print("male_file: ",male_file)
@@ -373,6 +380,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
                     "male",
                     self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/male"),
                     self._sim_config.parse_actor_config("male"),
+
                 )
             # print("8:,",i)
             female_translation = torch.tensor(
@@ -422,6 +430,32 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
                     self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/female"),
                     self._sim_config.parse_actor_config("female"),
                 )
+                
+                
+                # add fixed joints to females
+
+
+                prim_joint=utils.createJoint(self._stage, "Fixed",self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/female/female"),self._stage.GetPrimAtPath(f"/World"))
+
+
+
+                
+            # base_path = f"{self.default_base_env_path}/env_{i}/female/female"
+            # female_path=f"{base_path}/female"
+                # female_path = f"/World/envs/env_{i}" + f"/female/female"
+                # print("female_path: ",female_path)
+                # ground_joint_path=female_path + "_ground"
+                # print("ground_joint_path: ", ground_joint_path)
+                # # env_pos=stage.GetPrimAtPath(f"{self.default_base_env_path}/env_{i}").GetAttribute("xformOp:translate").Get()
+                # env_pos=self._stage.GetPrimAtPath(f"/World/envs/env_{i}").GetAttribute("xformOp:translate").Get()
+                # # female_pos=self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/female")
+                # # anchor_pos = env_pos + female_pos
+                # anchor_pos=(0.0, 0.0, self.cfg_base.env.table_height)
+                
+                # self.fix_to_ground(self._stage, ground_joint_path, female_path, anchor_pos)
+
+
+
 
 
         ####TODO: How do i transform this to my problem???
@@ -436,9 +470,10 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         self.female_heights = torch.tensor(
             self.female_heights, device=self._device
         ).unsqueeze(-1)
-
+        self.male_keypoint_middle_points = torch.tensor(
+            self.male_keypoint_middle_points, device=self._device
+        ).unsqueeze(-1)
         self.list_of_zeros = [0 for _ in range(self.num_envs)]
-        
         self.base_pos_zeros = torch.tensor(
             self.list_of_zeros, device=self._device
         ).unsqueeze(-1)
@@ -451,6 +486,68 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         self.male_thicknesses = torch.tensor( # --> used when resetting gripper  
             self.male_thicknesses, device=self._device
         ).unsqueeze(-1)
+
+
+
+
+    def fix_to_ground(self, stage, joint_path, prim_path, anchor_pos):
+        from pxr import UsdPhysics, Gf
+
+        # physx.PxFixedJointCreate()
+
+
+        # D6 fixed joint
+        print("a")
+        d6FixedJoint = UsdPhysics.FixedJoint.Define(stage, joint_path)
+        # d6FixedJoint = UsdPhysics.FixedJoint(joint_path)
+        d6FixedJoint.CreateBody0Rel().SetTargets(["/World/defaultGroundPlane"])
+        print("b")
+        d6FixedJoint.CreateBody1Rel().SetTargets([prim_path])
+        print("c")
+        d6FixedJoint.CreateLocalPos0Attr().Set(Gf.Vec3f(anchor_pos))
+        print("d")
+        d6FixedJoint.CreateLocalRot0Attr().Set(Gf.Quatf(1.0, Gf.Vec3f(0, 0, 0)))
+        print("e")
+        d6FixedJoint.CreateLocalPos1Attr().Set(Gf.Vec3f(0, 0, 0.4))
+        print("f")
+        d6FixedJoint.CreateLocalRot1Attr().Set(Gf.Quatf(1.0, Gf.Vec3f(0, 0, 0)))
+        print("g")
+        # lock all DOF (lock - low is greater than high)
+        d6Prim = stage.GetPrimAtPath(joint_path)
+        print("h")
+        limitAPI = UsdPhysics.LimitAPI.Apply(d6Prim, "transX")
+        print("i")
+        limitAPI.CreateLowAttr(1.0)
+        limitAPI.CreateHighAttr(-1.0)
+        limitAPI = UsdPhysics.LimitAPI.Apply(d6Prim, "transY")
+        limitAPI.CreateLowAttr(1.0)
+        limitAPI.CreateHighAttr(-1.0)
+        limitAPI = UsdPhysics.LimitAPI.Apply(d6Prim, "transZ")
+        limitAPI.CreateLowAttr(1.0)
+        limitAPI.CreateHighAttr(-1.0)
+        print("j")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
 
     def refresh_env_tensors(self): 
         """Refresh tensors."""

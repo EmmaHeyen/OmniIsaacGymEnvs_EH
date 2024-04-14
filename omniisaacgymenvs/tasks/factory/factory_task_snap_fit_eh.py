@@ -138,6 +138,10 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             [0.0, 0.0, 1.0], device=self.device
         ).repeat((self.num_envs, 1))*0.5
 
+       
+        # male_kp_middle_points=self.male_keypoint_middle_points torch.tensor( # highest position of female thingy
+        #     [0.0, 0.0, 1.0], device=self.device
+        # ).repeat((self.num_envs, 1)
         # Keypoint tensors
         '''
         num_keypoints: 4  # number of keypoints used in reward
@@ -541,9 +545,9 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                 self.male_quat_base,
                 self.male_pos_base,
                 self.identity_quat,
-                (keypoint_offset - self.male_base_pos_local), 
+                (keypoint_offset - self.male_keypoint_middle_points), 
             )[1]
-            self.keypoints_female_1[:, idx] = tf_combine( # TODO: adjust to female snap fit part
+            self.keypoints_female_1[:, idx] = tf_combine( # TODO: adjust to malefemale snap fit part
                 self.female_quat,
                 self.female_pos,
                 self.identity_quat,
@@ -556,7 +560,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                 self.male_quat_base,
                 self.male_pos_base,
                 self.identity_quat,
-                (keypoint_offset - self.male_base_pos_local), 
+                (keypoint_offset - self.male_keypoint_middle_points), 
             )[1]
             self.keypoints_female_2[:, idx] = tf_combine( # TODO: adjust to female snap fit part
                 self.female_quat,
@@ -613,10 +617,14 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         """Compute reward at current timestep."""
         # print("_update_rew_buf")
         keypoint_reward = -self._get_keypoint_dist()
+        # keypoint_reward = -torch.tensor(
+        #     [0.0, 0.0, 1.0], device=self.device)
+        
         action_penalty = (
             torch.norm(self.actions, p=2, dim=-1)
             * self.cfg_task.rl.action_penalty_scale
         )
+        # print("shape keypoint_reward. ", keypoint_reward.shape)
 
         '''
         default cfg values: 
@@ -624,10 +632,14 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         action_penalty_scale: 0.0  # scale on action penalty
         '''
 
+        # keypoint_reward = keypoint_reward * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device)
+
         self.rew_buf[:] = (
             keypoint_reward * self.cfg_task.rl.keypoint_reward_scale
             - action_penalty * self.cfg_task.rl.action_penalty_scale
         )
+
+        # keypoint_reward * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x,self.cfg_task.rl.keypoint_reward_scale_y,self.cfg_task.rl.keypoint_reward_scale_z])
 
         # In this policy, episode length is constant across all envs
         is_last_step = self.progress_buf[0] == self.max_episode_length - 1
@@ -660,13 +672,13 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         keypoint_offsets_1[:, -1]=( # axis 1
             torch.linspace(0.0, 1.0, num_keypoints, device=self.device)-0.5
         )
-        keypoint_offsets_1[:, 1]= -0.02 # move keypoint axis 2 units in  negative y-direction # TODO: right units?
+        keypoint_offsets_1[:, 0]= -0.02 # move keypoint axis 2 units in  negative x-direction # TODO: right units?
         # print("keypoint_offsets_1: ",keypoint_offsets_1)
         
         keypoint_offsets_2[:, -1]=( # axis 2
             torch.linspace(0.0, 1.0, num_keypoints, device=self.device)-0.5
         )
-        keypoint_offsets_2[:, 1]= 0.02 # move keypoint axis 2 units in positive y-direction # TODO: right units? --> check by adding cube at 0.02 to left/right to see if unit is right
+        keypoint_offsets_2[:, 0]= 0.02 # move keypoint axis 2 units in positive x-direction # TODO: right units? --> check by adding cube at 0.02 to left/right to see if unit is right
         # print("keypoint_offsets_2: ",keypoint_offsets_2)
 
         keypoint_offsets=torch.cat((keypoint_offsets_1,keypoint_offsets_2),1)
@@ -683,17 +695,74 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         # (1,1) and (2,2), (1,2) and (2,1)
         # a and b, c and d
         
+        # keypoint_dist_A1 = torch.sum(
+        #     torch.norm(self.keypoints_female_1 - self.keypoints_male_1, p=2, dim=-1), dim=-1 # frobenius/euclid norm
+        # )
+        # keypoint_dist_A2 = torch.sum(
+        #     torch.norm(self.keypoints_female_2 - self.keypoints_male_2, p=2, dim=-1), dim=-1
+        # )
+        # keypoint_dist_B1 = torch.sum(
+        #     torch.norm(self.keypoints_female_2 - self.keypoints_male_1, p=2, dim=-1), dim=-1
+        # )
+        # keypoint_dist_B2 = torch.sum(
+        #     torch.norm(self.keypoints_female_1 - self.keypoints_male_2, p=2, dim=-1), dim=-1
+        # )
+
+        # keypoint_dist_A1 = torch.sum(
+        #     torch.norm(self.keypoints_female_1 - self.keypoints_male_1, p=2, dim=-1) 
+        #     * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),         
+            
+        #     dim=-1 # frobenius/euclid norm
+        # )
+        # keypoint_dist_A2 = torch.sum(
+        #     torch.norm(self.keypoints_female_2 - self.keypoints_male_2, p=2, dim=-1),
+        #     * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),         
+        #     dim=-1
+        # )
+
+
+        # keypoint_dist_B1 = torch.sum(
+        #     torch.norm(self.keypoints_female_2 - self.keypoints_male_1, p=2, dim=-1)
+        #     * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),         
+        #     dim=-1
+        # )
+        # keypoint_dist_B2 = torch.sum(
+        #     torch.norm(self.keypoints_female_1 - self.keypoints_male_2, p=2, dim=-1), 
+        #     * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),
+        #     dim=-1
+        # )
+
+
         keypoint_dist_A1 = torch.sum(
-            torch.norm(self.keypoints_female_1 - self.keypoints_male_1, p=2, dim=-1), dim=-1 # frobenius norm
+            torch.norm(
+                (self.keypoints_female_1 - self.keypoints_male_1)
+                * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),
+                p=2, dim=-1
+            ), dim=-1
         )
+
         keypoint_dist_A2 = torch.sum(
-            torch.norm(self.keypoints_female_2 - self.keypoints_male_2, p=2, dim=-1), dim=-1
+            torch.norm(
+                (self.keypoints_female_2 - self.keypoints_male_2)
+                * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),
+                p=2, dim=-1
+            ), dim=-1
         )
+
         keypoint_dist_B1 = torch.sum(
-            torch.norm(self.keypoints_female_2 - self.keypoints_male_1, p=2, dim=-1), dim=-1
+            torch.norm(
+                (self.keypoints_female_2 - self.keypoints_male_1)
+                * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),
+                p=2, dim=-1
+            ), dim=-1
         )
+
         keypoint_dist_B2 = torch.sum(
-            torch.norm(self.keypoints_female_1 - self.keypoints_male_2, p=2, dim=-1), dim=-1
+            torch.norm(
+                (self.keypoints_female_1 - self.keypoints_male_2)
+                * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),
+                p=2, dim=-1
+            ), dim=-1
         )
 
         keypoint_dist_A=torch.add(keypoint_dist_A1,keypoint_dist_A2)
