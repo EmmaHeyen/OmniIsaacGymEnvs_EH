@@ -1,0 +1,2608 @@
+Loading user config located at: '/home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/kit/data/Kit/omni.isaac.sim.python.gym/2023.1/user.config.json'
+[Info] [carb] Logging to file: /home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/kit/logs/Kit/omni.isaac.sim.python.gym/2023.1/kit_20240420_173102.log
+2024-04-20 15:31:02 [0ms] [Warning] [omni.kit.app.plugin] No crash reporter present, dumps uploading isn't available.
+2024-04-20 15:31:02 [11ms] [Warning] [omni.ext.plugin] [ext: omni.kit.sequencer.core-103.4.0+105.0] Built using kit version: 105.0. Current version: 105.1. It is considered compatible, but building with a newer version is recommended.
+2024-04-20 15:31:02 [11ms] [Warning] [omni.ext.plugin] [ext: omni.kit.sequencer.usd-103.4.0+105.0] Built using kit version: 105.0. Current version: 105.1. It is considered compatible, but building with a newer version is recommended.
+2024-04-20 15:31:02 [11ms] [Warning] [omni.ext.plugin] [ext: omni.kit.widget.timeline-105.0.1+105.0] Built using kit version: 105.0. Current version: 105.1. It is considered compatible, but building with a newer version is recommended.
+2024-04-20 15:31:02 [12ms] [Warning] [omni.ext.plugin] [ext: omni.paint.brush.attributes-1.3.1+105.0] Built using kit version: 105.0. Current version: 105.1. It is considered compatible, but building with a newer version is recommended.
+2024-04-20 15:31:02 [12ms] [Warning] [omni.ext.plugin] [ext: omni.kit.window.sequencer-103.4.2-dev.3+105.0] Built using kit version: 105.0. Current version: 105.1. It is considered compatible, but building with a newer version is recommended.
+2024-04-20 15:31:02 [15ms] [Warning] [omni.ext.plugin] [ext: omni.usd.schema.sequence-2.3.0+105.0.lx64.r.cp310] Built using kit version: 105.0. Current version: 105.1. It is considered compatible, but building with a newer version is recommended.
+[0.072s] [ext: omni.kit.async_engine-0.0.0] startup
+[0.444s] [ext: omni.assets.plugins-0.0.0] startup
+[0.445s] [ext: omni.stats-0.0.0] startup
+[0.446s] [ext: omni.client-1.0.1] startup
+[0.455s] [ext: omni.gpu_foundation-0.0.0] startup
+[0.464s] [ext: omni.rtx.shadercache.vulkan-1.0.0] startup
+[0.466s] [ext: carb.windowing.plugins-1.0.0] startup
+[0.475s] [ext: omni.kit.renderer.init-0.0.0] startup
+
+|---------------------------------------------------------------------------------------------|
+| Driver Version: 535.104.05    | Graphics API: Vulkan
+|=============================================================================================|
+| GPU | Name                             | Active | LDA | GPU Memory | Vendor-ID | LUID       |
+|     |                                  |        |     |            | Device-ID | UUID       |
+|     |                                  |        |     |            | Bus-ID    |            |
+|---------------------------------------------------------------------------------------------|
+| 0   | NVIDIA RTX A5000                 | Yes: 0 |     | 24810   MB | 10de      | 0          |
+|     |                                  |        |     |            | 2231      | b529d905.. |
+|     |                                  |        |     |            | 73        |            |
+|=============================================================================================|
+| OS: 20.04.6 LTS (Focal Fossa) ubuntu, Version: 20.04.6, Kernel: 5.14.2-rt21
+| XServer Vendor: The X.Org Foundation, XServer Version: 12013000 (1.20.13.0)
+| Processor: Intel(R) Xeon(R) Gold 5217 CPU @ 3.00GHz | Cores: 16 | Logical: 32
+|---------------------------------------------------------------------------------------------|
+| Total Memory (MB): 128573 | Free Memory: 76412
+| Total Page/Swap (MB): 2047 | Free Page/Swap: 2047
+|---------------------------------------------------------------------------------------------|
+[1.493s] [ext: omni.kit.pipapi-0.0.0] startup
+[1.495s] [ext: omni.kit.pip_archive-0.0.0] startup
+[1.495s] [ext: omni.pip.compute-1.2.0] startup
+[1.496s] [ext: omni.pip.cloud-1.0.1] startup
+[1.497s] [ext: omni.isaac.core_archive-2.2.1] startup
+[1.498s] [ext: omni.pip.torch-2_0_1-2.0.2] startup
+[1.531s] [ext: omni.kit.telemetry-0.5.0] startup
+[1.572s] [ext: omni.mtlx-0.1.0] startup
+[1.573s] [ext: omni.usd.config-1.0.3] startup
+[1.578s] [ext: omni.gpucompute.plugins-0.0.0] startup
+[1.579s] [ext: omni.usd.libs-1.0.0] startup
+[1.720s] [ext: omni.kit.loop-isaac-1.1.0] startup
+[1.721s] [ext: omni.kit.test-0.0.0] startup
+[1.722s] [ext: omni.isaac.ml_archive-1.1.3] startup
+[1.722s] [ext: omni.usd.schema.omnigraph-1.0.0] startup
+[1.877s] [ext: omni.usd.schema.physics-0.0.0] startup
+[1.915s] [ext: omni.usd.schema.audio-0.0.0] startup
+[1.920s] [ext: omni.usd.schema.physx-0.0.0] startup
+[1.958s] [ext: omni.usd.schema.semantics-0.0.0] startup
+[1.969s] [ext: omni.usd.schema.anim-0.0.0] startup
+[1.991s] [ext: omni.usd.schema.omniscripting-1.0.0] startup
+[1.997s] [ext: omni.usd.schema.geospatial-0.0.0] startup
+[2.001s] [ext: omni.appwindow-1.1.5] startup
+[2.602s] [ext: omni.kit.renderer.core-0.0.0] startup
+[3.752s] [ext: omni.kit.renderer.capture-0.0.0] startup
+[3.755s] [ext: carb.audio-0.1.0] startup
+[3.779s] [ext: omni.kit.renderer.imgui-0.0.0] startup
+[3.925s] [ext: omni.graph.exec-0.3.0] startup
+[3.927s] [ext: omni.ui-2.18.5] startup
+[3.942s] [ext: omni.kit.exec.core-0.5.0] startup
+[3.945s] [ext: omni.kit.window.popup_dialog-2.0.23] startup
+[3.951s] [ext: omni.kit.actions.core-1.0.0] startup
+[3.953s] [ext: omni.usd_resolver-1.0.1] startup
+[3.959s] [ext: omni.timeline-1.0.9] startup
+[3.961s] [ext: omni.kit.widget.nucleus_connector-1.1.4] startup
+[3.963s] [ext: omni.kit.commands-1.4.6] startup
+[3.968s] [ext: omni.usd.core-1.1.8] startup
+[3.973s] [ext: omni.resourcemonitor-105.0.0] startup
+[3.975s] [ext: omni.activity.core-1.0.1] startup
+[3.977s] [ext: omni.kit.audiodeviceenum-1.0.1] startup
+[3.979s] [ext: omni.hydra.usdrt_delegate-7.2.34] startup
+[3.997s] [ext: omni.hydra.scene_delegate-0.3.2] startup
+[4.007s] [ext: omni.usd-1.10.18] startup
+[4.075s] [ext: omni.kit.helper.file_utils-0.1.6] startup
+[4.099s] [ext: omni.kit.widget.nucleus_info-1.0.2] startup
+[4.100s] [ext: omni.kit.widget.filebrowser-2.3.35] startup
+[4.105s] [ext: omni.kit.search_core-1.0.5] startup
+[4.106s] [ext: omni.kit.widget.path_field-2.0.8] startup
+[4.107s] [ext: omni.kit.widget.versioning-1.4.6] startup
+[4.109s] [ext: omni.ui.scene-1.7.0] startup
+[4.116s] [ext: omni.kit.widget.search_delegate-1.0.4] startup
+[4.118s] [ext: omni.kit.widget.browser_bar-2.0.9] startup
+[4.119s] [ext: omni.kit.notification_manager-1.0.6] startup
+[4.121s] [ext: omni.kit.clipboard-1.0.3] startup
+[4.122s] [ext: omni.kit.window.filepicker-2.10.13] startup
+[4.129s] [ext: omni.kit.window.file_exporter-1.0.22] startup
+[4.132s] [ext: omni.kit.window.drop_support-1.0.1] startup
+[4.132s] [ext: omni.kit.window.content_browser_registry-0.0.1] startup
+[4.133s] [ext: omni.isaac.version-1.0.3] startup
+[4.134s] [ext: omni.kit.menu.utils-1.5.6] startup
+[4.145s] [ext: omni.convexdecomposition-105.1.12-5.1] startup
+[4.152s] [ext: omni.kvdb-0.0.0] startup
+[4.154s] [ext: omni.iray.libs-0.0.0] startup
+[4.159s] [ext: omni.physx.foundation-105.1.12-5.1] startup
+[4.160s] [ext: omni.localcache-0.0.0] startup
+[4.162s] [ext: omni.usdphysics-105.1.12-5.1] startup
+[4.166s] [ext: omni.mdl.neuraylib-0.2.0] startup
+[4.168s] [ext: omni.kit.usd.layers-2.1.27] startup
+[4.180s] [ext: omni.physx.cooking-105.1.12-5.1] startup
+[4.190s] [ext: omni.mdl-0.2.1] startup
+[4.216s] [ext: usdrt.scenegraph-7.2.34] startup
+[4.272s] [ext: omni.kit.window.file_importer-1.0.22] startup
+[4.273s] [ext: omni.physics.tensors-0.1.0] startup
+[4.282s] [ext: omni.physx-105.1.12-5.1] startup
+2024-04-20 15:31:06 [4,267ms] [Warning] [omni.stageupdate.plugin] Deprecated: direct use of IStageUpdate callbacks is deprecated. Use IStageUpdate::getStageUpdate instead.
+[4.299s] [ext: omni.kit.material.library-1.3.41] startup
+[4.304s] [ext: omni.kit.numpy.common-0.1.2] startup
+[4.306s] [ext: omni.physx.tensors-0.1.0] startup
+[4.314s] [ext: omni.kit.primitive.mesh-1.0.15] startup
+[4.318s] [ext: omni.warp.core-1.0.0-beta.2] startup
+[4.496s] [ext: omni.isaac.dynamic_control-1.2.6] startup
+[4.516s] [ext: omni.kit.widget.options_menu-1.0.5] startup
+[4.518s] [ext: omni.kit.stage_templates-1.1.20] startup
+[4.521s] [ext: omni.isaac.core-3.3.2] startup
+[4.966s] [ext: omni.isaac.cloner-0.7.2] startup
+[4.967s] [ext: omni.kit.window.file-1.3.44] startup
+[4.972s] [ext: omni.kit.widget.filter-1.1.2] startup
+[4.973s] [ext: omni.isaac.gym-0.10.0] startup
+[4.973s] [ext: omni.kit.window.content_browser-2.7.17] startup
+[4.995s] [ext: omni.kit.menu.file-1.1.7] startup
+[4.997s] [ext: omni.volume-0.4.0] startup
+[5.002s] [ext: omni.isaac.kit-1.4.7] startup
+[5.002s] [ext: omni.kit.window.title-1.1.3] startup
+[5.003s] [ext: omni.kit.menu.create-1.0.11] startup
+[5.006s] [ext: omni.hydra.rtx-0.1.0] startup
+[5.026s] [ext: omni.kit.widget.searchable_combobox-1.0.5] startup
+[5.028s] [ext: omni.hydra.engine.stats-1.0.1] startup
+[5.036s] [ext: omni.kit.context_menu-1.6.8] startup
+[5.039s] [ext: omni.kit.hydra_texture-1.1.12] startup
+[5.052s] [ext: omni.kit.widget.settings-1.0.6] startup
+[5.056s] [ext: omni.kit.hotkeys.core-1.3.0] startup
+[5.063s] [ext: omni.kit.viewport.legacy_gizmos-1.0.14] startup
+[5.071s] [ext: omni.kit.widget.viewport-105.1.7] startup
+[5.078s] [ext: omni.kit.window.preferences-1.3.23] startup
+[5.090s] [ext: omni.kit.widget.stage-2.9.6] startup
+[5.105s] [ext: omni.kit.widget.stage_icons-1.0.4] startup
+[5.107s] [ext: omni.kit.viewport.registry-104.0.5] startup
+[5.108s] [ext: omni.physx.fabric-105.1.12-5.1] startup
+[5.118s] [ext: omni.kit.mainwindow-1.0.1] startup
+[5.119s] [ext: omni.kit.window.stage-2.4.4] startup
+[5.125s] [ext: omni.kit.viewport.window-105.1.12] startup
+[5.151s] [ext: omni.isaac.sim.python.gym.headless-2023.1.1] startup
+[5.151s] [ext: omni.kit.menu.stage-1.2.3] startup
+[5.153s] [ext: omni.kit.manipulator.transform-104.6.15] startup
+[5.155s] [ext: omni.rtx.window.settings-0.6.9] startup
+[5.161s] [ext: omni.kit.raycast.query-1.0.1] startup
+[5.177s] [ext: omni.kit.viewport.utility-1.0.16] startup
+[5.179s] [ext: omni.kit.widget.toolbar-1.5.6] startup
+[5.193s] [ext: omni.kit.collaboration.presence_layer-1.0.8] startup
+[5.195s] [ext: omni.kit.widget.prompt-1.0.6] startup
+[5.196s] [ext: omni.kit.manipulator.selector-1.0.1] startup
+[5.197s] [ext: omni.kit.manipulator.tool.snap-1.4.2] startup
+[5.205s] [ext: omni.kit.widget.highlight_label-1.0.1] startup
+[5.206s] [ext: omni.kit.widget.live_session_management-1.2.22] startup
+[5.210s] [ext: omni.kit.widget.searchfield-1.1.3] startup
+[5.211s] [ext: omni.kit.manipulator.viewport-104.0.9] startup
+[5.212s] [ext: omni.kit.widget.spinner-1.0.6] startup
+[5.214s] [ext: omni.kit.widget.layers-1.6.32] startup
+[5.226s] [ext: omni.kit.window.property-1.9.6] startup
+[5.229s] [ext: omni.kit.manipulator.prim-105.0.11] startup
+[5.235s] [ext: omni.kit.viewport.menubar.core-105.0.19] startup
+[5.254s] [ext: omni.kit.viewport.actions-105.1.6] startup
+[5.261s] [ext: omni.kit.property.layer-1.1.5] startup
+[5.263s] [ext: omni.kit.property.usd-3.21.15] startup
+[5.274s] [ext: omni.kit.viewport.menubar.camera-105.1.9] startup
+[5.280s] [ext: omni.kit.viewport.menubar.display-105.1.0] startup
+[5.281s] [ext: omni.kit.viewport.menubar.render-105.1.1] startup
+[5.284s] [ext: omni.kit.property.audio-1.0.9] startup
+[5.290s] [ext: omni.kit.property.camera-1.0.5] startup
+[5.291s] [ext: omni.kit.usd_undo-0.1.2] startup
+[5.291s] [ext: omni.hydra.scene_api-0.1.2] startup
+[5.302s] [ext: omni.kit.property.material-1.8.36] startup
+[5.305s] [ext: omni.kit.property.geometry-1.2.11] startup
+[5.309s] [ext: omni.kit.property.render-1.1.1] startup
+[5.314s] [ext: omni.kit.property.skel-1.0.4] startup
+[5.316s] [ext: omni.kit.property.transform-1.3.10] startup
+[5.319s] [ext: omni.kit.property.light-1.0.8] startup
+[5.321s] [ext: omni.kit.viewport.menubar.settings-105.0.9] startup
+[5.325s] [ext: omni.kit.manipulator.selection-104.0.8] startup
+[5.326s] [ext: omni.kit.manipulator.camera-105.0.4] startup
+[5.329s] [ext: omni.kit.property.bundle-1.2.9] startup
+[5.330s] [ext: omni.kit.widget.graph-1.8.4] startup
+[5.336s] [ext: omni.kit.viewport.bundle-104.0.1] startup
+[5.336s] [ext: omni.debugdraw-0.1.2] startup
+[5.343s] [ext: omni.kit.viewport.rtx-104.0.0] startup
+[5.343s] [ext: omni.kit.window.extensions-1.3.0] startup
+[5.349s] [ext: omni.physx.commands-105.1.12-5.1] startup
+[5.352s] [ext: omni.usdphysics.ui-105.1.12-5.1] startup
+[5.399s] [ext: omni.kit.window.script_editor-1.7.4] startup
+[5.402s] [ext: omni.kit.window.status_bar-0.1.6] startup
+[5.408s] [ext: omni.kit.menu.common-1.1.4] startup
+[5.410s] [ext: omni.physx.ui-105.1.12-5.1] startup
+[5.451s] [ext: omni.kit.selection-0.1.3] startup
+[5.452s] [ext: omni.command.usd-1.0.2] startup
+[5.453s] [ext: omni.kit.quicklayout-1.0.5] startup
+[5.454s] [ext: omni.kit.window.toolbar-1.5.4] startup
+[5.457s] [ext: omni.kit.property.physx-0.1.0] startup
+[5.553s] [ext: omni.kit.menu.edit-1.1.14] startup
+[5.556s] [ext: omni.isaac.app.setup-0.11.2] startup
+2024-04-20 15:31:08 [5,524ms] [Warning] [omni.kit.app._impl] carb.imgui is deprecated. Use omni.kit.imgui instead.
+[5.557s] Isaac Sim Version: 2023.1.1-rc.8
+[5.559s] Writing Isaac Sim icon file
+[5.559s] [ext: omni.isaac.sim.python.gym-2023.1.1] startup
+[5.561s] Simulation App Starting
+2024-04-20 15:31:11 [9,204ms] [Warning] [omni.kit.hotkeys.core.registry] [Hotkey] duplicated action as SPACE (On Press) with omni.kit.widget.toolbar.omni.kit.widget.toolbar::toolbar::play!
+2024-04-20 15:31:11 [9,205ms] [Warning] [omni.kit.hotkeys.core.registry] [Hotkey] Cannot register Global [omni.kit.widget.toolbar] omni.kit.widget.toolbar::toolbar::play.SPACE, error code: Duplicated action definition
+[9.291s] app ready
+2024-04-20 15:31:11 [9,389ms] [Warning] [omni.kit.menu.utils.scripts.layout] Menu Replicator not found. Create with; ("menu_index" controls menu order)
+2024-04-20 15:31:11 [9,390ms] [Warning] [omni.kit.menu.utils.scripts.layout]   self._menu_placeholder = omni.kit.menu.utils.add_menu_items([MenuItemDescription(name="placeholder", show_fn=lambda: False)], name="Replicator", menu_index=90)
+2024-04-20 15:31:11 [9,418ms] [Warning] [omni.kit.menu.utils.scripts.layout] Menu Replicator not found. Create with; ("menu_index" controls menu order)
+2024-04-20 15:31:11 [9,418ms] [Warning] [omni.kit.menu.utils.scripts.layout]   self._menu_placeholder = omni.kit.menu.utils.add_menu_items([MenuItemDescription(name="placeholder", show_fn=lambda: False)], name="Replicator", menu_index=90)
+2024-04-20 15:31:11 [9,456ms] [Warning] [omni.kit.menu.utils.scripts.layout] Menu Replicator not found. Create with; ("menu_index" controls menu order)
+2024-04-20 15:31:11 [9,456ms] [Warning] [omni.kit.menu.utils.scripts.layout]   self._menu_placeholder = omni.kit.menu.utils.add_menu_items([MenuItemDescription(name="placeholder", show_fn=lambda: False)], name="Replicator", menu_index=90)
+2024-04-20 15:31:11 [9,494ms] [Warning] [omni.kit.menu.utils.scripts.layout] Menu Replicator not found. Create with; ("menu_index" controls menu order)
+2024-04-20 15:31:11 [9,494ms] [Warning] [omni.kit.menu.utils.scripts.layout]   self._menu_placeholder = omni.kit.menu.utils.add_menu_items([MenuItemDescription(name="placeholder", show_fn=lambda: False)], name="Replicator", menu_index=90)
+2024-04-20 15:31:12 [9,851ms] [Warning] [omni.kit.menu.utils.scripts.layout] Menu Replicator not found. Create with; ("menu_index" controls menu order)
+2024-04-20 15:31:12 [9,851ms] [Warning] [omni.kit.menu.utils.scripts.layout]   self._menu_placeholder = omni.kit.menu.utils.add_menu_items([MenuItemDescription(name="placeholder", show_fn=lambda: False)], name="Replicator", menu_index=90)
+2024-04-20 15:31:12 [9,891ms] [Warning] [omni.kit.menu.utils.scripts.layout] Menu Replicator not found. Create with; ("menu_index" controls menu order)
+2024-04-20 15:31:12 [9,891ms] [Warning] [omni.kit.menu.utils.scripts.layout]   self._menu_placeholder = omni.kit.menu.utils.add_menu_items([MenuItemDescription(name="placeholder", show_fn=lambda: False)], name="Replicator", menu_index=90)
+2024-04-20 15:31:12 [9,932ms] [Warning] [omni.kit.menu.utils.scripts.layout] Menu Replicator not found. Create with; ("menu_index" controls menu order)
+2024-04-20 15:31:12 [9,932ms] [Warning] [omni.kit.menu.utils.scripts.layout]   self._menu_placeholder = omni.kit.menu.utils.add_menu_items([MenuItemDescription(name="placeholder", show_fn=lambda: False)], name="Replicator", menu_index=90)
+2024-04-20 15:31:12 [10,005ms] [Warning] [omni.kit.hotkeys.core.registry] [Hotkey] duplicated action as SPACE (On Press) with omni.kit.widget.toolbar.omni.kit.widget.toolbar::toolbar::play!
+2024-04-20 15:31:12 [10,005ms] [Warning] [omni.kit.hotkeys.core.registry] [Hotkey] Cannot register Global [omni.kit.widget.toolbar] omni.kit.widget.toolbar::toolbar::play.SPACE, error code: Duplicated action definition
+2024-04-20 15:31:12 [10,359ms] [Warning] [omni.kit.menu.utils.scripts.layout] Menu Replicator not found. Create with; ("menu_index" controls menu order)
+2024-04-20 15:31:12 [10,359ms] [Warning] [omni.kit.menu.utils.scripts.layout]   self._menu_placeholder = omni.kit.menu.utils.add_menu_items([MenuItemDescription(name="placeholder", show_fn=lambda: False)], name="Replicator", menu_index=90)
+2024-04-20 15:31:12 [10,401ms] [Warning] [omni.kit.menu.utils.scripts.layout] Menu Replicator not found. Create with; ("menu_index"Starting kit application with the following args:  ['/home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/exts/omni.isaac.kit/omni/isaac/kit/simulation_app.py', '/home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/apps/omni.isaac.sim.python.gym.kit', '--/app/tokens/exe-path=/home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/kit', '--/persistent/app/viewport/displayOptions=3094', '--/rtx/materialDb/syncLoads=True', '--/rtx/hydra/materialSyncLoads=True', '--/omni.kit.plugin/syncUsdLoads=True', '--/app/renderer/resolution/width=1280', '--/app/renderer/resolution/height=720', '--/app/window/width=1440', '--/app/window/height=900', '--/renderer/multiGpu/enabled=True', '--/app/fastShutdown=True', '--ext-folder', '/home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/exts', '--ext-folder', '/home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/apps', '--/physics/cudaDevice=0', '--portable']
+Passing the following args to the base kit application:  ['task=FactoryTaskSnapFit_eh', 'test=True', 'checkpoint=runs/10_FactoryTaskSnapFit_eh_numEnvs128_numEpochs1000_stiffness0.01_damping0_keypointG_controllerB_frankaNoiseTrue_MaleNoiseFalse_FemaleNoiseFalse/nn/FactoryTaskSnapFit_eh.pth']
+Warp 1.0.0-beta.2 initialized:
+   CUDA Toolkit: 11.5, Driver: 12.2
+   Devices:
+     "cpu"    | x86_64
+     "cuda:0" | NVIDIA RTX A5000 (sm_86)
+   Kernel cache: /home/mnn_eh/.cache/warp/1.0.0-beta.2
+task_name: FactoryTaskSnapFit_eh
+experiment: 
+num_envs: 
+seed: 42
+torch_deterministic: False
+max_iterations: 
+physics_engine: physx
+pipeline: gpu
+sim_device: gpu
+device_id: 0
+rl_device: cuda:0
+multi_gpu: False
+num_threads: 4
+solver_type: 1
+test: True
+checkpoint: /home/mnn_eh/OmniIsaacGymEnvs/omniisaacgymenvs/runs/10_FactoryTaskSnapFit_eh_numEnvs128_numEpochs1000_stiffness0.01_damping0_keypointG_controllerB_frankaNoiseTrue_MaleNoiseFalse_FemaleNoiseFalse/nn/FactoryTaskSnapFit_eh.pth
+evaluation: False
+headless: False
+enable_livestream: False
+mt_timeout: 300
+enable_recording: False
+recording_interval: 2000
+recording_length: 100
+recording_fps: 30
+recording_dir: 
+wandb_activate: False
+wandb_group: 
+wandb_name: FactoryTaskSnapFit_eh
+wandb_entity: 
+wandb_project: omniisaacgymenvs
+kit_app: 
+warp: False
+task: 
+    name: FactoryTaskSnapFit_eh
+    physics_engine: physx
+    sim: 
+        use_gpu_pipeline: True
+        dt: 0.00833333333
+        gravity_mag: 9.81
+        disable_gravity: False
+        add_ground_plane: True
+        add_distant_light: True
+        use_fabric: True
+        enable_scene_query_support: True
+        disable_contact_processing: False
+        default_material: 
+            static_friction: 1.0
+            dynamic_friction: 1.0
+            restitution: 0.0
+        physx: 
+            use_gpu: True
+            solver_position_iteration_count: 32
+            solver_velocity_iteration_count: 16
+            contact_offset: 0.005
+            rest_offset: 0.0
+            worker_thread_count: 4
+            solver_type: 1
+            bounce_threshold_velocity: 0.2
+            friction_offset_threshold: 0.01
+            friction_correlation_distance: 0.00625
+            max_depenetration_velocity: 5.0
+            enable_sleeping: True
+            enable_stabilization: True
+            gpu_max_rigid_contact_count: 524288
+            gpu_max_rigid_patch_count: 33554432
+            gpu_found_lost_pairs_capacity: 8192
+            gpu_found_lost_aggregate_pairs_capacity: 262144
+            gpu_total_aggregate_pairs_capacity: 1048576
+            gpu_max_soft_body_contacts: 1048576
+            gpu_max_particle_contacts: 1048576
+            gpu_heap_capacity: 33554432
+            gpu_temp_buffer_capacity: 16777216
+            gpu_max_num_partitions: 8
+        franka: 
+            override_usd_defaults: False
+            enable_self_collisions: True
+            enable_gyroscopic_forces: True
+            solver_position_iteration_count: 16
+            solver_velocity_iteration_count: 0
+            sleep_threshold: 0.005
+            stabilization_threshold: 0.001
+            density: 1000.0
+            max_depenetration_velocity: 5.0
+            contact_offset: 0.005
+            rest_offset: 0.0
+        male: 
+            solver_position_iteration_count: 32
+            solver_velocity_iteration_count: 16
+        female: 
+            solver_position_iteration_count: 16
+            solver_velocity_iteration_count: 0
+    env: 
+        controlFrequencyInv: 2
+        numEnvs: 128
+        numObservations: 27
+        numActions: 12
+        num_gripper_move_sim_steps: 40
+        num_gripper_close_sim_steps: 40
+    randomize: 
+        franka_arm_initial_dof_pos: [0.00871, -0.10368, -0.00794, -1.49139, -0.00083, 1.38774, 0.7861]
+        franka_arm_initial_dof_pos_taskspace: [0.0, 1.0323, 0.0, 0.8247, 0.0, 0.2076, 0.0]
+        fingertip_midpoint_pos_initial: [0.0, 0.0, 0.2]
+        fingertip_midpoint_pos_noise: [0.2, 0.2, 0.1]
+        fingertip_midpoint_rot_initial: [3.1416, 0, 3.1416]
+        fingertip_midpoint_rot_noise: [0.3, 0.3, 1]
+        male_noise_pos_in_gripper: [0.0, 0.0, 0.01]
+        male_noise_rot_in_gripper: 0.0
+        female_pos_xy_initial: [0.0, 0.0]
+        female_pos_xy_noise: [0.1, 0.1]
+    rl: 
+        pos_action_scale: [0.1, 0.1, 0.1]
+        rot_action_scale: [0.1, 0.1, 0.1]
+        force_action_scale: [1.0, 1.0, 1.0]
+        torque_action_scale: [1.0, 1.0, 1.0]
+        clamp_rot: True
+        clamp_rot_thresh: 1e-06
+        add_obs_female_tip_pos: False
+        num_keypoints: 4
+        num_axes: 2
+        keypoint_scale: 0.5
+        keypoint_reward_scale: 2.0
+        keypoint_reward_scale_x: 3.0
+        keypoint_reward_scale_y: 3.0
+        keypoint_reward_scale_z: 1.0
+        action_penalty_scale: 0
+        max_episode_length: 128
+        close_checkpoint_error_thresh: 0.01
+        checkpoint_reward_scale: 1.0
+        close_error_thresh: 0.1
+        success_bonus: 10
+    ctrl: 
+        ctrl_type: task_space_impedance
+        all: 
+            jacobian_type: geometric
+            gripper_prop_gains: [100, 100]
+            gripper_deriv_gains: [2, 2]
+        gym_default: 
+            ik_method: dls
+            joint_prop_gains: [40, 40, 40, 40, 40, 40, 40]
+            joint_deriv_gains: [8, 8, 8, 8, 8, 8, 8]
+            gripper_prop_gains: [500, 500]
+            gripper_deriv_gains: [20, 20]
+        joint_space_ik: 
+            ik_method: dls
+            joint_prop_gains: [1, 1, 1, 1, 1, 1, 1]
+            joint_deriv_gains: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+        joint_space_id: 
+            ik_method: dls
+            joint_prop_gains: [40, 40, 40, 40, 40, 40, 40]
+            joint_deriv_gains: [8, 8, 8, 8, 8, 8, 8]
+        task_space_impedance: 
+            motion_ctrl_axes: [1, 1, 1, 1, 1, 1]
+            task_prop_gains: [40, 40, 40, 1, 1, 40]
+            task_deriv_gains: [8, 8, 8, 8, 8, 8]
+        operational_space_motion: 
+            motion_ctrl_axes: [1, 1, 1, 1, 1, 1]
+            task_prop_gains: [1, 1, 1, 1, 1, 1]
+            task_deriv_gains: [1, 1, 1, 1, 1, 1]
+        open_loop_force: 
+            force_ctrl_axes: [0, 0, 1, 0, 0, 0]
+        closed_loop_force: 
+            force_ctrl_axes: [0, 0, 1, 0, 0, 0]
+            wrench_prop_gains: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+        hybrid_force_motion: 
+            motion_ctrl_axes: [1, 1, 0, 1, 1, 1]
+            task_prop_gains: [40, 40, 40, 40, 40, 40]
+            task_deriv_gains: [8, 8, 8, 8, 8, 8]
+            force_ctrl_axes: [0, 0, 1, 0, 0, 0]
+            wrench_prop_gains: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1]
+train: 
+    params: 
+        seed: 42
+        algo: 
+            name: a2c_continuous
+        model: 
+            name: continuous_a2c_logstd
+        network: 
+            name: actor_critic
+            separate: False
+            space: 
+                continuous: 
+                    mu_activation: None
+                    sigma_activation: None
+                    mu_init: 
+                        name: default
+                    sigma_init: 
+                        name: const_initializer
+                        val: 0
+                    fixed_sigma: True
+            mlp: 
+                units: [256, 128, 64]
+                activation: elu
+                d2rl: False
+                initializer: 
+ controls menu order)
+2024-04-20 15:31:12 [10,401ms] [Warning] [omni.kit.menu.utils.scripts.layout]   self._menu_placeholder = omni.kit.menu.utils.add_menu_items([MenuItemDescription(name="placeholder", show_fn=lambda: False)], name="Replicator", menu_index=90)
+[10.713s] Isaac Sim App is loaded.
+[10.774s] Simulation App Startup Complete
+2024-04-20 15:31:18 [15,907ms] [Warning] [carb] Client omni.stageupdate.plugin has acquired [omni::hydra::IOmniHydra v2.0] 100 times. Consider accessing this interface with carb::getCachedInterface() (Performance warning)
+2024-04-20 15:31:33 [31,473ms] [Warning] [omni.hydra.scene_delegate.plugin] Calling getBypassRenderSkelMeshProcessing for prim /World/envs/env_0/franka/panda_hand/visuals.proto_mesh_0_id0 that has not been populated
+2024-04-20 15:31:37 [34,632ms] [Warning] [omni.physx.plugin] Detected a rigid at /World/envs/env_0/male/male/arm_Left with more than 4 velocity iterations being added to a TGS scene.The related behavior changed recently, please consult the changelog. This warning will only print once.
+2024-04-20 15:31:37 [35,467ms] [Warning] [carb] Client omni.physx.plugin has acquired [omni::physics::schema::IUsdPhysics v1.1] 100 times. Consider accessing this interface with carb::getCachedInterface() (Performance warning)
+~*~*~*
+~*~*~* Direct GPU Helper:
+~*~*~*   640 rigid dynamics
+~*~*~*   128 articulations, maxLinks=12
+~*~*~*
+                    name: default
+                regularizer: 
+                    name: None
+        load_checkpoint: True
+        load_path: /home/mnn_eh/OmniIsaacGymEnvs/omniisaacgymenvs/runs/10_FactoryTaskSnapFit_eh_numEnvs128_numEpochs1000_stiffness0.01_damping0_keypointG_controllerB_frankaNoiseTrue_MaleNoiseFalse_FemaleNoiseFalse/nn/FactoryTaskSnapFit_eh.pth
+        config: 
+            name: FactoryTaskSnapFit_eh
+            full_experiment_name: 11_FactoryTaskSnapFit_eh_numEnvs128_numEpochs1000_stiffness0.01_damping0_keypointH_controllerB_frankaNoiseTrue_MaleNoiseFalse_FemaleNoiseFalse
+            device: cuda:0
+            device_name: cuda:0
+            env_name: rlgpu
+            multi_gpu: False
+            ppo: True
+            mixed_precision: True
+            normalize_input: True
+            normalize_value: True
+            value_bootstrap: True
+            num_actors: 128
+            reward_shaper: 
+                scale_value: 1.0
+            normalize_advantage: True
+            gamma: 0.99
+            tau: 0.95
+            learning_rate: 0.0001
+            lr_schedule: fixed
+            schedule_type: standard
+            kl_threshold: 0.016
+            score_to_win: 20000
+            max_epochs: 1000
+            save_best_after: 50
+            save_frequency: 25
+            print_stats: True
+            grad_norm: 1.0
+            entropy_coef: 0.002
+            truncate_grads: False
+            e_clip: 0.2
+            horizon_length: 128
+            minibatch_size: 512
+            mini_epochs: 8
+            critic_coef: 2
+            clip_value: True
+            seq_length: 4
+            bounds_loss_coef: 0.0001
+Setting seed: 42
+Sim params does not have attribute:  gravity_mag
+Sim params does not have attribute:  disable_gravity
+Sim params does not have attribute:  default_material
+Sim params does not have attribute:  physx
+Sim params does not have attribute:  franka
+Sim params does not have attribute:  male
+Sim params does not have attribute:  female
+Pipeline:  GPU
+Pipeline Device:  cuda:0
+Sim Device:  GPU
+Task Device: cuda:0
+RL device:  cuda:0
+1
+2
+3
+self.seed = 42
+Started to play
+[BasePlayer] Creating regular env:  rlgpu
+{'observation_space': Box(-inf, inf, (27,), float32), 'action_space': Box(-1.0, 1.0, (12,), float32), 'agents': 1, 'value_size': 1}
+build mlp: 27
+value_size in baseModelNetwork init in models.py :  1
+RunningMeanStd:  (1,)
+(1,)
+insize in running_mean_std:  None
+obs_shape in baseModelNetwork init in models.py :  (27,)
+RunningMeanStd:  (27,)
+(27,)
+insize in running_mean_std:  None
+=> loading checkpoint '/home/mnn_eh/OmniIsaacGymEnvs/omniisaacgymenvs/runs/10_FactoryTaskSnapFit_eh_numEnvs128_numEpochs1000_stiffness0.01_damping0_keypointG_controllerB_frankaNoiseTrue_MaleNoiseFalse_FemaleNoiseFalse/nn/FactoryTaskSnapFit_eh.pth'
+[2024-04-20 17:31:39] Running RL reset
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0.], device='cuda:0')
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -262.46 steps: 126.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: [80]
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -213.47 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 2., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: [25]
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -208.62 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 2., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -213.73 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: [114]
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -209.73 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 2., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: [47]
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -213.10 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 2., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: [2]
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -209.59 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 2., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: [45]
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -214.60 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 2., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -213.69 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: [52]
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -206.08 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 2., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -202.79 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: [90]
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: [95]
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -207.40 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        3., 0., 0., 0., 0., 2., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: [53]
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -211.12 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 4.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -202.21 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+reward: -204.11 steps: 127.0
+checkpoint_buf_before_resetting:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+        0., 0., 0., 0., 0., 0., 0., 0.], device='cuda:0')
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+Checkpoint reached in environments: []
+2024-04-20 15:37:05 [363,419ms] [Warning] [omni.usd] Unexpected reference count of 2 for UsdStage 'anon:0x1ab40410:World1.usd' while being closed in UsdContext (this may indicate it is still resident in memory).
+2024-04-20 15:37:05 [363,444ms] [Warning] [omni.kit.menu.utils.scripts.layout] Menu Replicator not found. Create with; ("menu_index" controls menu order)
+2024-04-20 15:37:05 [363,444ms] [Warning] [omni.kit.menu.utils.scripts.layout]   self._menu_placeholder = omni.kit.menu.utils.add_menu_items([MenuItemDescription(name="placeholder", show_fn=lambda: False)], name="Replicator", menu_index=90)
+2024-04-20 15:37:05 [363,497ms] [Warning] [omni.kit.menu.utils.scripts.layout] Menu Replicator not found. Create with; ("menu_index" controls menu order)
+2024-04-20 15:37:05 [363,498ms] [Warning] [omni.kit.menu.utils.scripts.layout]   self._menu_placeholder = omni.kit.menu.utils.add_menu_items([MenuItemDescription(name="placeholder", show_fn=lambda: False)], name="Replicator", menu_index=90)
+[363.566s] Simulation App Shutting Down
+2024-04-20 15:37:06 [363,554ms] [Warning] [carb] [Plugin: omni.spectree.delegate.plugin] Module /home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/kit/exts/omni.usd_resolver/bin/libomni.spectree.delegate.plugin.so remained loaded after unload request
+2024-04-20 15:37:06 [363,589ms] [Warning] [omni.core.ITypeFactory] Module /home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/kit/exts/omni.activity.core/bin/libomni.activity.core.plugin.so remained loaded after unload request.

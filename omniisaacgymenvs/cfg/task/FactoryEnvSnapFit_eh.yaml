@@ -15,7 +15,7 @@ env:
   desired_subassemblies: ['snap_fit_1', 'snap_fit_1'] # does this mean we can choose different subassemblies for different envs?
   male_lateral_offset: 0.1  # Y-axis offset of peg before initial reset to prevent initial interpenetration with hole
   snap_fit_density: 7850.0 # TODO: way too high??
-  snap_fit_friction: 0.3
+  snap_fit_friction: 0.4
 
   # Subassembly options:
 

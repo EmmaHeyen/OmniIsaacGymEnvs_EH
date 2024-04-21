@@ -269,6 +269,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             ),  # buffer on gripper DOF pos to prevent initial contact (was 1.1 before)
             dim=-1,
         )  # shape = (num_envs, num_dofs)
+
         self.dof_vel[env_ids] = 0.0  # shape = (num_envs, num_dofs)
         self.ctrl_target_dof_pos[env_ids] = self.dof_pos[env_ids]
 
@@ -415,6 +416,22 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             self.female_quat[env_ids],
             indices,
         )
+
+
+        # self.positions_checkpoint = torch.zeros_like(self.female_pos)
+        # self.positions_checkpoint[:,0] = self.female_pos[:,0]
+        # self.positions_checkpoint[:,1] = self.female_pos[:,1]
+        # self.positions_checkpoint[:,2] = self.female_pos[:,2]+ self.checkpoint_z_pos.squeeze(dim=1)
+
+        # self.cubes.set_world_poses(
+        #     self.positions_checkpoint + self.env_pos[env_ids], 
+        #     self.female_quat[env_ids],
+        #     indices,   
+        # )
+
+
+        # self.cubes.disable_rigid_body_physics()
+
         # print("reset_object ende")
 
     def _reset_buffers(self, env_ids) -> None:
@@ -423,6 +440,9 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
         self.reset_buf[env_ids] = 0
         self.progress_buf[env_ids] = 0
+
+        print("checkpoint_buf_before_resetting: ",self.checkpoint_buf)
+        self.checkpoint_buf[env_ids] = 0
 
     def _apply_actions_as_ctrl_targets(
         self, actions, ctrl_target_gripper_dof_pos, do_scale # do_scale:bool # immer false ausßer in pre_physics_step?
@@ -619,6 +639,25 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         keypoint_reward = -self._get_keypoint_dist()
         # keypoint_reward = -torch.tensor(
         #     [0.0, 0.0, 1.0], device=self.device)
+
+        checkpoint_reached = self._check_reached_checkpoint() # torch.Size([16])
+        # print("checkpoint_reward: ", checkpoint_reward)
+        # print("checkpoint_reward_shape: ", checkpoint_reward.shape)
+        
+        # reset first_time_checkpoint_reached
+        first_time_checkpoint_reached = torch.zeros_like(self.checkpoint_buf, dtype=torch.bool)
+        # first_time_checkpoint_reached.zero()
+
+        # check if checkpoint has been reached before: 
+        first_time_checkpoint_reached = self.checkpoint_buf == 1
+
+        env_checkpoint_reached_first_time = torch.nonzero(first_time_checkpoint_reached).squeeze(dim=1)
+        print("Checkpoint reached in environments:", env_checkpoint_reached_first_time.tolist())
+        
+        # compute checkpoint reward only if it has been reached for the first time
+        checkpoint_reward = checkpoint_reached * first_time_checkpoint_reached
+
+
         
         action_penalty = (
             torch.norm(self.actions, p=2, dim=-1)
@@ -634,10 +673,25 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
         # keypoint_reward = keypoint_reward * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device)
 
+        # self.rew_buf[:] = (
+        #     keypoint_reward * self.cfg_task.rl.keypoint_reward_scale
+        #     - action_penalty * self.cfg_task.rl.action_penalty_scale # muss das so? hier wird zwei mal mit der penalty_scale multipliziert (ist in nut_bolt_place task auch so)          
+        # )
+
+
         self.rew_buf[:] = (
             keypoint_reward * self.cfg_task.rl.keypoint_reward_scale
-            - action_penalty * self.cfg_task.rl.action_penalty_scale
+            - action_penalty * self.cfg_task.rl.action_penalty_scale # muss das so? hier wird zwei mal mit der penalty_scale multipliziert (ist in nut_bolt_place task auch so)          
+            + checkpoint_reward * self.cfg_task.rl.checkpoint_reward_scale        
         )
+
+        # print("reward_calculations:/n")
+        # print(keypoint_reward, "*" , self.cfg_task.rl.keypoint_reward_scale , "/n")
+        # print("-" , action_penalty , "*" , self.cfg_task.rl.action_penalty_scale ,"/n")
+        # print("+" , checkpoint_reward, "*" ,self.cfg_task.rl.checkpoint_reward_scale , "/n")
+        # print("=" , self.rew_buf[:])
+
+
 
         # keypoint_reward * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x,self.cfg_task.rl.keypoint_reward_scale_y,self.cfg_task.rl.keypoint_reward_scale_z])
 
@@ -647,6 +701,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         if is_last_step:
             # Check if nut is close enough to bolt
             is_male_close_to_female = self._check_male_close_to_female() # adjust threshold in task config file
+            # print("_check_male_close_to_female: ",is_male_close_to_female)
             self.rew_buf[:] += is_male_close_to_female * self.cfg_task.rl.success_bonus # if close to bolt, --> successbonus*1 else successbonus*0; sucess_bonus defined in cfg-task-yaml-file (currently =0)
             self.extras["successes"] = torch.mean(is_male_close_to_female.float())
 
@@ -732,38 +787,94 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         #     dim=-1
         # )
 
+        # keypoint_dist_A1 = torch.sum(
+        #     torch.norm(
+        #         (self.keypoints_female_1 - self.keypoints_male_1)
+        #         * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),
+        #         p=2, dim=-1
+        #     ), dim=-1
+        # )
+
+        # keypoint_dist_A2 = torch.sum(
+        #     torch.norm(
+        #         (self.keypoints_female_2 - self.keypoints_male_2)
+        #         * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),
+        #         p=2, dim=-1
+        #     ), dim=-1
+        # )
+
+        # keypoint_dist_B1 = torch.sum(
+        #     torch.norm(
+        #         (self.keypoints_female_2 - self.keypoints_male_1)
+        #         * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),
+        #         p=2, dim=-1
+        #     ), dim=-1
+        # )
+
+        # keypoint_dist_B2 = torch.sum(
+        #     torch.norm(
+        #         (self.keypoints_female_1 - self.keypoints_male_2)
+        #         * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),
+        #         p=2, dim=-1
+        #     ), dim=-1
+        # )
+
+        # print("keypoints_female_1.shape: ", self.keypoints_female_1.shape)
+
+        dist_1_1 = (self.keypoints_female_1 - self.keypoints_male_1)
+        dist_2_2 = (self.keypoints_female_2 - self.keypoints_male_2)
+        dist_2_1 = (self.keypoints_female_2 - self.keypoints_male_1)
+        dist_1_2 = (self.keypoints_female_1 - self.keypoints_male_2)
+
+
+
+        # scaling of the different axes
+        for dist in (dist_1_1, dist_2_2, dist_1_2, dist_2_1):
+            dist[:,0] *= self.cfg_task.rl.keypoint_reward_scale_x
+            dist[:,1] *= self.cfg_task.rl.keypoint_reward_scale_y 
+            dist[:,2] *= self.cfg_task.rl.keypoint_reward_scale_z
+        
+
+           
+           
+           
+            # dist[:,1]
+            # dist[:,2]
+
+
+        # self.keypoints_female_1[:, 0] / self.cfg_task.rl.keypoint_reward_scale_x
+        # normalized_d_y = self.keypoints_female_1[:, 1] / self.cfg_task.rl.keypoint_reward_scale_y
+        # normalized_d_z = self.keypoints_female_1[:, 2] / self.cfg_task.rl.keypoint_reward_scale_z
+
 
         keypoint_dist_A1 = torch.sum(
             torch.norm(
-                (self.keypoints_female_1 - self.keypoints_male_1)
-                * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),
+                dist_1_1,
                 p=2, dim=-1
             ), dim=-1
         )
 
         keypoint_dist_A2 = torch.sum(
             torch.norm(
-                (self.keypoints_female_2 - self.keypoints_male_2)
-                * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),
+                dist_2_2,                
                 p=2, dim=-1
             ), dim=-1
         )
 
         keypoint_dist_B1 = torch.sum(
             torch.norm(
-                (self.keypoints_female_2 - self.keypoints_male_1)
-                * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),
+                dist_2_1,
                 p=2, dim=-1
             ), dim=-1
         )
 
         keypoint_dist_B2 = torch.sum(
             torch.norm(
-                (self.keypoints_female_1 - self.keypoints_male_2)
-                * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device),
+                dist_1_2,
                 p=2, dim=-1
             ), dim=-1
         )
+
 
         keypoint_dist_A=torch.add(keypoint_dist_A1,keypoint_dist_A2)
         keypoint_dist_B=torch.add(keypoint_dist_B1,keypoint_dist_B2)
@@ -776,7 +887,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         keypoint_dist_min, _ = torch.min(key_point_dist_stacked, dim=1)
 
         # print("key_point_dist_stacked: ",key_point_dist_stacked)
-        # print("keypoint_dist_min: ",keypoint_dist_min)       
+        # print("keypoint_dist_min_shape: ",keypoint_dist_min.shape)    # torch.Size([num_envs])   
 
         return keypoint_dist_min
 
@@ -1050,3 +1161,74 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         )
 
         return is_male_close_to_female
+
+    def _check_reached_checkpoint(self) -> torch.Tensor:
+        """Check if nut is close to bolt."""
+        # TODO
+        # print("_check_male_close_to_female")
+        # z_value_checkpoints = 0.1125 # /in mm from table surface
+        # self.female_pos[env_ids, 2]
+        # print("self.checkpoint_z_pos:", self.checkpoint_z_pos)
+        # print("self.checkpoint_z_pos_shape:", self.checkpoint_z_pos.shape)
+        # print("female_pos: ", self.female_pos)
+        # print("female_pos_shape: ", self.female_pos.shape)
+
+        self.positions_checkpoint = self.female_pos.clone()
+        self.positions_checkpoint[:,2] += self.checkpoint_z_pos.squeeze(dim=1)
+        # print("self.positions_checkpoint: ",self.positions_checkpoint)
+        # print("self.female_pos: ", self.female_pos)
+
+        checkpoint_dist = torch.norm(self.positions_checkpoint - self.male_pos_base, p=2, dim=-1) # frobenius norm
+
+        # print("self.male_pos_base: ", self.male_pos_base)
+        # print("checkpoint_dist: ", checkpoint_dist)
+
+        # print("shape checkpoint_dist: ", checkpoint_dist.shape)
+        # print("self.male_pos_base: ", self.male_pos_base)
+
+
+
+        # dist_to_checkpoint_x = self.female_pos[env_ids, 0]-self.male_pos[env_ids,0] 
+        # dist_to_checkpoint_y = self.female_pos[env_ids, 1]-self.male_pos[env_ids,1] 
+        # dist_to_checkpoint_z = self.female_pos[env_ids, 2]-self.male_pos[env_ids,2] 
+
+        # checkpoint_dist = dist_to_checkpoint_x + dist_to_checkpoint_x
+
+
+        # z_pos_checkpoint: 47.5+65 mm from table top
+        # checkpoint_pos = female_pos + z_pos_checkpoint
+
+
+        # is_close_to_checkpoint = torch.where(# torch.where(condition, input, other) Returns tensor of elements selected from either input or other depending on condition (input if condition=true) 
+        #     torch.sum(checkpoint_dist,dim=-1) < self.cfg_task.rl.close_checkpoint_error_thresh, # first try: 0.005
+        #     torch.ones_like(checkpoint_dist),                                     # TODO: adjust threshold?
+        #     torch.zeros_like(checkpoint_dist),
+        # )
+        is_close_to_checkpoint=torch.zeros_like(checkpoint_dist)
+        # print("checkpoint_dist: ", checkpoint_dist)
+        # print("checkpoint_dist_shape: ", checkpoint_dist.shape)
+
+
+
+        for i in range(self._num_envs):
+            is_close_to_checkpoint[i] = torch.where(
+                checkpoint_dist[i] < self.cfg_task.rl.close_checkpoint_error_thresh,
+                1,
+                0,
+            )
+   
+        # is_close_to_checkpoint = torch.where(# torch.where(condition, input, other) Returns tensor of elements selected from either input or other depending on condition (input if condition=true) 
+        #     torch.sum(checkpoint_dist,dim=-1) < self.cfg_task.rl.close_checkpoint_error_thresh, # first try: 0.005
+        #     1,
+        #     0,
+        # )
+
+        self.checkpoint_buf += is_close_to_checkpoint
+
+
+
+
+        # print("is_close_to_checkpoint: ", is_close_to_checkpoint)
+
+        return is_close_to_checkpoint
+

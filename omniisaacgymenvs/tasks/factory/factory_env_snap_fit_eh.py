@@ -62,6 +62,7 @@ import omni.isaac.core.utils.deformable_mesh_utils as deformableMeshUtils
 from omni.isaac.core.materials.deformable_material import DeformableMaterial
 from omni.isaac.core.prims.soft.deformable_prim import DeformablePrim
 from omni.isaac.core.prims.soft.deformable_prim_view import DeformablePrimView
+from omni.isaac.core.objects import DynamicCuboid
 
 ops="linux" # (choose if "windows" or "linux")
 
@@ -128,7 +129,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         RLTask.set_up_scene(self, scene, replicate_physics=False)
         # print("import assets")
         self._import_env_assets(add_to_stage=True)
-
+        self._import_test_cubes(add_to_stage=True)
 
         # print("FactoryFrankaView")
         self.frankas = FactoryFrankaView(
@@ -150,9 +151,16 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
             prim_paths_expr="/World/envs/.*/female/female.*", name="females_view", track_contact_forces=True, 
         )
 
+
+        self.cubes = RigidPrimView(prim_paths_expr=f"/World/envs/.*/cube", name="cube_view", track_contact_forces=True,)
+        # self.cubes.disable_rigid_body_physics()  
+           
+
         scene.add(self.males_base)
         scene.add(self.males_armRight)
         scene.add(self.males_armLeft)
+
+        scene.add(self.cubes)
 
         scene.add(self.females)
         scene.add(self.frankas)
@@ -217,10 +225,17 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
             prim_paths_expr="/World/envs/.*/female/female/collisions.*", name="females_view"
         )
 
+
+        self.cubes = RigidPrimView(prim_paths_expr=f"/World/envs/.*/cube", name="cube_view")
+        # self.cubes.disable_rigid_body_physics()  
+           
+
         # print("add males_arms")
         scene.add(self.males_base)
         scene.add(self.males_armRight)
         scene.add(self.males_armLeft)
+
+        scene.add(self.cubes)
         # print("add males_base")
         scene.add(self.males_base)
         # print("add females")
@@ -243,6 +258,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
 
         self.MalePhysicsMaterialPath = "/World/Physics_Materials/MaleMaterial"
         self.FemalePhysicsMaterialPath = "/World/Physics_Materials/FemaleMaterial"
+        self.FrankaFingerPhysicsMaterialPath = "/World/Physics_Materials/FrankaFingerMaterial"
 
         utils.addRigidBodyMaterial(
             self._stage,
@@ -260,6 +276,17 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
             dynamicFriction=self.cfg_env.env.snap_fit_friction,       # from config file (FactoryEnvSnapFit_eh.yaml)
             restitution=0.0,
         )
+
+        utils.addRigidBodyMaterial(
+            self._stage,
+            self.FrankaFingerPhysicsMaterialPath,
+            density=self.cfg_env.env.snap_fit_density,                  # from config file (FactoryEnvSnapFit_eh.yaml) #  does density defined her overwrite the density/mass in usd? I guess it does not overwrite the mass?
+            staticFriction=1000,      
+            dynamicFriction=1000,      
+            restitution=0.0,
+        )
+
+
 
 
     def _import_env_assets(self, add_to_stage=True): 
@@ -280,7 +307,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         self.male_keypoint_middle_points = []
         self.female_widths = []
         self.female_heights = [] # TODO: check whether we need more lists to store any more values
-
+        self.checkpoint_z_pos = []
 
 
         print("3")
@@ -310,12 +337,14 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
             male_height_base=self.asset_info_snap_fit[subassembly][components[0]]["height_base"]
             male_thickness=self.asset_info_snap_fit[subassembly][components[0]]["thickness"]
             male_kp_middle_point=self.asset_info_snap_fit[subassembly][components[0]]["keypoint_middle_point_from_KOS"]
+            checkpoint_z_pos = self.asset_info_snap_fit[subassembly][components[0]]["z_pos_checkpoint"]
 
             self.male_widths_base.append(male_width_base)
             self.male_heights_total.append(male_height_total)
             self.male_heights_base.append(male_height_base)   
             self.male_thicknesses.append(male_thickness)   
             self.male_keypoint_middle_points.append(male_kp_middle_point)
+            self.checkpoint_z_pos.append(checkpoint_z_pos)
 
             male_file = self.asset_info_snap_fit[subassembly][components[0]][usd_path]      # aus factory_asset_info_nut_bolt datei; müsste auch über asset path funktionieren
             # print("male_file: ",male_file)
@@ -372,6 +401,34 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
                     ),
                     self.MalePhysicsMaterialPath,
                 )
+
+
+                self._stage.GetPrimAtPath(
+                    f"/World/envs/env_{i}" + f"/franka/panda_leftfinger/collisions" 
+                ).SetInstanceable(
+                    False # ???
+                ) 
+                physicsUtils.add_physics_material_to_prim(
+                    self._stage,
+                    self._stage.GetPrimAtPath(
+                        f"/World/envs/env_{i}" + f"/franka/panda_leftfinger/collisions" 
+                    ),
+                    self.FrankaFingerPhysicsMaterialPath,
+                )
+
+                self._stage.GetPrimAtPath(
+                    f"/World/envs/env_{i}" + f"/franka/panda_rightfinger/collisions" 
+                ).SetInstanceable(
+                    False # ???
+                ) 
+                physicsUtils.add_physics_material_to_prim(
+                    self._stage,
+                    self._stage.GetPrimAtPath(
+                        f"/World/envs/env_{i}" + f"/franka/panda_rightfinger/collisions" 
+                    ),
+                    self.FrankaFingerPhysicsMaterialPath,
+                )
+
                 # print("7:,",i)
                 ##### TODO: Check out task config file --> does task config file only have to have the same name as the task?
 
@@ -380,8 +437,10 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
                     "male",
                     self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/male"),
                     self._sim_config.parse_actor_config("male"),
-
                 )
+
+                # prim_joint=utils.createJoint(self._stage, "Fixed",self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/male/male/base"),self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/franka/panda_leftfinger"))
+
             # print("8:,",i)
             female_translation = torch.tensor(
                 [0.0, 0.0, self.cfg_base.env.table_height], device=self._device                             # from config file FactoryBase.yaml
@@ -467,6 +526,9 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         self.male_heights_base = torch.tensor(
             self.male_heights_base, device=self._device
         ).unsqueeze(-1)
+        self.checkpoint_z_pos = torch.tensor(
+            self.checkpoint_z_pos, device=self._device
+        ).unsqueeze(-1)
         self.female_heights = torch.tensor(
             self.female_heights, device=self._device
         ).unsqueeze(-1)
@@ -486,6 +548,46 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         self.male_thicknesses = torch.tensor( # --> used when resetting gripper  
             self.male_thicknesses, device=self._device
         ).unsqueeze(-1)
+
+
+
+    def _import_test_cubes(self, add_to_stage):
+
+        for i in range(0, self._num_envs):      
+                                     
+            cube_z_pos = self.asset_info_snap_fit["snap_fit_1"]["male"]["z_pos_checkpoint"]
+
+            cube_translation = torch.tensor(                                             # passt das so??
+                [
+                    0.0,
+                    0.0,
+                    self.cfg_base.env.table_height + 0.1125,                                     # from config file FactoryBase.yaml
+                ],
+                device=self._device,
+            )
+
+            # cube_scale= torch.tensor(
+            #     [
+            #         0.01,
+            #         0.01,
+            #         0.01,
+            #     ]
+            # )
+            cube_orientation = torch.tensor([1.0, 0.0, 0.0, 0.0], device=self._device)  #  maybe has to be adjusted? --> turned by 90 degrees in usd
+            
+            cube = DynamicCuboid(
+                prim_path=f"/World/envs/env_{i}" + "/cube",
+                name="cube",
+                position=cube_translation,
+                scale=[0.01,0.01,0.01],
+            )   
+
+            
+            # self.cube_z_pos.append(cube_z_pos)
+
+                
+ 
+
 
 
 
@@ -529,24 +631,6 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 
 
     def refresh_env_tensors(self): 

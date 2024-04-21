@@ -150,6 +150,7 @@ class RLTask(RLTaskInterface):
         self.states_buf = torch.zeros((self._num_envs, self.num_states), device=self._device, dtype=torch.float)
         self.rew_buf = torch.zeros(self._num_envs, device=self._device, dtype=torch.float)
         self.reset_buf = torch.ones(self._num_envs, device=self._device, dtype=torch.long)
+        self.checkpoint_buf = torch.zeros(self._num_envs, device=self._device, dtype=torch.float) # eh
         self.progress_buf = torch.zeros(self._num_envs, device=self._device, dtype=torch.long)
         self.extras = {}
 

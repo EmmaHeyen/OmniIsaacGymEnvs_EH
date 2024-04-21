@@ -14,17 +14,20 @@ snap_fit_1:
         height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
         retention_feature_heigth: # TODO
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
+        z_pos_checkpoint: 0.1125
 
     female: 
         # usd_path_windows: "C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\CAD RJ45\planar cantilever\nach AMAY\female\usd_female\20240323_female.usd"
         # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/female/female_v2.usd"
-        usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/female/female_v2_closed.usd"
+        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/female/female_v2_closed.usd"
+        usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/female/female_v2_closed_noscaling.usd"
         width_top_inner: 0.053 
         width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
         height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
         insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
         retention_release_height: # TODO # middle of release part
+
 
        
 
