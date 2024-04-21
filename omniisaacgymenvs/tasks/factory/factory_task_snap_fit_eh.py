@@ -649,7 +649,9 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         # first_time_checkpoint_reached.zero()
 
         # check if checkpoint has been reached before: 
-        first_time_checkpoint_reached = self.checkpoint_buf == 1
+        first_time_checkpoint_reached = (self.checkpoint_buf == 1) & (checkpoint_reached==1)
+        print("first_time_checkpoint_reached: ", first_time_checkpoint_reached)
+        print("checkpoint_buf: ", self.checkpoint_buf)
 
         env_checkpoint_reached_first_time = torch.nonzero(first_time_checkpoint_reached).squeeze(dim=1)
         print("Checkpoint reached in environments:", env_checkpoint_reached_first_time.tolist())
@@ -738,6 +740,9 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
         keypoint_offsets=torch.cat((keypoint_offsets_1,keypoint_offsets_2),1)
         # print("keypoint_offset (concatenated): ",keypoint_offsets)
+
+        print("keypoint_offsets_1: ",keypoint_offsets_1)
+        print("keypoint_offsets_2: ",keypoint_offsets_2)
         
 
         return keypoint_offsets_1, keypoint_offsets_2

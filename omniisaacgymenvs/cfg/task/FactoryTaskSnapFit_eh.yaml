@@ -154,8 +154,8 @@ ctrl:
       joint_deriv_gains: [8, 8, 8, 8, 8, 8, 8]
   task_space_impedance:
       motion_ctrl_axes: [1, 1, 1, 1, 1, 1] # default: [1,1,1,1,1,1] # axes for which to enable motion control {0, 1} (6)
-      task_prop_gains: [40, 40, 40, 1, 1, 40] # [200, 200, 200, 50, 50, 50] # default: [40, 40, 40, 40, 40, 40]  # proportional gains on Franka fingertip pose (6)
-      task_deriv_gains: [8, 8, 8, 8, 8, 8] # industreal: [34, 34, 34, 1.4, 1.4, 1.4] # default [8, 8, 8, 8, 8, 8] # derivative gains on Franka fingertip pose (6)
+      task_prop_gains:  [200, 200, 200, 50, 50, 50]  #[40, 40, 40, 1, 1, 40] # [200, 200, 200, 50, 50, 50] # default: [40, 40, 40, 40, 40, 40]  # proportional gains on Franka fingertip pose (6)
+      task_deriv_gains: [34, 34, 34, 1.4, 1.4, 1.4] # [8, 8, 8, 8, 8, 8] # industreal: [34, 34, 34, 1.4, 1.4, 1.4] # default [8, 8, 8, 8, 8, 8] # derivative gains on Franka fingertip pose (6)
   operational_space_motion:
       motion_ctrl_axes: [1, 1, 1, 1, 1, 1]
       task_prop_gains: [1, 1, 1, 1, 1, 1]
