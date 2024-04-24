@@ -112,7 +112,7 @@ rl:
 
   num_keypoints: 4  # number of keypoints used in reward PER AXIS!
   num_axes: 2
-  keypoint_scale: 0.5  # length of line of keypoints
+  keypoint_scale: 0.5  # length of line of keypoints (only in z-direction)
 
   keypoint_reward_scale: 2.0  # scale on keypoint-based reward
   keypoint_reward_scale_x: 3.0
@@ -122,11 +122,11 @@ rl:
 
   max_episode_length: 128
 
-  close_checkpoint_error_thresh: 0.01 # 0.05 entspricht ca 3cm abweichung in jede richtung; 0.01 entspricht ca 5mm abweichung in jede richtung
-  checkpoint_reward_scale: 1.0
+  close_checkpoint_error_thresh: 0.01 # 0.05 entspricht ca 3cm abweichung in jede richtung; 0.01 entspricht ca 5.5mm abweichung in jede richtung
+  checkpoint_reward_scale: 10.0
 
   close_error_thresh: 0.1  # threshold below which nut is considered close enough to bolt (initially was 0.1) # is used to calculate success bonus --> if close enough, success_bonus is multiplied with 1, else with 0 --> is only taken into account if success_bonus!=0
-  success_bonus: 10  # bonus if nut is close enough to bolt (initially was 0.0)
+  success_bonus: 50  # bonus if nut is close enough to bolt (initially was 0.0)
 
 ctrl:
   ctrl_type: task_space_impedance  # {gym_default,
@@ -154,8 +154,8 @@ ctrl:
       joint_deriv_gains: [8, 8, 8, 8, 8, 8, 8]
   task_space_impedance:
       motion_ctrl_axes: [1, 1, 1, 1, 1, 1] # default: [1,1,1,1,1,1] # axes for which to enable motion control {0, 1} (6)
-      task_prop_gains:  [200, 200, 200, 50, 50, 50]  #[40, 40, 40, 1, 1, 40] # [200, 200, 200, 50, 50, 50] # default: [40, 40, 40, 40, 40, 40]  # proportional gains on Franka fingertip pose (6)
-      task_deriv_gains: [34, 34, 34, 1.4, 1.4, 1.4] # [8, 8, 8, 8, 8, 8] # industreal: [34, 34, 34, 1.4, 1.4, 1.4] # default [8, 8, 8, 8, 8, 8] # derivative gains on Franka fingertip pose (6)
+      task_prop_gains:  [40, 40, 40, 40, 40, 40] #[200, 200, 200, 200, 200, 200]  #[40, 40, 40, 1, 1, 40] # [200, 200, 200, 50, 50, 50] # default: [40, 40, 40, 40, 40, 40]  # proportional gains on Franka fingertip pose (6)
+      task_deriv_gains: [8, 8, 8, 8, 8, 8] # [8, 8, 8, 8, 8, 8] # industreal: [34, 34, 34, 1.4, 1.4, 1.4] # default [8, 8, 8, 8, 8, 8] # derivative gains on Franka fingertip pose (6)
   operational_space_motion:
       motion_ctrl_axes: [1, 1, 1, 1, 1, 1]
       task_prop_gains: [1, 1, 1, 1, 1, 1]
