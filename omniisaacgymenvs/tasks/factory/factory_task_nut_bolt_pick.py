@@ -464,7 +464,7 @@ class FactoryTaskNutBoltPick(FactoryEnvNutBolt, FactoryABCTask):
             self.fingertip_midpoint_pos,
             self.fingertip_midpoint_quat,
             self.fingertip_midpoint_linvel,
-            self.fingertip_midpoint_angvel,
+            # self.fingertip_midpoint_angvel,
             self.nut_grasp_pos,
             self.nut_grasp_quat,
         ]

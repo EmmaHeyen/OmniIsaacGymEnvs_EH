@@ -80,7 +80,7 @@ sim:
 
 env:
   controlFrequencyInv: 2  # 60 Hz
-  numEnvs: 128 #${resolve_default:128,${...num_envs}} # 1 funktioniert irgendwie nicht
+  numEnvs: 4 #128 #${resolve_default:128,${...num_envs}} # 1 funktioniert irgendwie nicht
   numObservations: 27 # number of observations per env; camel case required by VecTask
   numActions: 12 # number of actions per env; camel case required by VecTask
 
@@ -114,7 +114,7 @@ rl:
   num_axes: 2
   keypoint_scale: 0.5  # length of line of keypoints (only in z-direction)
 
-  keypoint_reward_scale: 2.0  # scale on keypoint-based reward
+  keypoint_reward_scale: 1.0  # scale on keypoint-based reward
   keypoint_reward_scale_x: 3.0
   keypoint_reward_scale_y: 3.0
   keypoint_reward_scale_z: 1.0

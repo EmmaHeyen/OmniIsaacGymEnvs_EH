@@ -129,7 +129,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         RLTask.set_up_scene(self, scene, replicate_physics=False)
         # print("import assets")
         self._import_env_assets(add_to_stage=True)
-        self._import_test_cubes(add_to_stage=True)
+        # self._import_test_cubes(add_to_stage=True)
 
         # print("FactoryFrankaView")
         self.frankas = FactoryFrankaView(
@@ -152,15 +152,15 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         )
 
 
-        self.cubes = RigidPrimView(prim_paths_expr=f"/World/envs/.*/cube", name="cube_view", track_contact_forces=True,)
-        # self.cubes.disable_rigid_body_physics()  
+        # self.cubes = RigidPrimView(prim_paths_expr=f"/World/envs/.*/cube", name="cube_view", track_contact_forces=True,)
+        # # self.cubes.disable_rigid_body_physics()  
            
 
         scene.add(self.males_base)
         scene.add(self.males_armRight)
         scene.add(self.males_armLeft)
 
-        scene.add(self.cubes)
+        # scene.add(self.cubes)
 
         scene.add(self.females)
         scene.add(self.frankas)
@@ -209,24 +209,40 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
             prim_paths_expr="/World/envs/.*/franka", name="frankas_view"
         )
 
+        # self.males_base = RigidPrimView(
+        #     prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_base.*", name="males_view_base", track_contact_forces=True, 
+        # )
+        # self.males_armRight = RigidPrimView(
+        #     prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_armRight.*", name="males_view_armRight", track_contact_forces=True, 
+        # )
+        # self.males_armLeft = RigidPrimView(
+        #     prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_armLeft.*", name="males_view_armLeft", track_contact_forces=True, 
+        # )
+
+
         self.males_base = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_base.*", name="males_view_base", track_contact_forces=True, 
+            prim_paths_expr="/World/envs/.*/male/male.*", name="males_view_base", track_contact_forces=True, 
         )
         self.males_armRight = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_armRight.*", name="males_view_armRight", track_contact_forces=True, 
+            prim_paths_expr="/World/envs/.*/male/male.*", name="males_view_armRight", track_contact_forces=True, 
         )
         self.males_armLeft = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/male/male/collisions/collisions_armLeft.*", name="males_view_armLeft", track_contact_forces=True, 
+            prim_paths_expr="/World/envs/.*/male/male.*", name="males_view_armLeft", track_contact_forces=True, 
         )
 
+
+        # # print("RigidPrimView")
+        # self.females = RigidPrimView(
+        #     prim_paths_expr="/World/envs/.*/female/female/collisions.*", name="females_view"
+        # )
 
         # print("RigidPrimView")
         self.females = RigidPrimView(
-            prim_paths_expr="/World/envs/.*/female/female/collisions.*", name="females_view"
+            prim_paths_expr="/World/envs/.*/female/female.*", name="females_view"
         )
 
 
-        self.cubes = RigidPrimView(prim_paths_expr=f"/World/envs/.*/cube", name="cube_view")
+        # self.cubes = RigidPrimView(prim_paths_expr=f"/World/envs/.*/cube", name="cube_view")
         # self.cubes.disable_rigid_body_physics()  
            
 
@@ -235,7 +251,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         scene.add(self.males_armRight)
         scene.add(self.males_armLeft)
 
-        scene.add(self.cubes)
+        # scene.add(self.cubes)
         # print("add males_base")
         scene.add(self.males_base)
         # print("add females")
@@ -645,8 +661,10 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         self.male_pos_base, self.male_quat_base = self.males_base.get_world_poses(clone=False) #TODO: does it work when i only set and get the pose of the male_base? Or do i need the poses of the arms aswell?            # positions in world frame of the prims with shape (M,3), quaternion orientations in world frame of the prims (scalar-first (w,x,y,z), shape (M,4))
         self.male_pos_base -= self.env_pos                                                    # A-=B is equal to A=A-B; male position relative to env position. env position is absolute to world
 
-        self.male_pos_armLeft, male_quat_armLeft = self.males_armLeft.get_world_poses(clone=False) 
-        self.male_pos_armRight, male_quat_armRight = self.males_armRight.get_world_poses(clone=False) 
+        self.male_pos_armLeft, self.male_quat_armLeft = self.males_armLeft.get_world_poses(clone=False) 
+        self.male_pos_armLeft -= self.env_pos 
+        self.male_pos_armRight, self.male_quat_armRight = self.males_armRight.get_world_poses(clone=False) 
+        self.male_pos_armRight-= self.env_pos 
 
         ### TODO: WHAT is a com pos --> Center of mass position --> only needed in screw task?
         self.male_com_pos = fc.translate_along_local_z(                                  # translate_along_local_z(pos, quat, offset, device). Translate global body position along local Z-axis and express in global coordinates
@@ -674,7 +692,6 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         self.male_angvel_armLeft = male_velocities_base[:, 3:6]
 
 
-        # ?? needed for my task? (so far only copied and adjusted from nut_bolt_place env)
         self.male_com_linvel = self.male_linvel_base + torch.cross(        # torch.cross(input, other, dim=None, *, out=None) → Tensor 
                                                                     # Returns the cross product of vectors in dimension dim of input and other.
             
@@ -684,10 +701,14 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         )
         self.male_com_angvel = self.male_angvel_base  # always equal
 
-        self.male_force = self.males_base.get_net_contact_forces(clone=False) #TODO potential problems wenn wir nur die contact forces von base berücksichtigen?
-
+        self.male_force_armRight = self.males_armRight.get_net_contact_forces(clone=False) #TODO potential problems wenn wir nur die contact forces von base berücksichtigen?
+        self.male_force_armLeft = self.males_armLeft.get_net_contact_forces(clone=False) 
+        self.male_force = self.males_base.get_net_contact_forces(clone=False) 
         # female tensors
         self.female_pos, self.female_quat = self.females.get_world_poses(clone=False)
+        # print("female_pos in refresh_env_tensors before adding env_pos: ", self.female_pos)
+
         self.female_pos -= self.env_pos
+        # print("female_pos in refresh_env_tensors: ", self.female_pos)
 
         self.female_force = self.females.get_net_contact_forces(clone=False)
