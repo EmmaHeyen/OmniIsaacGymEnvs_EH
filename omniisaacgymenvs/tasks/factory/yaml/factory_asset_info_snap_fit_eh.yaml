@@ -122,6 +122,7 @@ snap_fit_5:
 
 snap_fit_6:
     male:        
+        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_ArmKos_in_armsroot.usd"
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling.usd"
         thickness: 0.016
         length_arm: 0.04
@@ -134,7 +135,7 @@ snap_fit_6:
         z_pos_checkpoint: 0.1125
 
     female: 
-        usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_x55mm_y19mm.usd"
+        usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_abdeckung_wanddick_x65mm_y20mm.usd"
         width_top_inner: 0.053 
         width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 

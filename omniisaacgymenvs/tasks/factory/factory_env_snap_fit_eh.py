@@ -33,9 +33,6 @@ Inherits base class and abstract environment class. Inherited by nut-bolt task c
 Configuration defined in FactoryEnvNutBolt.yaml. Asset info defined in factory_asset_info_nut_bolt.yaml.
 """
 
-
-
-
 import hydra
 import numpy as np
 import torch
@@ -510,7 +507,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
                 # add fixed joints to females
 
 
-                prim_joint=utils.createJoint(self._stage, "Fixed",self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/female/female"),self._stage.GetPrimAtPath(f"/World"))
+                # prim_joint=utils.createJoint(self._stage, "Fixed",self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/female/female"),self._stage.GetPrimAtPath(f"/World"))
 
 
 
@@ -707,6 +704,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
         # female tensors
         self.female_pos, self.female_quat = self.females.get_world_poses(clone=False)
         # print("female_pos in refresh_env_tensors before adding env_pos: ", self.female_pos)
+        
 
         self.female_pos -= self.env_pos
         # print("female_pos in refresh_env_tensors: ", self.female_pos)

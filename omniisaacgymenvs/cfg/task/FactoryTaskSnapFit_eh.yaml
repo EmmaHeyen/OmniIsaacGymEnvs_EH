@@ -80,8 +80,8 @@ sim:
 
 env:
   controlFrequencyInv: 2  # 60 Hz
-  numEnvs: 4 #128 #${resolve_default:128,${...num_envs}} # 1 funktioniert irgendwie nicht
-  numObservations: 27 # number of observations per env; camel case required by VecTask
+  numEnvs: 128 #${resolve_default:128,${...num_envs}} # 1 funktioniert irgendwie nicht
+  numObservations: 29 # number of observations per env; camel case required by VecTask
   numActions: 12 # number of actions per env; camel case required by VecTask
 
   num_gripper_move_sim_steps: 40  # number of timesteps to reserve for moving gripper before first step of episode
@@ -120,7 +120,7 @@ rl:
   keypoint_reward_scale_z: 1.0
   action_penalty_scale: 0  # scale on action penalty (used to be 0.0)
 
-  max_episode_length: 128
+  max_episode_length: 160
 
   close_checkpoint_error_thresh: 0.01 # 0.05 entspricht ca 3cm abweichung in jede richtung; 0.01 entspricht ca 5.5mm abweichung in jede richtung
   checkpoint_reward_scale: 10.0
