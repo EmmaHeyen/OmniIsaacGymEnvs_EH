@@ -35,7 +35,7 @@ params:
 
   config:
     name: ${resolve_default:FactoryTaskSnapFit_eh,${....experiment}}
-    full_experiment_name:     30_FactoryTaskSnapFit_eh_numEnvs128_numEpochs1000_stiffness0.01_damping0_keypointP_controllerB_frankaNoiseTrue_MaleNoiseFalse_FemaleNoiseFalse #${.name}
+    full_experiment_name:     30_d_FactoryTaskSnapFit_eh_numEnvs128_numEpochs500_stiffness0.01_damping0_keypointP_controllerB_frankaNoiseTrue_MaleNoiseFalse_FemaleNoiseFalse #${.name}
     device: ${....rl_device}
     device_name: ${....rl_device}
     env_name: rlgpu
@@ -56,7 +56,7 @@ params:
     schedule_type: standard
     kl_threshold: 0.016
     score_to_win: 20000
-    max_epochs: 1000 #${resolve_default:400,${....max_iterations}} # default:400
+    max_epochs: 3073 #${resolve_default:400,${....max_iterations}} # default:400
     save_best_after: 50 
     save_frequency: 25
     print_stats: True

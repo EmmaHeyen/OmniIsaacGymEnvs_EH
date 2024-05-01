@@ -46,7 +46,7 @@
 # muss num_envs an eine bestimmte stelle?
 
 # TRAINING FROM CHECKPOINT:
-# PYTHON_PATH scripts/rlgames_train.py task=Ant checkpoint=runs/Ant/nn/Ant.pth
+# PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh checkpoint=runs/.../nn/FactoryTaskSnapFit_eh.pth
 
 
 # EXTENSION WORKFLOW:
@@ -824,6 +824,8 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             # print("keypoint dist min last step: ", self._get_keypoint_dist())
             self.rew_buf[:] += is_male_close_to_female * self.cfg_task.rl.success_bonus # if close to bolt, --> successbonus*1 else successbonus*0; sucess_bonus defined in cfg-task-yaml-file (currently =0)
             self.extras["successes"] = torch.mean(is_male_close_to_female.float())
+            success_rate = torch.sum(is_male_close_to_female)/self.num_envs
+            print("success rate: ",success_rate.item())
             checkpoint_reached_in_epoch = (self.checkpoint_buf != 1)
             self.extras["checkpoint_reached"] =torch.mean(checkpoint_reached_in_epoch.float())
             # print("extras dict: ", self.extras) 
