@@ -81,7 +81,7 @@ sim:
 env:
   controlFrequencyInv: 2  # 60 Hz
   numEnvs: 128 #${resolve_default:128,${...num_envs}} # 1 funktioniert irgendwie nicht
-  numObservations: 29 # number of observations per env; camel case required by VecTask
+  numObservations: 34 # number of observations per env; camel case required by VecTask
   numActions: 12 # number of actions per env; camel case required by VecTask
 
   num_gripper_move_sim_steps: 40  # number of timesteps to reserve for moving gripper before first step of episode

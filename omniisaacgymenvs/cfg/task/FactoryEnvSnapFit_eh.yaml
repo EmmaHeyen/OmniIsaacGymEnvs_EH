@@ -12,7 +12,7 @@ sim:
 
 env:
   env_name: 'FactoryEnvSnapFit_eh'
-  desired_subassemblies: ['snap_fit_8', 'snap_fit_8'] # does this mean we can choose different subassemblies for different envs?
+  desired_subassemblies: ['snap_fit_6', 'snap_fit_6'] # does this mean we can choose different subassemblies for different envs?
   male_lateral_offset: 0.1  # Y-axis offset of peg before initial reset to prevent initial interpenetration with hole
   snap_fit_density: 7850.0 # TODO: way too high??
   snap_fit_friction: 0.4
@@ -25,6 +25,6 @@ env:
   # snap-fit_5              x55mm_y19mm
   # snap_fit_6              x65mm_y20mm (dicke wand)
   # snap_fit_7              x62mm_y20mm (dicke wand)
-  # snap-fit_8              x55mm_y19mm
-  
+  # snap-fit_8              x55mm_y19mm (dicke wand)
+  # snap_fit_9              x58mm_y20mm (dicke wand)
 
