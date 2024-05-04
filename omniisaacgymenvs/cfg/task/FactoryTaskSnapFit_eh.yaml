@@ -100,6 +100,7 @@ randomize:
   female_pos_xy_noise: [0.1, 0.1]  # noise on nut position
 
 rl:
+  ansatz: "B" #[A,B]
   pos_action_scale: [0.1, 0.1, 0.1]
   rot_action_scale: [0.1, 0.1, 0.1]
   force_action_scale: [1.0, 1.0, 1.0]
@@ -122,7 +123,14 @@ rl:
 
   max_episode_length: 160
 
+  max_force_thresh: 0.05 # to determine force reward # TODO
+  max_force_scale: 20
+  dist_thresh_for_max_force: 0.0
+
   close_checkpoint_error_thresh: 0.01 # 0.05 entspricht ca 3cm abweichung in jede richtung; 0.01 entspricht ca 5.5mm abweichung in jede richtung
+  close_checkpoint_error_thresh_keypoint_dist: 0.1
+  checkpoint_checking_method: point_dist # [point_dist or keypoint_dist]
+  
   checkpoint_reward_scale: 10.0
 
   close_error_thresh: 0.1  # threshold below which nut is considered close enough to bolt (initially was 0.1) # is used to calculate success bonus --> if close enough, success_bonus is multiplied with 1, else with 0 --> is only taken into account if success_bonus!=0

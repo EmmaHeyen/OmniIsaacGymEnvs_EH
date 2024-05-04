@@ -151,7 +151,10 @@ class RLTask(RLTaskInterface):
         self.rew_buf = torch.zeros(self._num_envs, device=self._device, dtype=torch.float)
         self.reset_buf = torch.ones(self._num_envs, device=self._device, dtype=torch.long)
         self.checkpoint_buf = torch.zeros(self._num_envs, device=self._device, dtype=torch.float) # eh
-        self.progress_buf = torch.zeros(self._num_envs, device=self._device, dtype=torch.long)
+        self.checkpoint_buf_keypoint_dist = torch.zeros(self._num_envs, device=self._device, dtype=torch.float) # eh
+        self.progress_buf = torch.zeros(self._num_envs, device=self._device, dtype=torch.long) 
+        self.force_buf = torch.zeros(self._num_envs,device=self._device, dtype=torch.long)
+        self.keypoint_dist_buf = torch.zeros(self._num_envs,160,device=self._device, dtype=torch.long)
         self.extras = {}
 
     def set_up_scene(
