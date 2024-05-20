@@ -38,15 +38,15 @@
 # PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh
 
 # TENSORBOARD:
-# PYTHON_PATH -m tensorboard.main --logdir runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0actionpenalty_withNoise/summaries (run from cd OmniIsaacGymEnvs/omniisaacgymenvs)
+# PYTHON_PATH -m tensorboard.main --logdir runs/.../summaries (run from cd OmniIsaacGymEnvs/omniisaacgymenvs) (JEWEILS ANPASSEN)
 # 
 # RUNNING: 
-# PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh test=True num_envs=4 checkpoint=runs/FactoryTaskSnapFit_eh_400epochs_0.1mass_0.3friction-both_0.3actionpenalty_withNoise/nn/FactoryTaskSnapFit_eh.pth  (ANPASSEN)
+# PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh test=True checkpoint=runs/.../nn/FactoryTaskSnapFit_eh.pth  (JEWEILS ANPASSEN)
 # 
-# muss num_envs an eine bestimmte stelle?
+
 
 # TRAINING FROM CHECKPOINT:
-# PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh checkpoint=runs/.../nn/FactoryTaskSnapFit_eh.pth
+# PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh checkpoint=runs/.../nn/FactoryTaskSnapFit_eh.pth (JEWEILS ANPASSEN)
  
 
 # EXTENSION WORKFLOW:
@@ -239,17 +239,17 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         # print("reset_idx")
         self._reset_franka(env_ids)
 
-        for i in range(0,self._num_envs):
-            if i == 0: path="/World/FixedJoint"
-            else: path = f"/World/FixedJoint{i-1}"
-            self._stage.RemovePrim(path)
-            # prims_utils.delete_prim(path)
+        # for i in range(0,self._num_envs):
+        #     if i == 0: path="/World/FixedJoint"
+        #     else: path = f"/World/FixedJoint{i-1}"
+        #     self._stage.RemovePrim(path)
+        #     # prims_utils.delete_prim(path)
 
 
         
         self._reset_object(env_ids)
-        for j in range(0, self._num_envs):
-                utils.createJoint(self._stage, "Fixed",self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/female/female"),self._stage.GetPrimAtPath(f"/World"))
+        # for j in range(0, self._num_envs):
+        #         utils.createJoint(self._stage, "Fixed",self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/female/female"),self._stage.GetPrimAtPath(f"/World"))
 
         # Close gripper onto male
         self.disable_gravity()  # to prevent male from falling
@@ -439,19 +439,19 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             )
         )
 
-        # self.female_pos[env_ids, 0] = ( # x
-        #     self.cfg_task.randomize.female_pos_xy_initial[0] + female_noise_xy[env_ids, 0]
-        # )
-        # self.female_pos[env_ids, 1] = ( # y
-        #     self.cfg_task.randomize.female_pos_xy_initial[1] + female_noise_xy[env_ids, 1]
-        # )
+        self.female_pos[env_ids, 0] = ( # x
+            self.cfg_task.randomize.female_pos_xy_initial[0] + female_noise_xy[env_ids, 0]
+        )
+        self.female_pos[env_ids, 1] = ( # y
+            self.cfg_task.randomize.female_pos_xy_initial[1] + female_noise_xy[env_ids, 1]
+        )
 
-        self.female_pos[env_ids, 0] = ( # x ###REMOVED NOISE FOR TESTING # TODO: noise
-            self.cfg_task.randomize.female_pos_xy_initial[0]
-        )
-        self.female_pos[env_ids, 1] = ( # y ###REMOVED NOISE FOR TESTING  # TODO: noise
-            self.cfg_task.randomize.female_pos_xy_initial[1]
-        )
+        # self.female_pos[env_ids, 0] = ( # x ###REMOVED NOISE FOR TESTING # TODO: noise
+        #     self.cfg_task.randomize.female_pos_xy_initial[0]
+        # )
+        # self.female_pos[env_ids, 1] = ( # y ###REMOVED NOISE FOR TESTING  # TODO: noise
+        #     self.cfg_task.randomize.female_pos_xy_initial[1]
+        # )
 
 
         self.female_pos[env_ids, 2] = self.cfg_base.env.table_height # z # table_height=0.4 (from cfg->task->FactoryBase.yaml)
@@ -754,100 +754,98 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             self.reset_buf,
         )
 
-    # def _update_rew_buf(self) -> None:
-    #     """Compute reward at current timestep."""
-    #     # print("_update_rew_buf")
-    #     keypoint_reward = -self._get_keypoint_dist_scaled()
-    #     # print("keypoint_reward: ", keypoint_reward)
+    def _update_rew_buf_alt(self) -> None:
+        """Compute reward at current timestep."""
+        # print("_update_rew_buf")
+        keypoint_reward = -self._get_keypoint_dist_scaled()
+        # print("keypoint_reward: ", keypoint_reward)
 
-    #     # self._get_keypoint_dist()
-    #     # keypoint_reward = -self.keypoint_dist_min
-    #     # print("keypoint_dist_min: ",self.keypoint_dist_min)
+        # self._get_keypoint_dist()
+        # keypoint_reward = -self.keypoint_dist_min
+        # print("keypoint_dist_min: ",self.keypoint_dist_min)
 
-    #     # keypoint_reward = -torch.tensor(
-    #     #     [0.0, 0.0, 1.0], device=self.device)
+        # keypoint_reward = -torch.tensor(
+        #     [0.0, 0.0, 1.0], device=self.device)
 
-    #     checkpoint_reached = self._check_reached_checkpoint() # torch.Size([16])
-    #     checkpoint_reached_keypoint_dist = self._check_reached_checkpoint_keypoint_dist()
-    #     # print("checkpoint_reward: ", checkpoint_reward)
-    #     # print("checkpoint_reward_shape: ", checkpoint_reward.shape)
+        checkpoint_reached = self._check_reached_checkpoint() # torch.Size([16])
+        checkpoint_reached_keypoint_dist = self._check_reached_checkpoint_keypoint_dist()
+        # print("checkpoint_reward: ", checkpoint_reward)
+        # print("checkpoint_reward_shape: ", checkpoint_reward.shape)
         
-    #     # reset first_time_checkpoint_reached
-    #     first_time_checkpoint_reached = torch.zeros_like(self.checkpoint_buf, dtype=torch.bool)
-    #     first_time_checkpoint_reached_keypoint_dist = torch.zeros_like(self.checkpoint_buf_keypoint_dist, dtype=torch.bool)
-    #     # first_time_checkpoint_reached.zero()
+        # reset first_time_checkpoint_reached
+        first_time_checkpoint_reached = torch.zeros_like(self.checkpoint_buf, dtype=torch.bool)
+        first_time_checkpoint_reached_keypoint_dist = torch.zeros_like(self.checkpoint_buf_keypoint_dist, dtype=torch.bool)
+        # first_time_checkpoint_reached.zero()
 
-    #     # check if checkpoint has been reached before: 
-    #     first_time_checkpoint_reached = (self.checkpoint_buf == 1) & (checkpoint_reached==1)
-    #     first_time_checkpoint_reached_keypoint_dist = (self.checkpoint_buf_keypoint_dist == 1) & (checkpoint_reached_keypoint_dist==1)
+        # check if checkpoint has been reached before: 
+        first_time_checkpoint_reached = (self.checkpoint_buf == 1) & (checkpoint_reached==1)
+        first_time_checkpoint_reached_keypoint_dist = (self.checkpoint_buf_keypoint_dist == 1) & (checkpoint_reached_keypoint_dist==1)
 
-    #     # print("first_time_checkpoint_reached: ", first_time_checkpoint_reached)
-    #     # print("checkpoint_buf: ", self.checkpoint_buf)
+        # print("first_time_checkpoint_reached: ", first_time_checkpoint_reached)
+        # print("checkpoint_buf: ", self.checkpoint_buf)
 
-    #     env_checkpoint_reached_first_time = torch.nonzero(first_time_checkpoint_reached).squeeze(dim=1)
-    #     # print("Checkpoint reached in environments:", env_checkpoint_reached_first_time.tolist())
+        env_checkpoint_reached_first_time = torch.nonzero(first_time_checkpoint_reached).squeeze(dim=1)
+        # print("Checkpoint reached in environments:", env_checkpoint_reached_first_time.tolist())
         
-    #     # compute checkpoint reward only if it has been reached for the first time
+        # compute checkpoint reward only if it has been reached for the first time
 
-    #     if self.cfg_task.rl.checkpoint_checking_method=="keypoint_dist": 
-    #         checkpoint_reward = checkpoint_reached_keypoint_dist * first_time_checkpoint_reached_keypoint_dist
+        if self.cfg_task.rl.checkpoint_checking_method=="keypoint_dist": 
+            checkpoint_reward = checkpoint_reached_keypoint_dist * first_time_checkpoint_reached_keypoint_dist
        
-    #     elif self.cfg_task.rl.checkpoint_checking_method=="point_dist":
-    #         checkpoint_reward = checkpoint_reached * first_time_checkpoint_reached
+        elif self.cfg_task.rl.checkpoint_checking_method=="point_dist":
+            checkpoint_reward = checkpoint_reached * first_time_checkpoint_reached
 
         
-    #     # if first_time_checkpoint_reached:
-    #     #     self.extras["checkpt_reached_1st_time"] = torch.mean(first_time_checkpoint_reached.float()) # RuntimeError: Boolean value of Tensor with more than one value is ambiguous
+        # if first_time_checkpoint_reached:
+        #     self.extras["checkpt_reached_1st_time"] = torch.mean(first_time_checkpoint_reached.float()) # RuntimeError: Boolean value of Tensor with more than one value is ambiguous
         
-    #     action_penalty = (
-    #         torch.norm(self.actions, p=2, dim=-1)
-    #         * self.cfg_task.rl.action_penalty_scale
-    #     )
-    #     # print("shape keypoint_reward. ", keypoint_reward.shape)
+        action_penalty = (
+            torch.norm(self.actions, p=2, dim=-1)
+            * self.cfg_task.rl.action_penalty_scale
+        )
+        # print("shape keypoint_reward. ", keypoint_reward.shape)
 
-    #     '''
-    #     default cfg values: 
-    #     keypoint_reward_scale: 1.0  # scale on keypoint-based reward
-    #     action_penalty_scale: 0.0  # scale on action penalty
-    #     '''
+        '''
+        default cfg values: 
+        keypoint_reward_scale: 1.0  # scale on keypoint-based reward
+        action_penalty_scale: 0.0  # scale on action penalty
+        '''
 
-    #     # keypoint_reward = keypoint_reward * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device)
+        # keypoint_reward = keypoint_reward * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device)
 
-    #     self.rew_buf[:] = (
-    #         keypoint_reward * self.cfg_task.rl.keypoint_reward_scale
-    #         - action_penalty * self.cfg_task.rl.action_penalty_scale # muss das so? hier wird zwei mal mit der penalty_scale multipliziert (ist in nut_bolt_place task auch so)          
-    #         + checkpoint_reward * self.cfg_task.rl.checkpoint_reward_scale       
-    #     )
+        self.rew_buf[:] = (
+            keypoint_reward * self.cfg_task.rl.keypoint_reward_scale
+            - action_penalty * self.cfg_task.rl.action_penalty_scale # muss das so? hier wird zwei mal mit der penalty_scale multipliziert (ist in nut_bolt_place task auch so)          
+            + checkpoint_reward * self.cfg_task.rl.checkpoint_reward_scale       
+        )
 
-    #     # print("reward_calculations:/n")
-    #     # print(keypoint_reward, "*" , self.cfg_task.rl.keypoint_reward_scale , "/n")
-    #     # print("-" , action_penalty , "*" , self.cfg_task.rl.action_penalty_scale ,"/n")
-    #     # print("+" , checkpoint_reward, "*" ,self.cfg_task.rl.checkpoint_reward_scale , "/n")
-    #     # print("=" , self.rew_buf[:])
+        # print("reward_calculations:/n")
+        # print(keypoint_reward, "*" , self.cfg_task.rl.keypoint_reward_scale , "/n")
+        # print("-" , action_penalty , "*" , self.cfg_task.rl.action_penalty_scale ,"/n")
+        # print("+" , checkpoint_reward, "*" ,self.cfg_task.rl.checkpoint_reward_scale , "/n")
+        # print("=" , self.rew_buf[:])
 
-    #     # print("rew_buf before adding success bonus: ", self.rew_buf)
+        # print("rew_buf before adding success bonus: ", self.rew_buf)
 
-    #     # episode length is constant across all envs
-    #     is_last_step = self.progress_buf[0] == self.max_episode_length - 1
+        # episode length is constant across all envs
+        is_last_step = self.progress_buf[0] == self.max_episode_length - 1
 
-    #     if is_last_step:
-    #         # Check if nut is close enough to bolt
-    #         is_male_close_to_female = self._check_male_close_to_female() # adjust threshold in task config file
-    #         print("_check_male_close_to_female: ",is_male_close_to_female)
-    #         # print("keypoint dist min last step: ", self._get_keypoint_dist())
-    #         self.rew_buf[:] += is_male_close_to_female * self.cfg_task.rl.success_bonus # if close to bolt, --> successbonus*1 else successbonus*0; sucess_bonus defined in cfg-task-yaml-file (currently =0)
-    #         self.extras["successes"] = torch.mean(is_male_close_to_female.float())
-    #         success_rate = torch.sum(is_male_close_to_female)/self.num_envs
-    #         print("success rate: ",success_rate.item())
-    #         checkpoint_reached_in_epoch = (self.checkpoint_buf != 1)
-    #         checkpoint_reached_in_epoch_keypoint_dist = (self.checkpoint_buf_keypoint_dist != 1)
-    #         self.extras["checkpoint_reached"] =torch.mean(checkpoint_reached_in_epoch.float())
-    #         self.extras["checkpoint_reached keypoint dist"] =torch.mean(checkpoint_reached_in_epoch_keypoint_dist.float())
-    #         # print("extras dict: ", self.extras) 
-    #     # print("is last step? ", is_last_step)
-    #     # print("rew_buf before adding success bonus: ", self.rew_buf)
+        if is_last_step:
+            # Check if nut is close enough to bolt
+            is_male_close_to_female = self._check_male_close_to_female() # adjust threshold in task config file
+            print("_check_male_close_to_female: ",is_male_close_to_female)
+            # print("keypoint dist min last step: ", self._get_keypoint_dist())
+            self.rew_buf[:] += is_male_close_to_female * self.cfg_task.rl.success_bonus # if close to bolt, --> successbonus*1 else successbonus*0; sucess_bonus defined in cfg-task-yaml-file (currently =0)
+            self.extras["successes"] = torch.mean(is_male_close_to_female.float())
+            success_rate = torch.sum(is_male_close_to_female)/self.num_envs
+            print("success rate: ",success_rate.item())
+            checkpoint_reached_in_epoch = (self.checkpoint_buf >= 1)
+            self.extras["checkpoint_reached"] =torch.mean(checkpoint_reached_in_epoch.float())
+            # print("extras dict: ", self.extras) 
+        # print("is last step? ", is_last_step)
+        # print("rew_buf before adding success bonus: ", self.rew_buf)
 
-    #     # print("rew_buf: ", self.rew_buf)
+        # print("rew_buf: ", self.rew_buf)
 
     def _update_rew_buf(self) -> None:
 
@@ -927,8 +925,6 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         # episode length is constant across all envs
         is_last_step = self.progress_buf[0] == self.max_episode_length - 1
 
-        # reset self.is_male_close_to_female
-
         if is_last_step:
             # Check if nut is close enough to bolt
             is_male_close_to_female = self._check_male_close_to_female() # adjust threshold in task config file
@@ -938,19 +934,8 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             self.extras["successes"] = torch.mean(is_male_close_to_female.float())
             success_rate = torch.sum(is_male_close_to_female)/self.num_envs
             print("success rate: ",success_rate.item())
-            checkpoint_reached_in_epoch = (self.checkpoint_buf != 1)
+            checkpoint_reached_in_epoch = (self.checkpoint_buf >= 1)
             self.extras["checkpoint_reached"] =torch.mean(checkpoint_reached_in_epoch.float())
-            self.extras["collision"] =torch.mean(self.force_buf.float())
-
-            # print("extras dict: ", self.extras)
-
-        # print("is last step? ", is_last_step)
-
-        # print("rew_buf before adding success bonus: ", self.rew_buf)
-
- 
-
-        # print("rew_buf: ", self.rew_buf)
 
 
 

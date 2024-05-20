@@ -507,7 +507,7 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
                 # add fixed joints to females
 
 
-                # prim_joint=utils.createJoint(self._stage, "Fixed",self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/female/female"),self._stage.GetPrimAtPath(f"/World"))
+                prim_joint=utils.createJoint(self._stage, "Fixed",self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/female/female"),self._stage.GetPrimAtPath(f"/World"))
 
 
 
