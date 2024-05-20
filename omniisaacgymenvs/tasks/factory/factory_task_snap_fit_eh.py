@@ -44,11 +44,9 @@
 # PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh test=True checkpoint=runs/.../nn/FactoryTaskSnapFit_eh.pth  (JEWEILS ANPASSEN)
 # 
 
-
 # TRAINING FROM CHECKPOINT:
 # PYTHON_PATH scripts/rlgames_train.py task=FactoryTaskSnapFit_eh checkpoint=runs/.../nn/FactoryTaskSnapFit_eh.pth (JEWEILS ANPASSEN)
  
-
 # EXTENSION WORKFLOW:
 # windows: C:/Users/emmah/AppData/Local/ov/pkg/isaac_sim-2023.1.1/isaac-sim.gym.bat --ext-folder "C:\Users\emmah"
 # linux: /home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/isaac-sim.gym.sh --ext-folder /home/mnn_eh
@@ -115,7 +113,6 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
     def post_reset(self) -> None:
         """Reset the world. Called only once, before simulation begins."""
-        # print("post_reset")
 
         if self.cfg_task.sim.disable_gravity:
             self.disable_gravity()
@@ -135,10 +132,8 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
     def _acquire_task_tensors(self) -> None:
         """Acquire tensors."""
-        # print("_acquire_task_tensors")
-        # Nut-bolt tensors
       
-        self.male_base_pos_local = self.male_heights_total * torch.tensor(    # result: list of tensors like torch.tensor([0.0, 0.0, bolt_head_height]) --> nut_pos_base local is equal to [0,0,bolt_head_height] for each env.
+        self.male_base_pos_local = self.male_heights_total * torch.tensor(    
             [0.0, 0.0, 1.0], device=self.device 
         ).repeat((self.num_envs, 1))-self.male_heights_base*torch.tensor([0.0, 0.0, 1.0], device=self.device).repeat((self.num_envs, 1))*0.5
 
@@ -149,16 +144,10 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         ).repeat((self.num_envs, 1))*0.5
 
        
-        self.male_kp_middle_points=self.male_keypoint_middle_points * torch.tensor( # highest position of female thingy
+        self.male_kp_middle_points=self.male_keypoint_middle_points * torch.tensor( # highest position of female part
             [0.0, 0.0, 1.0], device=self.device
         ).repeat((self.num_envs, 1))
 
-        # try20240428
-        # self.male_kp_middle_points[:,2] += 0.01
-
-        # print("male_kp_middle_points:", self.male_kp_middle_points)
-
-        # Keypoint tensors
         '''
         num_keypoints: 4  # number of keypoints used in reward
         keypoint_scale: 0.5  # length of line of keypoints
@@ -172,7 +161,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         self.keypoint_offsets_female_2[:,2] *= self.cfg_task.rl.keypoint_scale 
 
         self.keypoints_male_1 = torch.zeros(  # tensor of zeros of size (num_envs, num_keypoints, 3)
-            (self.num_envs, self.cfg_task.rl.num_keypoints, 3), # adjusted for snap-fit: multiplied num_keypoints by 2 (number of axes)
+            (self.num_envs, self.cfg_task.rl.num_keypoints, 3), 
             dtype=torch.float32,
             device=self.device,
         )
@@ -238,18 +227,8 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         """Reset specified environments."""
         # print("reset_idx")
         self._reset_franka(env_ids)
-
-        # for i in range(0,self._num_envs):
-        #     if i == 0: path="/World/FixedJoint"
-        #     else: path = f"/World/FixedJoint{i-1}"
-        #     self._stage.RemovePrim(path)
-        #     # prims_utils.delete_prim(path)
-
-
-        
+       
         self._reset_object(env_ids)
-        # for j in range(0, self._num_envs):
-        #         utils.createJoint(self._stage, "Fixed",self._stage.GetPrimAtPath(f"/World/envs/env_{i}" + "/female/female"),self._stage.GetPrimAtPath(f"/World"))
 
         # Close gripper onto male
         self.disable_gravity()  # to prevent male from falling
@@ -260,19 +239,6 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             self._randomize_gripper_pose(
                 env_ids, sim_steps=self.cfg_task.env.num_gripper_move_sim_steps         # num_gripper_move_sim_steps= number of timesteps to reserve for moving gripper before first step of episode (40)
             )
-
-
-        # save force and keypoint_dist to csv
-        # path=f"/home/mnn_eh/Documents/MA/force_data{self.cfg_ppo.full_experiment_name}"
-        # if not os.path.exists(path):
-        #     os.makedirs(path)  
-
-
-
-        # filename=f"force_and_keypoint_dist_{self.epoch_number}.csv"
-
-        # data={"Force": self.force_buf,"Keypoint_dist": self.keypoint_dist_buf,"success":}
-
 
         self._reset_buffers(env_ids)
 
@@ -296,9 +262,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
     def _reset_franka(self, env_ids) -> None:
         """Reset DOF states and DOF targets of Franka."""
-        # print("_reset_franka")
-        gripper_buffer=1.1  # buffer on gripper DOF pos to prevent initial contact (was 1.1 before)
-        # print("gripper_buffer: ", gripper_buffer)
+        gripper_buffer=1.1  # buffer on gripper DOF pos to prevent initial contact 
 
         self.dof_pos[env_ids] = torch.cat(
             (
@@ -306,13 +270,11 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                     self.cfg_task.randomize.franka_arm_initial_dof_pos, # franka_arm_initial_dof_pos: [0.00871, -0.10368, -0.00794, -1.49139, -0.00083,  1.38774,  0.7861]
                     device=self.device,
                 ).repeat((len(env_ids), 1)),
-                # (self.male_widths * 0.5)
                 (self.male_thicknesses * 0.5)                                 # finger pos
-                * gripper_buffer,  # buffer on gripper DOF pos to prevent initial contact (was 1.1 before)
-                # (self.male_widths * 0.5) * 1.1,
+                * gripper_buffer,  # buffer on gripper DOF pos to prevent initial contact 
                 (self.male_thicknesses * 0.5) * gripper_buffer                # finger pos
                 
-            ),  # buffer on gripper DOF pos to prevent initial contact (was 1.1 before)
+            ),  # buffer on gripper DOF pos to prevent initial contact 
             dim=-1,
         )  # shape = (num_envs, num_dofs)
 
@@ -332,21 +294,19 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         self.male_pos_base[env_ids, 1] = 0.0 # y-coordinate of position?
 
         self.male_pos_armLeft[env_ids, 0] = self.male_pos_base[env_ids, 0] - 0.023
-        self.male_pos_armLeft[env_ids, 1] = self.male_pos_base[env_ids, 1]       # TODO right unit??
+        self.male_pos_armLeft[env_ids, 1] = self.male_pos_base[env_ids, 1]       
         self.male_pos_armRight[env_ids, 0] = self.male_pos_base[env_ids, 0] + 0.023
-        self.male_pos_armRight[env_ids, 1] = self.male_pos_base[env_ids, 1]      # TODO: right unit??
+        self.male_pos_armRight[env_ids, 1] = self.male_pos_base[env_ids, 1]      
 
-        # TODO: check out if value for fingertip_midpoint_pos_reset has to be adjusted (was 0.58781 before) (franka_finger_length=0.053671, from factory_asset_info_franka_table)
-        fingertip_midpoint_pos_reset = 0.58781  # self.fingertip_midpoint_pos at reset # for  fingertip_midpoint_pos_reset = 0.28781 peg "jumped" ot of table?? (TODO)
-        # print("fingertip_midpoint_pos_reset: ",fingertip_midpoint_pos_reset)
+        fingertip_midpoint_pos_reset = 0.58781  
 
-        male_base_pos_local = self.male_heights_total.squeeze(-1) - 0.5*self.male_heights_base.squeeze(-1) # try 3 # TODO: adjust base_pos to snap fit task
+        male_base_pos_local = self.male_heights_total.squeeze(-1) - 0.5*self.male_heights_base.squeeze(-1) 
 
-        self.male_pos_base[env_ids, 2] = fingertip_midpoint_pos_reset + 0.01 # TODO: adjust male z pos of male to snapfit task ? TODO: ist peg_base_local random gewählt -->irgendein Abstand der ungefähr passen könnte, damit abstand zwischen fingertip_midpoint_pos_reset und bolt
+        self.male_pos_base[env_ids, 2] = fingertip_midpoint_pos_reset + 0.01 
         
 
-        self.male_pos_armLeft[env_ids, 2] = self.male_pos_base[env_ids, 2] - 0.01       # TODO right unit?
-        self.male_pos_armRight[env_ids, 2] = self.male_pos_base[env_ids,2] - 0.01       # TODO: right unit?
+        self.male_pos_armLeft[env_ids, 2] = self.male_pos_base[env_ids, 2] - 0.01       
+        self.male_pos_armRight[env_ids, 2] = self.male_pos_base[env_ids,2] - 0.01       
         
         male_noise_pos_in_gripper = 2 * ( 
             torch.rand((self.num_envs, 3), dtype=torch.float32, device=self.device)
@@ -357,8 +317,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                 self.cfg_task.randomize.male_noise_pos_in_gripper, device=self.device
             )
         )
-        # self.male_pos[env_ids, :] += male_noise_pos_in_gripper[env_ids]               # TODO: noise for base, armLeft and armRight
-
+        # self.male_pos[env_ids, :] += male_noise_pos_in_gripper[env_ids]              
         male_rot_euler = torch.tensor(
             [0.0, 0.0, math.pi * 0.5], device=self.device
         ).repeat(len(env_ids), 1)
@@ -422,10 +381,6 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             indices,
         )
 
-
-        # print("checkpoint2 ", env_ids)
-        # print("self.male_pos[env_ids] + self.env_pos[env_ids]=",self.male_pos[env_ids] + self.env_pos[env_ids])
-
         # Randomize root state of female
         female_noise_xy = 2 * (
             torch.rand((self.num_envs, 2), dtype=torch.float32, device=self.device)
@@ -469,23 +424,6 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
         
 
-
-        # self.positions_checkpoint = torch.zeros_like(self.female_pos)
-        # self.positions_checkpoint[:,0] = self.female_pos[:,0]
-        # self.positions_checkpoint[:,1] = self.female_pos[:,1]
-        # self.positions_checkpoint[:,2] = self.female_pos[:,2]+ self.checkpoint_z_pos.squeeze(dim=1)
-
-        # self.cubes.set_world_poses(
-        #     self.positions_checkpoint + self.env_pos[env_ids], 
-        #     self.female_quat[env_ids],
-        #     indices,   
-        # )
-
-
-        # self.cubes.disable_rigid_body_physics()
-
-        # print("reset_object ende")
-
     def _reset_buffers(self, env_ids) -> None:
         # print("_reset_buffers")
         """Reset buffers."""
@@ -501,7 +439,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         self.keypoint_dist_buf[env_ids]=0
 
     def _apply_actions_as_ctrl_targets(
-        self, actions, ctrl_target_gripper_dof_pos, do_scale # do_scale:bool # immer false ausßer in pre_physics_step?
+        self, actions, ctrl_target_gripper_dof_pos, do_scale 
     ) -> None:
         """Apply actions from policy as position/rotation/force/torque targets."""
         # print("_apply_actions_as_ctrl_targets")
@@ -571,53 +509,35 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         self,
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         """Step buffers. Refresh tensors. Compute observations and reward. Reset environments."""
-        # print("post_physics_step")
         self.progress_buf[:] += 1
-        # print("progress buf post physics step: ",self.progress_buf)
 
         if self._env._world.is_playing():
-            self.refresh_base_tensors()     # ??? # from factory_schema_class_base.py-file?
-            self.refresh_env_tensors()      # from env .py-file 
-            self._refresh_task_tensors()    # from current .py-file
-            self.get_observations()         # from current .py-file
-            self.calculate_metrics()        # from current .py-file
-            self.get_extras()               # ???
+            self.refresh_base_tensors()     
+            self.refresh_env_tensors()       
+            self._refresh_task_tensors()    
+            self.get_observations()         
+            self.calculate_metrics()        
+            self.get_extras()               
 
         return self.obs_buf, self.rew_buf, self.reset_buf, self.extras
 
     def _refresh_task_tensors(self) -> None:
         """Refresh tensors."""
         # Compute pos of keypoints on gripper, nut, and bolt in world frame
-        # print("_refresh_task_tensors")
 
-        '''def tf_combine(q1, t1, q2, t2):
-            return quat_mul(q1, q2), quat_apply(q1, t2) + t1
-
-        -->combines two transformations, first applying the rotation of the first transformation to the translation of the second transformation ..
-        .. and then adding it to the translation of the first transformation. ..
-        ..The combined rotation is obtained by multiplying the quaternions of the two transformations.
-        '''
         self.positions_checkpoint = self.female_pos.clone()
         self.positions_checkpoint[:,2] += self.checkpoint_z_pos.squeeze(dim=1)
+        
         # KEYPOINTS SHIFTED BY 2CM in X-DIRECTION
         self.num_keypoints=self.cfg_task.rl.num_keypoints
-        for idx, keypoint_offset in enumerate(self.keypoint_offsets_1): # keypoints are placed in even distance in a line in z-direction 
-            # self.keypoints_male_1[:, idx] = tf_combine(                 # shape keypoints_male_1: torch.Size([128, 4, 3])
-            #     self.male_quat_base,
-            #     self.male_pos_base,                                       # MARKER 18!!
-            #     self.identity_quat,
-            #     (keypoint_offset - self.male_keypoint_middle_points), 
-            # )[1]
-
-            
-
+        for idx, keypoint_offset in enumerate(self.keypoint_offsets_1): # keypoints are placed in even distance in a line in z-direction       
             self.keypoints_male_1[:, idx] = tf_combine(                 # shape keypoints_male_1: torch.Size([128, 4, 3])
                 self.male_quat_base,
                 self.male_pos_base,
                 self.identity_quat,
                 (keypoint_offset - self.male_kp_middle_points), 
             )[1]
-            self.keypoints_female_1[:, idx] = tf_combine( # TODO: adjust to malefemale snap fit part
+            self.keypoints_female_1[:, idx] = tf_combine( 
                 self.female_quat,
                 self.female_pos,
                 self.identity_quat,
@@ -633,19 +553,13 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
             
         for idx, keypoint_offset in enumerate(self.keypoint_offsets_2): # keypoints are placed in even distance in a line in z-direction 
-            # self.keypoints_male_2[:, idx] = tf_combine( # TODO: adjust to male snapfit part
-            #     self.male_quat_base,
-            #     self.male_pos_base,                               # MARKER 18!!
-            #     self.identity_quat,
-            #     (keypoint_offset - self.male_keypoint_middle_points), 
-            # )[1]
             self.keypoints_male_2[:, idx] = tf_combine(                 # shape keypoints_male_1: torch.Size([128, 4, 3])
                 self.male_quat_base,
                 self.male_pos_base,
                 self.identity_quat,
                 (keypoint_offset - self.male_kp_middle_points), 
             )[1]
-            self.keypoints_female_2[:, idx] = tf_combine( # TODO: adjust to female snap fit part
+            self.keypoints_female_2[:, idx] = tf_combine( 
                 self.female_quat,
                 self.female_pos,
                 self.identity_quat,
@@ -658,24 +572,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                 (keypoint_offset + self.female_middle_point),  
             )[1]
         
-
-        # print("self.keypoint_offsets_female_1:", self.keypoint_offsets_female_1)
-        # print("self.keypoint_offsets_female_2:", self.keypoint_offsets_female_2)
-        # print("keypoints_female_1: ",self.keypoints_female_1)
-        # print("keypoints_checkpoint_1: ",self.keypoints_checkpoint_1)
-        # print("keypoints_female_2: ", self.keypoints_female_2)
-        # print("female_pos: ", self.female_pos)
-        # print("keypoints_male_1 (left arm): ",self.keypoints_male_1)
-        # print("male_pos_armLeft: ",self.male_pos_armLeft)
-        # print("keypoints_male_2 (right arms): ",self.keypoints_male_2)
-        # print("male_pos_armRight: ",self.male_pos_armRight)
-        # print("male_pos_base: ",self.male_pos_base)
-        
-      
-        
-
-
-        # print("shape keypoint_female_2: ", self.keypoints_female_2.shape) # torch.Size([128, 4, 3])
+        # print("shape keypoints: ", self.keypoints_female_2.shape) # torch.Size([num_envs, 4, 3])
 
     def get_observations(self) -> dict:
         """Compute observations."""
@@ -701,34 +598,18 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         self.joint_efforts_except_fingers=self.frankas.get_measured_joint_efforts(joint_indices=torch.Tensor([0,1,2,3,4,5,6]))
 
 
-
-        # print("self.joint_efforts:  ", self.joint_efforts)
-        # print("self.joint_forces: ", self.joint_forces)
-
-        # print("self.joint_efforts.shape: ", self.joint_efforts.shape)
-        # print("self.joint_forces.shape: ", self.joint_forces.shape)
-
-        # print("female_pos_shape: ", self.female_pos.shape)
-
         obs_tensors = [ # WENN OBSERVATIONS ANGEPASST WERDEN MÜSSEN AUCH IN PPO.YAML DIE NUM_OBSERVATIONS ANGEPASST WERDEN!
-            self.fingertip_midpoint_pos,        #3
+            self.fingertip_midpoint_pos,        # dimension: 3
             self.fingertip_midpoint_quat,       #4
             self.fingertip_midpoint_linvel,     #3
             self.fingertip_midpoint_angvel,     #3
             self.male_pos_base,                 #3
-            self.male_quat_base,              #4
+            self.male_quat_base,                #4
             self.female_pos,                    #3
             self.female_quat,                   #4
-            # self.female_pos-self.male_pos_base, #3
-            # delta_quat,                 #4
-            # self._get_keypoint_dist().unsqueeze(1),          #1
-            # self.joint_efforts,   #2
-            self.joint_efforts_except_fingers,     #7                       
+            self.joint_efforts_except_fingers,  #7                       
         
         ]
-
-        # if self.cfg_task.rl.add_obs_female_tip_pos: # --> edit in task config file (add_obs_female_tip_pos is boolean value) # add observation of bolt tip position
-        #     obs_tensors += [self.female_tip_pos_local]
 
         self.obs_buf = torch.cat(
             obs_tensors, dim=-1
@@ -746,7 +627,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
     def _update_reset_buf(self) -> None:
         """Assign environments for reset if successful or failed."""
-        # print("_update_reset_buf")
+
         # If max episode length has been reached
         self.reset_buf[:] = torch.where(
             self.progress_buf[:] >= self.max_episode_length - 1,
@@ -758,76 +639,35 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         """Compute reward at current timestep."""
         # print("_update_rew_buf")
         keypoint_reward = -self._get_keypoint_dist_scaled()
-        # print("keypoint_reward: ", keypoint_reward)
-
-        # self._get_keypoint_dist()
-        # keypoint_reward = -self.keypoint_dist_min
-        # print("keypoint_dist_min: ",self.keypoint_dist_min)
-
-        # keypoint_reward = -torch.tensor(
-        #     [0.0, 0.0, 1.0], device=self.device)
 
         checkpoint_reached = self._check_reached_checkpoint() # torch.Size([16])
         checkpoint_reached_keypoint_dist = self._check_reached_checkpoint_keypoint_dist()
-        # print("checkpoint_reward: ", checkpoint_reward)
-        # print("checkpoint_reward_shape: ", checkpoint_reward.shape)
         
         # reset first_time_checkpoint_reached
         first_time_checkpoint_reached = torch.zeros_like(self.checkpoint_buf, dtype=torch.bool)
         first_time_checkpoint_reached_keypoint_dist = torch.zeros_like(self.checkpoint_buf_keypoint_dist, dtype=torch.bool)
-        # first_time_checkpoint_reached.zero()
 
         # check if checkpoint has been reached before: 
         first_time_checkpoint_reached = (self.checkpoint_buf == 1) & (checkpoint_reached==1)
         first_time_checkpoint_reached_keypoint_dist = (self.checkpoint_buf_keypoint_dist == 1) & (checkpoint_reached_keypoint_dist==1)
 
-        # print("first_time_checkpoint_reached: ", first_time_checkpoint_reached)
-        # print("checkpoint_buf: ", self.checkpoint_buf)
-
         env_checkpoint_reached_first_time = torch.nonzero(first_time_checkpoint_reached).squeeze(dim=1)
         # print("Checkpoint reached in environments:", env_checkpoint_reached_first_time.tolist())
         
         # compute checkpoint reward only if it has been reached for the first time
-
         if self.cfg_task.rl.checkpoint_checking_method=="keypoint_dist": 
             checkpoint_reward = checkpoint_reached_keypoint_dist * first_time_checkpoint_reached_keypoint_dist
        
         elif self.cfg_task.rl.checkpoint_checking_method=="point_dist":
             checkpoint_reward = checkpoint_reached * first_time_checkpoint_reached
 
-        
-        # if first_time_checkpoint_reached:
-        #     self.extras["checkpt_reached_1st_time"] = torch.mean(first_time_checkpoint_reached.float()) # RuntimeError: Boolean value of Tensor with more than one value is ambiguous
-        
-        action_penalty = (
-            torch.norm(self.actions, p=2, dim=-1)
-            * self.cfg_task.rl.action_penalty_scale
-        )
-        # print("shape keypoint_reward. ", keypoint_reward.shape)
-
-        '''
-        default cfg values: 
-        keypoint_reward_scale: 1.0  # scale on keypoint-based reward
-        action_penalty_scale: 0.0  # scale on action penalty
-        '''
-
         # keypoint_reward = keypoint_reward * torch.tensor([self.cfg_task.rl.keypoint_reward_scale_x, self.cfg_task.rl.keypoint_reward_scale_y, self.cfg_task.rl.keypoint_reward_scale_z], device=self.device)
 
         self.rew_buf[:] = (
             keypoint_reward * self.cfg_task.rl.keypoint_reward_scale
-            - action_penalty * self.cfg_task.rl.action_penalty_scale # muss das so? hier wird zwei mal mit der penalty_scale multipliziert (ist in nut_bolt_place task auch so)          
             + checkpoint_reward * self.cfg_task.rl.checkpoint_reward_scale       
         )
 
-        # print("reward_calculations:/n")
-        # print(keypoint_reward, "*" , self.cfg_task.rl.keypoint_reward_scale , "/n")
-        # print("-" , action_penalty , "*" , self.cfg_task.rl.action_penalty_scale ,"/n")
-        # print("+" , checkpoint_reward, "*" ,self.cfg_task.rl.checkpoint_reward_scale , "/n")
-        # print("=" , self.rew_buf[:])
-
-        # print("rew_buf before adding success bonus: ", self.rew_buf)
-
-        # episode length is constant across all envs
         is_last_step = self.progress_buf[0] == self.max_episode_length - 1
 
         if is_last_step:
@@ -841,19 +681,11 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             print("success rate: ",success_rate.item())
             checkpoint_reached_in_epoch = (self.checkpoint_buf >= 1)
             self.extras["checkpoint_reached"] =torch.mean(checkpoint_reached_in_epoch.float())
-            # print("extras dict: ", self.extras) 
-        # print("is last step? ", is_last_step)
-        # print("rew_buf before adding success bonus: ", self.rew_buf)
 
-        # print("rew_buf: ", self.rew_buf)
 
     def _update_rew_buf(self) -> None:
 
         """Compute reward at current timestep."""
-
-        # print("_update_rew_buf")
-
-        # keypoint_reward = -self._get_keypoint_dist_scaled()
 
         # KEYPOINT REWARD
         keypoint_reward = -self._get_keypoint_dist()
@@ -868,37 +700,19 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         self.force_buf+=force_reward
         print("force_buf_before adding rew: ",self.force_buf)
     
-
-
         # CHECKPOINT reward
         checkpoint_reached = self._check_reached_checkpoint() # torch.Size([16])
-
-        # print("checkpoint_reward: ", checkpoint_reward)
-        # print("checkpoint_reward_shape: ", checkpoint_reward.shape)
         first_time_checkpoint_reached = torch.zeros_like(self.checkpoint_buf, dtype=torch.bool)
-        # first_time_checkpoint_reached.zero()
 
         # check if checkpoint has been reached before:
         first_time_checkpoint_reached = (self.checkpoint_buf == 1) & (checkpoint_reached==1)
-        # print("first_time_checkpoint_reached: ", first_time_checkpoint_reached)
-        # print("checkpoint_buf: ", self.checkpoint_buf)
         env_checkpoint_reached_first_time = torch.nonzero(first_time_checkpoint_reached).squeeze(dim=1)
         # print("Checkpoint reached in environments:", env_checkpoint_reached_first_time.tolist())
+
         # compute checkpoint reward only if it has been reached for the first time
         checkpoint_reward = checkpoint_reached * first_time_checkpoint_reached # bisschen unnötig, weil habe ich ja oben schon gecheckt. Ginge wahrscheinlich auch mit checkpoint_reward=first_time_checkpoint_reached
 
-        # ACTION reward (not used in this work)
-        action_penalty = (
-            torch.norm(self.actions, p=2, dim=-1)
-            * self.cfg_task.rl.action_penalty_scale
-        )
-
-
-        '''
-        default cfg values:
-        keypoint_reward_scale: 1.0  # scale on keypoint-based reward
-        action_penalty_scale: 0.0  # scale on action penalty
-        '''
+        # define which hypothesis should be used in task config-file
         if self.cfg_task.rl.ansatz == "A":
              self.rew_buf[:] = (
                 keypoint_reward * self.cfg_task.rl.keypoint_reward_scale  
@@ -911,25 +725,12 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                 + checkpoint_reward * self.cfg_task.rl.checkpoint_reward_scale        
         )
 
- 
-
-        # print("reward_calculations:/n")
-        # print(keypoint_reward, "*" , self.cfg_task.rl.keypoint_reward_scale , "/n")
-        # print("-" , action_penalty , "*" , self.cfg_task.rl.action_penalty_scale ,"/n")
-        # print("+" , checkpoint_reward, "*" ,self.cfg_task.rl.checkpoint_reward_scale , "/n")
-        # print("=" , self.rew_buf[:])
-
-
-        # print("rew_buf before adding success bonus: ", self.rew_buf)
- 
-        # episode length is constant across all envs
         is_last_step = self.progress_buf[0] == self.max_episode_length - 1
 
         if is_last_step:
             # Check if nut is close enough to bolt
             is_male_close_to_female = self._check_male_close_to_female() # adjust threshold in task config file
             print("_check_male_close_to_female: ",is_male_close_to_female)
-            # print("keypoint dist min last step: ", self._get_keypoint_dist())
             self.rew_buf[:] += is_male_close_to_female * self.cfg_task.rl.success_bonus # if close to bolt, --> successbonus*1 else successbonus*0; sucess_bonus defined in cfg-task-yaml-file (currently =0)
             self.extras["successes"] = torch.mean(is_male_close_to_female.float())
             success_rate = torch.sum(is_male_close_to_female)/self.num_envs
@@ -937,24 +738,10 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             checkpoint_reached_in_epoch = (self.checkpoint_buf >= 1)
             self.extras["checkpoint_reached"] =torch.mean(checkpoint_reached_in_epoch.float())
 
-
-
     def _get_keypoint_offsets(self, num_keypoints) -> torch.Tensor:
         """Get uniformly-spaced keypoints along a line of unit length, centered at 0.
         Last column contains values ranging from -0.5 to 0.5 in a linearly spaced manner. The first two columns are filled with zeros. """
-        # print("_get_keypoint_offsets")
-        # keypoint_offsets = torch.zeros((num_keypoints, 3), device=self.device) 
-        # keypoint_offsets[:, -1] = ( # 
-        #     torch.linspace(0.0, 1.0, num_keypoints, device=self.device) - 0.5 #(try 06/03/2024: commented out the -0.5; went back on 07/03/2027 but with middle keypoint on topsurface of hole)
-        # ) 
-
-        # keypoint_offsets for snap-fit task: two axes right and left along y axis 
-        # keypoint_offsets = torch.zeros((num_keypoints, 3), device=self.device) # tensor for only one axis of keypoints
         
-        # print("tensor keypoint_offsets *from*: ",num_keypoints*(i-1))
-        # print("tensor keypoint_offsets *to*: ",num_keypoints*i+1)
-        
-        # did concatenation work  properly? --> nope but i dont use the concatenation anymore
         keypoint_offsets_1=torch.zeros((num_keypoints, 3), device=self.device) # tensor for only one axis of keypoints
         keypoint_offsets_2=torch.zeros((num_keypoints, 3), device=self.device) # tensor for only one axis of keypoints
         keypoint_offsets_female_1=torch.zeros((num_keypoints, 3), device=self.device)
@@ -973,24 +760,13 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             torch.linspace(0.0, 1.0, num_keypoints, device=self.device)-0.5
         )
 
-        #TRY20240428: # put axes in arms (offset in x direction=0!) and adjust female offsets with x  offset of 
-        
-        keypoint_offsets_1[:, 0]= -0.02 # move keypoint axis 2 units in  negative x-direction # TODO: right units?
+        keypoint_offsets_1[:, 0]= -0.02 # move keypoint axis 2 units in  negative x-direction 
         # print("keypoint_offsets_1: ",keypoint_offsets_1)
-        keypoint_offsets_2[:, 0]= 0.02 # move keypoint axis 2 units in positive x-direction # TODO: right units? --> check by adding cube at 0.02 to left/right to see if unit is right
+        keypoint_offsets_2[:, 0]= 0.02 # move keypoint axis 2 units in positive x-direction 
         # print("keypoint_offsets_2: ",keypoint_offsets_2)
 
         keypoint_offsets_female_1[:, 0]= -0.023
         keypoint_offsets_female_2[:, 0]= 0.023
-
-
-
-
-        # print("keypoint_offset (concatenated): ",keypoint_offsets)
-
-        # print("keypoint_offsets_1: ",keypoint_offsets_1)
-        # print("keypoint_offsets_2: ",keypoint_offsets_2)
-        
 
         return keypoint_offsets_1, keypoint_offsets_2, keypoint_offsets_female_1, keypoint_offsets_female_2
 
@@ -998,27 +774,19 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         """Get keypoint distance between nut and bolt."""
         # print("_get_keypoint_dist")
 
-        # combinations (male_keypoints,female_kepoints): 
+        # combinations (male_keypoints,female_keypoints): 
         # (1,1) and (2,2), (1,2) and (2,1)
         # a and b, c and d
         
-
-        # print("keypoints_female_1.shape: ", self.keypoints_female_1.shape)
 
         dist_1_1 = (self.keypoints_female_1 - self.keypoints_male_1)
         dist_2_2 = (self.keypoints_female_2 - self.keypoints_male_2)
         dist_2_1 = (self.keypoints_female_2 - self.keypoints_male_1)
         dist_1_2 = (self.keypoints_female_1 - self.keypoints_male_2)
 
-        # print("dist_1_1:", dist_1_1)
-
      
         # calc euclidean norm for each keypoint and then sum up the values along one keypoint axis  
         keypoint_dist_A1 = torch.sum(torch.norm(dist_1_1,p=2, dim=-1), dim=-1)
-
-        # print("keypoint_dist_A1 shape", keypoint_dist_A1.shape) # torch.size([num_envs])
-        # print("keypoint_dist_A1", keypoint_dist_A1)
-
         keypoint_dist_A2 = torch.sum(torch.norm(dist_2_2,p=2, dim=-1), dim=-1)
         keypoint_dist_B1 = torch.sum(torch.norm(dist_2_1,p=2, dim=-1), dim=-1)
         keypoint_dist_B2 = torch.sum(torch.norm(dist_1_2,p=2, dim=-1), dim=-1)
@@ -1032,24 +800,16 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         is_first_step = self.progress_buf[0] == 1
 
         # is only updated for first step of epoch, not for any other steps.--> min kp-dist is chosen at beginning of an epoch and not for each step
-
         if is_first_step:
             self.min_dist_index = None 
 
-            # Use torch.argmin to find which distance is smaller
+            # find out which distance is smaller
             # 0 for A, 1 for B
             self.min_dist_index = torch.argmin(torch.stack([keypoint_dist_A, keypoint_dist_B], dim=1), dim=1)
            
 
         # Depending on the chosen index, select the keypoint distance for reward calculation
         keypoint_dist_min = torch.where(self.min_dist_index == 0, keypoint_dist_A, keypoint_dist_B)
-
-        # current_timestep=self.progress_buf[0] 
-        # self.keypoint_dist_buf[current_timestep] += keypoint_dist_min
-        # print("keypoint_dist_min: ", keypoint_dist_min)
-           
-        # print("key_point_dist_stacked: ",key_point_dist_stacked)
-        # print("keypoint_dist_min_shape: ",keypoint_dist_min.shape)    # torch.Size([num_envs])   
 
         return keypoint_dist_min
     
@@ -1062,8 +822,6 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         dist_2_2 = (self.keypoints_female_2 - self.keypoints_male_2)
         dist_2_1 = (self.keypoints_female_2 - self.keypoints_male_1)
         dist_1_2 = (self.keypoints_female_1 - self.keypoints_male_2)
-
-        # print("dist_1_1:", dist_1_1)
 
         # scaling of the different axes according to task config file
 
@@ -1081,23 +839,18 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         keypoint_dist_B2 = torch.sum(torch.norm(dist_1_2,p=2, dim=-1), dim=-1)
 
          # print("keypoint_dist_A1 shape", keypoint_dist_A1.shape) # torch.size([num_envs])
-        # print("keypoint_dist_A1", keypoint_dist_A1)
 
         keypoint_dist_A=torch.add(keypoint_dist_A1,keypoint_dist_A2)
         keypoint_dist_B=torch.add(keypoint_dist_B1,keypoint_dist_B2)
-
-        # print("keypoint_dist_A", keypoint_dist_A)
-        # print("keypoint_dist_B", keypoint_dist_B)
-   
+ 
         # Depending on the chosen min_dist_index, select the keypoint distance for reward calculation
         keypoint_dist_min = torch.where(self.min_dist_index == 0, keypoint_dist_A, keypoint_dist_B)
-
 
         return keypoint_dist_min
 
 
     def _get_keypoint_dist_checkpoint(self) -> torch.Tensor:
-        """Get keypoint distance between nut and bolt."""
+        """Get keypoint distance between male part and checkpoint."""
 
         self._get_keypoint_dist() # to get the current min_dist_index
 
@@ -1105,8 +858,6 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         dist_2_2 = (self.keypoints_checkpoint_2 - self.keypoints_male_2)
         dist_2_1 = (self.keypoints_checkpoint_2 - self.keypoints_male_1)
         dist_1_2 = (self.keypoints_checkpoint_1 - self.keypoints_male_2)
-
-        # print("dist_1_1:", dist_1_1)
 
         # scaling of the different axes according to task config file
 
@@ -1136,18 +887,10 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         # Depending on the chosen min_dist_index, select the keypoint distance for reward calculation
         keypoint_dist_min = torch.where(self.min_dist_index == 0, keypoint_dist_A, keypoint_dist_B)
 
-
-
-
         return keypoint_dist_min
-
-
-
-
 
     def _randomize_gripper_pose(self, env_ids, sim_steps) -> None:
         """Move gripper to random pose."""
-        # print("_randomize_gripper_pose")
         # Step once to update PhysX with new joint positions and velocities from reset_franka()
         SimulationContext.step(self._env._world, render=True)
 
@@ -1318,7 +1061,6 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                 actions=actions,
                 ctrl_target_gripper_dof_pos=0.0,
                 do_scale=False,
-                # do_scale=True, # was False before # TODO
             )
 
             self._env._world.physics_sim_view.flush()
@@ -1329,7 +1071,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         indices = env_ids.to(dtype=torch.int32)
         self.frankas.set_joint_velocities(self.dof_vel[env_ids], indices=indices)
 
-        # Step once to update PhysX with new joint velocities
+        # Step simulation once to update PhysX with new joint velocities
         self._env._world.physics_sim_view.flush()
         await omni.kit.app.get_app().next_update_async()
 
@@ -1345,12 +1087,11 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             (self.num_envs, 6), device=self.device
         )  # No hand motion 
 
-        # Step sim
+        # Step simulation
         for _ in range(sim_steps):
             self._apply_actions_as_ctrl_targets(
                 delta_hand_pose, gripper_dof_pos, 
                 do_scale=False
-                # do_scale=True # was False before # TODO
             )
             SimulationContext.step(self._env._world, render=True)
 
@@ -1364,73 +1105,37 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         self, gripper_dof_pos, sim_steps
     ) -> None:
         """Move gripper fingers to specified DOF position using controller."""
-        # print("_move_gripper_to_dof_pos_async")
         delta_hand_pose = torch.zeros(
             (self.num_envs, 6), device=self.device
         )  # No hand motion
 
-        # Step sim
+        # Step simulation
         for _ in range(sim_steps):
             self._apply_actions_as_ctrl_targets(
                 delta_hand_pose, gripper_dof_pos, 
                 do_scale=False
-                # do_scale=True # was False before # TODO
             )
             self._env._world.physics_sim_view.flush()
             await omni.kit.app.get_app().next_update_async()
 
     def _check_male_close_to_female(self) -> torch.Tensor:
         """Check if nut is close to bolt."""
-        # TODO
-
-
 
         keypoint_dist=self._get_keypoint_dist() # not the scaled one so that the threshold can be used universally even for changed scales
 
-        # print("keypoint_dist_min:" ,keypoint_dist)
-        # print("torch.sum(keypoint_dist_min, dim=-1): ", torch.sum(keypoint_dist_min, dim=-1))
-
-
-        # is_male_close_to_female = torch.where( # torch.where(condition, input, other) Returns tensor of elements selected from either input or other depending on condition (input if condition=true) 
-        #     torch.sum(keypoint_dist_min, dim=-1) < self.cfg_task.rl.close_error_thresh, # threshold below which male is considered close enough to female
-        #     torch.ones_like(self.progress_buf),                                     # TODO: adjust threshold?
-        #     torch.zeros_like(self.progress_buf),
-        # )
-
         is_male_close_to_female = keypoint_dist <= self.cfg_task.rl.close_error_thresh
-
-        # print("is_male_close_to_female shape: ", is_male_close_to_female.shape) 
-        # print("is_male_close_to_female: ", is_male_close_to_female) 
-        
-
-        # is_male_close_to_female = torch.where(
-        #     torch.sum(self.keypoint_dist_min, dim=-1) < self.cfg_task.rl.close_error_thresh,
-        #     torch.ones_like(self.progress_buf),
-        #     torch.zeros_like(self.progress_buf),
-        # )
 
         return is_male_close_to_female
 
     def _check_reached_checkpoint(self) -> torch.Tensor:
-        """Check if nut is close to bolt."""
-        # TODO
+        """Check if male part is close to checkpoint."""
 
         self.positions_checkpoint = self.female_pos.clone()
         self.positions_checkpoint[:,2] += self.checkpoint_z_pos.squeeze(dim=1)
-        # print("self.positions_checkpoint: ",self.positions_checkpoint)
-        # print("self.female_pos: ", self.female_pos)
 
-        checkpoint_dist = torch.norm(self.positions_checkpoint - self.male_pos_base, p=2, dim=-1) # frobenius norm
+        checkpoint_dist = torch.norm(self.positions_checkpoint - self.male_pos_base, p=2, dim=-1) # euclidian norm
 
-
-        # is_close_to_checkpoint = torch.where(# torch.where(condition, input, other) Returns tensor of elements selected from either input or other depending on condition (input if condition=true) 
-        #     torch.sum(checkpoint_dist,dim=-1) < self.cfg_task.rl.close_checkpoint_error_thresh, # first try: 0.005
-        #     torch.ones_like(checkpoint_dist),                                     # TODO: adjust threshold?
-        #     torch.zeros_like(checkpoint_dist),
-        # )
         is_close_to_checkpoint=torch.zeros_like(checkpoint_dist)
-        # print("checkpoint_dist: ", checkpoint_dist)
-        # print("checkpoint_dist_shape: ", checkpoint_dist.shape)
 
         for i in range(self._num_envs):
             is_close_to_checkpoint[i] = torch.where(
@@ -1439,44 +1144,20 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                 0,
             )
    
-        # is_close_to_checkpoint = torch.where(# torch.where(condition, input, other) Returns tensor of elements selected from either input or other depending on condition (input if condition=true) 
-        #     torch.sum(checkpoint_dist,dim=-1) < self.cfg_task.rl.close_checkpoint_error_thresh, # first try: 0.005
-        #     1,
-        #     0,
-        # )
-
         self.checkpoint_buf += is_close_to_checkpoint
-
-
-
 
         # print("is_close_to_checkpoint: ", is_close_to_checkpoint)
 
         return is_close_to_checkpoint
     
     def _check_reached_checkpoint_keypoint_dist(self) -> torch.Tensor:
-        """Check if nut is close to bolt."""
-        # TODO
+        """Check if male part is close to checkpoint via keypoint distances. Choose if keypoint distance or point distance should be used in task-config-file."""
 
         keypoint_dist=self._get_keypoint_dist_checkpoint() # not the scaled one so that the threshold can be used universally even for changed scales
 
-        # print("keypoint_dist_checkpoint:" ,keypoint_dist)
-        # print("torch.sum(keypoint_dist_min, dim=-1): ", torch.sum(keypoint_dist_min, dim=-1))
-
-
-        # is_male_close_to_female = torch.where( # torch.where(condition, input, other) Returns tensor of elements selected from either input or other depending on condition (input if condition=true) 
-        #     torch.sum(keypoint_dist_min, dim=-1) < self.cfg_task.rl.close_error_thresh, # threshold below which male is considered close enough to female
-        #     torch.ones_like(self.progress_buf),                                     # TODO: adjust threshold?
-        #     torch.zeros_like(self.progress_buf),
-        # )
-
         is_male_close_to_checkpoint = keypoint_dist <= self.cfg_task.rl.close_checkpoint_error_thresh_keypoint_dist
-        # print("self.positions_checkpoint: ",self.positions_checkpoint)
-        # print("self.female_pos: ", self.female_pos)
 
         is_close_to_checkpoint=torch.zeros_like(keypoint_dist)
-        # print("checkpoint_dist: ", checkpoint_dist)
-        # print("checkpoint_dist_shape: ", checkpoint_dist.shape)
 
         for i in range(self._num_envs):
             is_close_to_checkpoint = torch.where(
@@ -1485,23 +1166,11 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
                 0,
             )
    
-        # is_close_to_checkpoint = torch.where(# torch.where(condition, input, other) Returns tensor of elements selected from either input or other depending on condition (input if condition=true) 
-        #     torch.sum(checkpoint_dist,dim=-1) < self.cfg_task.rl.close_checkpoint_error_thresh, # first try: 0.005
-        #     1,
-        #     0,
-        # )
-
         self.checkpoint_buf_keypoint_dist += is_close_to_checkpoint
-
-        # print("is_close_to_checkpoint_keypoint dist: ", is_close_to_checkpoint)
 
         return is_close_to_checkpoint
     
     def quat_conjugate(self,q):
-    #     if q.shape[0] != 4:
-    #         raise ValueError("Input tensor must have 4 elements (w, x, y, z)")
-        # w,x,y,z = q
-        # return torch.tensor([w,-x,-y,-z])
         return torch.cat([q[:, :1], -q[:, 1:]], dim=1)
     
     def _get_contact_forces(self):
@@ -1511,18 +1180,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
 
         contact_force_mean=(contact_force_armLeft[:,2]+contact_force_armRight[:,2])/2
 
-        # print("contact_force_armRight:",contact_force_armRight)
-        # print("contact_force_armLeft:",contact_force_armLeft)
-        # print("contact_force_armLeft z shape:",contact_force_armLeft[:,2].shape)
-
-        # current_timestep=self.progress_buf[0] 
-       
-
-        # print("contact_force_armRight:",contact_force_armRight[:,2].shape)
-        # print("contact_force_armLeft:",contact_force_armLeft[:,2].shape)
-        # collision_detected = (contact_force_armRight[:,2] >= self.cfg_task.rl.max_force_thresh) | (contact_force_armLeft[:,2] >= self.cfg_task.rl.max_force_thresh)
         collision_detected = torch.abs(contact_force_mean) >= self.cfg_task.rl.max_force_thresh
-        # self.force_buf+=collision_detected
 
         return collision_detected
 
