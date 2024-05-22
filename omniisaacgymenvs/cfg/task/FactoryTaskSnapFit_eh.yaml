@@ -80,7 +80,7 @@ sim:
 
 env:
   controlFrequencyInv: 2  # 60 Hz
-  numEnvs: 128 #${resolve_default:128,${...num_envs}} # 1 funktioniert irgendwie nicht
+  numEnvs: 4 #${resolve_default:128,${...num_envs}} # 1 funktioniert irgendwie nicht
   numObservations: 34 # number of observations per env; camel case required by VecTask
   numActions: 12 # number of actions per env; camel case required by VecTask
 

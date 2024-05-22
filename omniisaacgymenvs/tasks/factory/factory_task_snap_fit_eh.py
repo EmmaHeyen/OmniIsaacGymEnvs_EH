@@ -26,7 +26,7 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# """Factory: Class for snap-fit place task.
+# Factory: Class for snap-fit task.
 
 # Inherits the snap-fit envorionment class and the abstract task class.
 
@@ -54,7 +54,6 @@
 # windows: C:/Users/emmah/AppData/Local/ov/pkg/isaac_sim-2023.1.1/isaac-sim.gym.bat --ext-folder "C:\Users\emmah"
 # linux: /home/mnn_eh/.local/share/ov/pkg/isaac_sim-2023.1.1/isaac-sim.gym.sh --ext-folder /home/mnn_eh
 
-# """
 
 import asyncio
 import hydra
@@ -405,8 +404,7 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             self.female_quat[env_ids],
             indices,
         )
-
-        
+      
 
     def _reset_buffers(self, env_ids) -> None:
         # print("_reset_buffers")
@@ -617,56 +615,9 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
             self.reset_buf,
         )
 
-    def _update_rew_buf_alt(self) -> None:
-        """Compute reward at current timestep."""
-        keypoint_reward = -self._get_keypoint_dist_scaled()
-
-        checkpoint_reached = self._check_reached_checkpoint() # torch.Size([16])
-        checkpoint_reached_keypoint_dist = self._check_reached_checkpoint_keypoint_dist()
-        
-        # reset first_time_checkpoint_reached
-        first_time_checkpoint_reached = torch.zeros_like(self.checkpoint_buf, dtype=torch.bool)
-        first_time_checkpoint_reached_keypoint_dist = torch.zeros_like(self.checkpoint_buf_keypoint_dist, dtype=torch.bool)
-
-        # check if checkpoint has been reached before: 
-        first_time_checkpoint_reached = (self.checkpoint_buf == 1) & (checkpoint_reached==1)
-        first_time_checkpoint_reached_keypoint_dist = (self.checkpoint_buf_keypoint_dist == 1) & (checkpoint_reached_keypoint_dist==1)
-
-        env_checkpoint_reached_first_time = torch.nonzero(first_time_checkpoint_reached).squeeze(dim=1)
-        # print("Checkpoint reached in environments:", env_checkpoint_reached_first_time.tolist())
-        
-        # compute checkpoint reward only if it has been reached for the first time
-        if self.cfg_task.rl.checkpoint_checking_method=="keypoint_dist": 
-            checkpoint_reward = checkpoint_reached_keypoint_dist * first_time_checkpoint_reached_keypoint_dist
-       
-        elif self.cfg_task.rl.checkpoint_checking_method=="point_dist":
-            checkpoint_reward = checkpoint_reached * first_time_checkpoint_reached
-
-        self.rew_buf[:] = (
-            keypoint_reward * self.cfg_task.rl.keypoint_reward_scale
-            + checkpoint_reward * self.cfg_task.rl.checkpoint_reward_scale       
-        )
-
-        is_last_step = self.progress_buf[0] == self.max_episode_length - 1
-
-        if is_last_step:
-            # Check if male part is close to female part
-            is_male_close_to_female = self._check_male_close_to_female() 
-            print("_check_male_close_to_female: ",is_male_close_to_female)
-
-            self.rew_buf[:] += is_male_close_to_female * self.cfg_task.rl.success_bonus # if close to female part: --> successbonus*1, else successbonus*0; sucess_bonus defined in FactoryTaskSnapFit_eh.yaml
-            success_rate = torch.sum(is_male_close_to_female)/self.num_envs
-            print("success rate: ",success_rate.item())
-            checkpoint_reached_in_epoch = (self.checkpoint_buf >= 1)
-
-            # add success rate and rate of reached checkpoints to extras, so they can be displayed on tensorboard (can be expanded easily by simply adding new key-value-pair to extras-dict)
-            self.extras["successes"] = torch.mean(is_male_close_to_female.float())
-            self.extras["checkpoint_reached"] = torch.mean(checkpoint_reached_in_epoch.float())
-
-
     def _update_rew_buf(self) -> None:
 
-        """Compute reward at current timestep."""
+        """Compute reward at the current timestep."""
 
         # KEYPOINT REWARD
         keypoint_reward = -self._get_keypoint_dist()
@@ -676,11 +627,8 @@ class FactoryTaskSnapFit_eh(FactoryEnvSnapFit_eh, FactoryABCTask):
         exceeded_force_max = self._get_contact_forces()
         exceeded_keypoint_dist_thresh = keypoint_reward >= self.cfg_task.rl.dist_thresh_for_max_force
         force_reward=exceeded_force_max*exceeded_keypoint_dist_thresh
-        print("force_reward: ", force_reward)
-        print("force_buf_before adding rew: ",self.force_buf)
         self.force_buf+=force_reward
-        print("force_buf_before adding rew: ",self.force_buf)
-    
+            
         # CHECKPOINT reward
         checkpoint_reached = self._check_reached_checkpoint() # torch.Size([16])
         checkpoint_reached_keypoint_dist = self._check_reached_checkpoint_keypoint_dist()

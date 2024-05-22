@@ -63,7 +63,7 @@ from omni.isaac.core.prims.soft.deformable_prim import DeformablePrim
 from omni.isaac.core.prims.soft.deformable_prim_view import DeformablePrimView
 from omni.isaac.core.objects import DynamicCuboid
 
-ops="windows" # (choose if "windows" or "linux")
+ops="linux" # (choose if "windows" or "linux")
 
 class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
     def __init__(self, name, sim_config, env) -> None:
