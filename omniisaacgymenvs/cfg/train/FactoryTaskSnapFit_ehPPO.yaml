@@ -56,12 +56,12 @@ params:
     schedule_type: standard
     kl_threshold: 0.016
     score_to_win: 20000
-    max_epochs: 1000 #${resolve_default:400,${....max_iterations}} # default:400
+    max_epochs: 1000 #${resolve_default:400,${....max_iterations}} 
     save_best_after: 50 
     save_frequency: 25
     print_stats: True
     grad_norm: 1.0
-    entropy_coef: 0.003 # laut medium blog: entropy coefficient range from 0.001 to 0.01
+    entropy_coef: 0.003 # range from 0.001 to 0.01
     truncate_grads: False
     e_clip: 0.2
     horizon_length: 128

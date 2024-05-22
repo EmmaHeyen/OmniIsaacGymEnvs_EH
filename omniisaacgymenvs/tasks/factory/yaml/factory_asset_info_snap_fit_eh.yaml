@@ -1,136 +1,82 @@
 snap_fit_1:
     male: 
-        # usd_path_windows: "C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\CAD RJ45\planar cantilever\nach AMAY\male\20240323_male_nach_AMAY.usd" 
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/male/20240402/bigger version/male_v2_fromSingleParts.usd"
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/male/20240402/bigger version/male_v2_fromSingleParts_jointsInCollisionPrims.usd"
-        # # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/male/20240402/bigger version/male_v2_NoRigidBodies.usd"
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/male/20240402/bigger version/male_v2_NoRigidBodies_rearrangedCollisionAndVisuals.usd"
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling.usd"
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/male/20240402/bigger version/male_v2_rearrangedCollisionAndVisuals.usd"
         thickness: 0.016
-        length_arm: 0.04
-        length_retention_feature: 0.010 # TODO
-        width_base: 0.052 # Breite Handle (in m) 
         height_base: 0.02 # Höhe Handle (in m) 
-        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
-        retention_feature_heigth: # TODO
+        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) 
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
         z_pos_checkpoint: 0.1125
 
     female: 
-        # usd_path_windows: "C:\Users\emmah\OneDrive - Students RWTH Aachen University\Dokumente\Uni\01_RWTH\02_Master\_20_MA\CAD RJ45\planar cantilever\nach AMAY\female\usd_female\20240323_female.usd"
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/female/female_v2.usd"
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/female/female_v2_closed.usd"
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/nach AMAY/female/female_v2_closed_noscaling.usd"
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_x65mm_y20mm_inst_meshes.usd"
         width_top_inner: 0.053 
-        width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
-        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
-        insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
-        retention_release_height: # TODO # middle of release part
 
 snap_fit_2:
     male: 
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling.usd"
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_ArmKos_in_armsroot.usd"
         thickness: 0.016
-        length_arm: 0.04
-        length_retention_feature: 0.010 # TODO
-        width_base: 0.052 # Breite Handle (in m) 
         height_base: 0.02 # Höhe Handle (in m) 
-        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
-        retention_feature_heigth: # TODO
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
         z_pos_checkpoint: 0.1125
 
     female: 
-
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_x65mm_y20mm.usd"
         width_top_inner: 0.065 
-        width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
-        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
-        insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
-        retention_release_height: # TODO # middle of release part
+
 
 snap_fit_3:
     male: 
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling.usd"
         thickness: 0.016
-        length_arm: 0.04
-        length_retention_feature: 0.010 # TODO
-        width_base: 0.052 # Breite Handle (in m) 
         height_base: 0.02 # Höhe Handle (in m) 
-        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
-        retention_feature_heigth: # TODO
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
         z_pos_checkpoint: 0.1125
 
     female: 
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_x64mm_y20mm.usd"
         width_top_inner: 0.064 
-        width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
-        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
-        insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
-        retention_release_height: # TODO # middle of release part
+        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) 
+
 
 snap_fit_4:
     male:        
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling.usd"
         thickness: 0.016
-        length_arm: 0.04
-        length_retention_feature: 0.010 # TODO
-        width_base: 0.052 # Breite Handle (in m) 
         height_base: 0.02 # Höhe Handle (in m) 
-        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
-        retention_feature_heigth: # TODO
+        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) 
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
         z_pos_checkpoint: 0.1125
 
     female: 
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_x62mm_y20mm.usd"
         width_top_inner: 0.062 
-        width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
-        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
-        insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
-        retention_release_height: # TODO # middle of release part
-
+        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) 
 snap_fit_5:
     male:        
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling.usd"
         thickness: 0.016
-        length_arm: 0.04
-        length_retention_feature: 0.010 # TODO
-        width_base: 0.052 # Breite Handle (in m) 
         height_base: 0.02 # Höhe Handle (in m) 
-        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
-        retention_feature_heigth: # TODO
+        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m)
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
         z_pos_checkpoint: 0.1125
 
     female: 
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_x55mm_y19mm.usd"
         width_top_inner: 0.055 
-        width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
-        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
-        insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
-        retention_release_height: # TODO # middle of release part
+        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) 
 
 snap_fit_6:
     male:        
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_ArmKos_in_armsroot.usd"
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling.usd"
         thickness: 0.016
-        length_arm: 0.04
-        length_retention_feature: 0.010 # TODO
         width_base: 0.052 # Breite Handle (in m) 
         height_base: 0.02 # Höhe Handle (in m) 
-        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
-        retention_feature_heigth: # TODO
+        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) 
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
         z_pos_checkpoint: 0.1125
 
@@ -139,176 +85,112 @@ snap_fit_6:
         width_top_inner: 0.065 
         width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
-        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
-        insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
-        retention_release_height: # TODO # middle of release part
+        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) 
 
 snap_fit_7:
     male:        
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_ArmKos_in_armsroot.usd"
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling.usd"
         thickness: 0.016
-        length_arm: 0.04
-        length_retention_feature: 0.010 # TODO
-        width_base: 0.052 # Breite Handle (in m) 
         height_base: 0.02 # Höhe Handle (in m) 
-        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
-        retention_feature_heigth: # TODO
+        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) 
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
         z_pos_checkpoint: 0.1125
 
     female: 
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_abdeckung_wanddick_x62mm_y20mm.usd"
         width_top_inner: 0.062 
-        width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
-        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
-        insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
-        retention_release_height: # TODO # middle of release part
-
+        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) 
 
 snap_fit_8:
     male:        
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_ArmKos_in_armsroot.usd"
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling.usd"
         thickness: 0.016
-        length_arm: 0.04
-        length_retention_feature: 0.010 # TODO
         width_base: 0.052 # Breite Handle (in m) 
         height_base: 0.02 # Höhe Handle (in m) 
-        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
-        retention_feature_heigth: # TODO
+        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) 
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
         z_pos_checkpoint: 0.1125
 
     female: 
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_abdeckung_wanddick_x55mm_y19mm.usd"
         width_top_inner: 0.062 
-        width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
-        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
-        insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
-        retention_release_height: # TODO # middle of release part
-
+        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) 
 
 snap_fit_9:
     male:        
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_ArmKos_in_armsroot.usd"
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling.usd"
         thickness: 0.016
-        length_arm: 0.04
-        length_retention_feature: 0.010 # TODO
-        width_base: 0.052 # Breite Handle (in m) 
         height_base: 0.02 # Höhe Handle (in m) 
-        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
-        retention_feature_heigth: # TODO
+        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) 
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
         z_pos_checkpoint: 0.1125
 
     female: 
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_abdeckung_wanddick_x58mm_y20mm.usd"
         width_top_inner: 0.062 
-        width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
-        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
-        insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
-        retention_release_height: # TODO # middle of release part
+        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) 
 
 snap_fit_10:
     male:        
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_ArmKos_in_armsroot.usd"
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_stiffness_0.1.usd"
         thickness: 0.016
-        length_arm: 0.04
-        length_retention_feature: 0.010 # TODO
-        width_base: 0.052 # Breite Handle (in m) 
         height_base: 0.02 # Höhe Handle (in m) 
-        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
-        retention_feature_heigth: # TODO
+        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) 
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
         z_pos_checkpoint: 0.1125
 
     female: 
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_abdeckung_wanddick_x55mm_y19mm.usd"
         width_top_inner: 0.062 
-        width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
-        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
-        insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
-        retention_release_height: # TODO # middle of release part
+        height_total: 0.047 # Höhe insgesamt inkl. Base (in m)
 
 
 snap_fit_11:
     male:        
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_ArmKos_in_armsroot.usd"
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_stiffness_0.07.usd"
         thickness: 0.016
-        length_arm: 0.04
-        length_retention_feature: 0.010 # TODO
-        width_base: 0.052 # Breite Handle (in m) 
         height_base: 0.02 # Höhe Handle (in m) 
-        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
-        retention_feature_heigth: # TODO
+        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) 
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
         z_pos_checkpoint: 0.1125
 
     female: 
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_abdeckung_wanddick_x55mm_y19mm.usd"
         width_top_inner: 0.062 
-        width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
-        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
-        insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
-        retention_release_height: # TODO # middle of release part
-
-
-
-
+        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) 
 
 snap_fit_12:
     male:        
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_ArmKos_in_armsroot.usd"
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_stiffness_0.04.usd"
         thickness: 0.016
-        length_arm: 0.04
-        length_retention_feature: 0.010 # TODO
-        width_base: 0.052 # Breite Handle (in m) 
         height_base: 0.02 # Höhe Handle (in m) 
-        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
-        retention_feature_heigth: # TODO
+        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) 
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
         z_pos_checkpoint: 0.1125
 
     female: 
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_abdeckung_wanddick_x55mm_y19mm.usd"
         width_top_inner: 0.062 
-        width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
-        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
-        insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
-        retention_release_height: # TODO # middle of release part
+        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) 
        
-
 snap_fit_13:
     male:        
-        # usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_ArmKos_in_armsroot.usd"
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/male_no_scaling/male_noscaling_stiffness_0.01.usd"
         thickness: 0.016
-        length_arm: 0.04
-        length_retention_feature: 0.010 # TODO
-        width_base: 0.052 # Breite Handle (in m) 
         height_base: 0.02 # Höhe Handle (in m) 
-        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m) # TODO
-        retention_feature_heigth: # TODO
+        height_total: 0.07 # Höhe gesamt (Ende Arm bis Anfang Handle) (in m)
         keypoint_middle_point_from_KOS: 0.0375 # in neg z direction 
         z_pos_checkpoint: 0.1125
 
     female: 
         usd_path_linux: "/home/mnn_eh/Documents/MA/CAD/snap-fit/female_transfer_learning_spiel/female_v2_abdeckung_wanddick_x55mm_y19mm.usd"
         width_top_inner: 0.062 
-        width_base: 0.1 # Kantenlänge Base (quadratisch) (in m)  
         height_base: 0.002 # Höhe Bodenplatte (in m) 
-        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) # TODO
-        insert_height: 0.005 # Höhe Ende Snapfit bei maximaler Einschubtiefe (in m) # TODO
-        retention_release_height: # TODO # middle of release part
+        height_total: 0.047 # Höhe insgesamt inkl. Base (in m) 
        
