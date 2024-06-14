@@ -448,21 +448,6 @@ class FactoryEnvSnapFit_eh(FactoryBase, FactoryABCEnv):
             self.male_thicknesses, device=self._device
         ).unsqueeze(-1)
 
-    def _import_test_cubes(self, add_to_stage):
-
-        for i in range(0, self._num_envs):      
-                                     
-            cube_z_pos = self.asset_info_snap_fit["snap_fit_1"]["male"]["z_pos_checkpoint"]
-
-            cube_translation = torch.tensor(                                           
-                [
-                    0.0,
-                    0.0,
-                    self.cfg_base.env.table_height + 0.1125,                                     # from config file FactoryBase.yaml
-                ],
-                device=self._device,
-            )
-            
 
     def refresh_env_tensors(self): 
         """Refresh environment tensors."""

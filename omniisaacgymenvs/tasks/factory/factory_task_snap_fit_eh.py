@@ -34,7 +34,7 @@
 
 # Set PYTHON_PATH: 
 # For Linux: alias PYTHON_PATH=~/.local/share/ov/pkg/isaac_sim-2023.1.1/python.sh
-# For Windows: doskey PYTHON_PATH=C:\Users\emmah\AppData\Local\ov\pkg\isaac_sim-2023.1.1\python.bat $* 
+# For Windows: doskey PYTHON_PATH=C:\Users\...\isaac_sim-2023.1.1\python.bat $* 
 
 # START TRAINING:
 # cd OmniIsaacGymEnvs/omniisaacgymenvs

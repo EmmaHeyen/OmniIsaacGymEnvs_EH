@@ -80,7 +80,7 @@ sim:
 
 env:
   controlFrequencyInv: 2  # 60 Hz
-  numEnvs: 4 #${resolve_default:128,${...num_envs}} # 1 funktioniert irgendwie nicht
+  numEnvs: 128 #${resolve_default:128,${...num_envs}} # 1 funktioniert irgendwie nicht
   numObservations: 34 # number of observations per env; camel case required by VecTask
   numActions: 12 # number of actions per env; camel case required by VecTask
 
@@ -100,7 +100,7 @@ randomize:
   female_pos_xy_noise: [0.1, 0.1]  # noise on nut position
 
 rl:
-  ansatz: "A" #[A,B]
+  ansatz: "B" #[A,B]
   pos_action_scale: [0.1, 0.1, 0.1]
   rot_action_scale: [0.1, 0.1, 0.1]
   force_action_scale: [1.0, 1.0, 1.0]
@@ -133,7 +133,7 @@ rl:
   
   checkpoint_reward_scale: 10.0
 
-  close_error_thresh: 0.07 # threshold below which male is considered close enough to female (initially was 0.1) # is used to calculate success bonus --> if close enough, success_bonus is multiplied with 1, else with 0 --> is only taken into account if success_bonus!=0
+  close_error_thresh: 0.03 # threshold below which male is considered close enough to female (initially was 0.1) # is used to calculate success bonus --> if close enough, success_bonus is multiplied with 1, else with 0 --> is only taken into account if success_bonus!=0
   success_bonus: 50  # bonus if male is close enough to female (initially was 0.0)
 
 ctrl:

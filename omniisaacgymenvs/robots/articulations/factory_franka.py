@@ -71,8 +71,10 @@ class FactoryFranka(Robot):
         damping = [80 * np.pi / 180] * 7 + [20] * 2
         max_force = [87, 87, 87, 87, 12, 12, 12, 200, 200]
 
-        # adjust force_limits
-        max_force = [value * 10 for value in max_force]
+        # adjust force_limits (EH)
+        force_factor=10
+        max_force = [value * force_factor for value in max_force]
+        print("force_factor:",force_factor)
 
 
         max_velocity = [math.degrees(x) for x in [2.175, 2.175, 2.175, 2.175, 2.61, 2.61, 2.61]] + [0.2, 0.2]
